@@ -13,17 +13,31 @@
 	</body>
 	
 	<script type="x-shader/x-vertex" id="vertex-shader">
-		#version 300
+		#version 100
+		#pragma language glsl3
+		precision highp float;
+		attribute vec3 vPosition;
 		void main() {
-			gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-			gl_PointSize = 64.0;
+			gl_Position = vec4(vPosition, 1.0);
+			gl_PointSize = 32.0;
 		}
 	</script>
 	
 	<script type="x-shader/x-fragment" id="fragment-shader">
-		#version 300
+		#version 100
+		#pragma language glsl3
+		precision highp float;
 		void main() {
-			gl_FragColor = vec4(0.56, 0.54, 0.34, 1.0);
+			vec2 fragmentPosition = 2.0 * gl_PointCoord - 1.0;
+			
+			float distance = length(fragmentPosition);
+			float distanceSqrd = distance * distance;
+			
+			gl_FragColor = vec4(
+				0.2/distanceSqrd,
+				0.1/distanceSqrd,
+				0.0,
+				1.0);
 		}
 	</script>
 	
@@ -43,68 +57,104 @@
 			paragraph.innerHTML = "Échec du contexte WebGL. " + "Votre navigateur peut ne pas supporter WebGL.";
 		}
 		
-		function initShaders() {
-			let source = document.querySelector("#vertex-shader").innerHTML;
-			let vertexShader = gl.createShader(gl.VERTEX_SHADER);
-			gl.shaderSource(vertexShader,source);
-			gl.compileShader(vertexShader);
+		class Shader {
+			constructor() {
+				let source = document.querySelector("#vertex-shader").innerHTML;
+				this.vertexShader = gl.createShader(gl.VERTEX_SHADER);
+				gl.shaderSource(this.vertexShader, source);
+				gl.compileShader(this.vertexShader);
+				
+				if (!gl.getShaderParameter(this.vertexShader, gl.COMPILE_STATUS)) {
+					let compileErrLog = gl.getShaderInfoLog(this.vertexShader);
+					document.querySelector("p").innerHTML = "La compilation du vertex shader a échoué." + "Journal d'erreur : " + compileErrLog;
+					return;
+				}
+				
+				source = document.querySelector("#fragment-shader").innerHTML			
+				this.fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+				gl.shaderSource(this.fragmentShader, source);
+				gl.compileShader(this.fragmentShader);
+				
+				if (!gl.getShaderParameter(this.fragmentShader, gl.COMPILE_STATUS)) {
+					let compileErrLog = gl.getShaderInfoLog(this.fragmentShader);
+					document.querySelector("p").innerHTML = "La compilation du fragment shader a échoué." + "Journal d'erreur : " + compileErrLog;
+					return;
+				}
+				
+				this.program = gl.createProgram();
+				
+				gl.attachShader(this.program, this.vertexShader);
+				gl.attachShader(this.program, this.fragmentShader);
+				
+				gl.linkProgram(this.program);
+				
+				gl.detachShader(this.program, this.vertexShader);
+				gl.detachShader(this.program, this.fragmentShader);
+				
+				gl.deleteShader(this.vertexShader);
+				gl.deleteShader(this.fragmentShader);
+				
+				if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+					let linkErrLog = gl.getProgramInfoLog(this.program);
+					this.destructor();
+					document.querySelector("p").innerHTML = "La liaison du programme a échoué." + "Journal d'erreur : " + linkErrLog;
+					return;
+				}
+			}
 			
-			source = document.querySelector("#fragment-shader").innerHTML			
-			let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-			gl.shaderSource(fragmentShader,source);
-			gl.compileShader(fragmentShader);
-			
-			program = gl.createProgram();
-			
-			gl.attachShader(program, vertexShader);
-			gl.attachShader(program, fragmentShader);
-			
-			gl.linkProgram(program);
-			
-			gl.detachShader(program, vertexShader);
-			gl.detachShader(program, fragmentShader);
-			
-			gl.deleteShader(vertexShader);
-			gl.deleteShader(fragmentShader);
-			
-			if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-				let linkErrLog = gl.getProgramInfoLog(program);
-				releaseShaders();
-				document.querySelector("p").innerHTML = "La liaison du programme a échoué." + "Journal d'erreur : " + linkErrLog;
-				return;
+			destructor() {
+				document.querySelector("p").innerHTML = "fini";
+				if (this.program)
+				  gl.deleteProgram(this.program);
 			}
 		}
 		
+		function initShaders() {
+			return new Shader();
+		}
+		
 		let buffer;
-		function initializeAttributes() {
-			gl.enableVertexAttribArray(0);
+		function initializeAttributes(x=0, y=0, z=0) {
 			buffer = gl.createBuffer();
+			gl.enableVertexAttribArray(0);
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-			gl.vertexAttribPointer(0, 1, gl.FLOAT, false, 0, 0);
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([x, y, z]), gl.DYNAMIC_DRAW);
+			gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
 		}
 		
-		function releaseShaders() {
-			gl.useProgram(null);
-			if (buffer)
-			  gl.deleteBuffer(buffer);
-			if (program)
-			  gl.deleteProgram(program);
+		function point(x, y, z=0) {
+			initializeAttributes(x, y, z);
+			gl.drawArrays(gl.POINTS, 0, 1);
 		}
-		
+
+		// https://developer.mozilla.org/fr/docs/Web/API/WebGL_API/Tutorial/Adding_2D_content_to_a_WebGL_context
 		gl = detectWebGLContext();
 		if (gl) {
 			//gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 			//gl.clearColor(0.0, 0.5, 0.0, 1.0);
 			//gl.clear(gl.COLOR_BUFFER_BIT);
-			
-			initShaders()
-			
-			initializeAttributes();
+			gl.clearColor(0.0, 0.0, 0.0, 1.0);  // effacement en noir, complètement opaque
+			gl.clearDepth(1.0);                 // tout effacer
+			gl.enable(gl.DEPTH_TEST);           // activer le test de profondeur
+			gl.depthFunc(gl.LEQUAL);            // les choses proches cachent les choses lointaines
 
-			gl.useProgram(program);
-			gl.drawArrays(gl.POINTS, 0, 1);
+			// Effacer le canevas avant que nous ne commencions à dessiner dessus.
+
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			
-			releaseShaders();
+			let shader = initShaders()
+
+			gl.useProgram(shader.program);
+			
+			point(0.0, 0.5);
+			point(0.5, -0.5);
+			
+			gl.useProgram(null);
+			if (buffer)
+			  gl.deleteBuffer(buffer);
+			
+			//delete shader;
+			shader.destructor()
 		}
 	</script>
 	
