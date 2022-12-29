@@ -1,6 +1,10 @@
 var random = Math.random;
-function randomInt(_max) {
-    return Math.ceil(Math.random() * _max);
+function randomInt(_min, _max) {
+    if (_max == undefined) {
+        _max = _min;
+        _min = 1;
+    }
+    return Math.ceil(Math.random() * (_max - _min) + _min);
 }
 
 var min = Math.min;

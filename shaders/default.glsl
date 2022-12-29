@@ -5,7 +5,8 @@ var vertexShaderText = `
     attribute vec3 vPosition;
     uniform vec2 size;
     uniform mat4 pMatrix;
-    uniform mat4 mvMatrix;
+    uniform mat4 vMatrix;
+    uniform mat4 mMatrix;
     void main() {
         // gl_Position = vec4(
         //     vPosition.x / (size.x/2.) - 1.,
@@ -13,7 +14,7 @@ var vertexShaderText = `
         //     0,
         //     1);
 
-        gl_Position = mvMatrix * pMatrix * vec4(vPosition, 1.);
+        gl_Position = pMatrix * vMatrix * mMatrix * vec4(vPosition, 1.);
 
         gl_PointSize = 2.;
     }

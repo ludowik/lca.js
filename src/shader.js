@@ -48,19 +48,26 @@ class Shader {
         var uniformSize = gl.getUniformLocation(this.program, "size");
         gl.uniform2f(uniformSize, W, H);
 
+        var invert = false;
+
         var uniformProjectionMatrix = gl.getUniformLocation(this.program, "pMatrix");
         var pMatrix = glMatrix.mat4.create();
         glMatrix.mat4.ortho(pMatrix, 0, W, 0, H, -1., 1.);
+        gl.uniformMatrix4fv(uniformProjectionMatrix, invert, pMatrix);
 
-        gl.uniformMatrix4fv(uniformProjectionMatrix, false, pMatrix);
+        var uniformViewMatrix = gl.getUniformLocation(this.program, "vMatrix");
+        var vMatrix = glMatrix.mat4.create();
+        glMatrix.mat4.identity(vMatrix);
+        gl.uniformMatrix4fv(uniformViewMatrix, invert, vMatrix);
 
-        var uniformModelViewMatrix = gl.getUniformLocation(this.program, "mvMatrix");
-        var mvMatrix = glMatrix.mat4.create();
+        var uniformModelMatrix = gl.getUniformLocation(this.program, "mMatrix");
+        var mMatrix = glMatrix.mat4.create();
+        glMatrix.mat4.identity(mMatrix);
+        var origin = glMatrix.vec3.set(glMatrix.vec3.create(), W/2, H/2, 0);
+        glMatrix.mat4.translate(mMatrix, mMatrix, origin);
         var axis = glMatrix.vec3.set(glMatrix.vec3.create(), 0, 0, 1);
-        glMatrix.mat4.identity(mvMatrix);
-        glMatrix.mat4.rotate(mvMatrix, mvMatrix, ElapsedTime, axis);
-
-        gl.uniformMatrix4fv(uniformModelViewMatrix, false, mvMatrix);
+        glMatrix.mat4.rotate(mMatrix, mMatrix, ElapsedTime, axis);
+        gl.uniformMatrix4fv(uniformModelMatrix, invert, mMatrix);
     }
     
     destructor() {

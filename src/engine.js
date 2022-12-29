@@ -14,27 +14,35 @@ class Engine {
         this.gl = this.detectWebGLContext();
         W = this.gl.drawingBufferWidth;
         H = this.gl.drawingBufferHeight;
-        
+
         this.graphics = new Graphics(this.gl);
     }
 
     detectWebGLContext() {
         this.canvas = document.querySelector("canvas");
-        this.canvas.height = window.innerHeight; // window.innerHeight;
-        this.canvas.width = window.innerHeight * 9 / 16;        
+
+        var platform = window.navigator?.userAgentData?.platform;
+        var iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+        if (iosPlatforms.indexOf(platform) !== -1) {
+            this.canvas.height = window.innerHeight;
+            this.canvas.width = window.innerWidth;
+        } else {
+            this.canvas.height = window.innerHeight;
+            this.canvas.width = window.innerHeight * 9 / 16;
+        }
 
         let gl = this.canvas.getContext("webgl2");
 
         if (gl && gl instanceof WebGL2RenderingContext) {
             return gl;
         }
-        
+
         console.log("WebGL context not available");
     }
 
     frame(timestamp) {
         ElapsedTime = timestamp / 1000.;
-        
+
         update();
 
         let gl = this.gl;
@@ -42,7 +50,7 @@ class Engine {
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clearDepth(1.0);
-        
+
         gl.disable(gl.DEPTH_TEST);
         // gl.enable(gl.DEPTH_TEST);
         // gl.depthFunc(gl.LEQUAL);
@@ -61,7 +69,7 @@ class Engine {
         window.requestAnimationFrame((timestamp) => {
             engine.stats.begin();
             engine.frame(timestamp);
-	        engine.stats.end();            
+            engine.stats.end();
         });
     }
 }
@@ -70,7 +78,7 @@ var engine, sketch;
 
 window.onload = function () {
     engine = new Engine();
-    
+
     sketch = new Sketch();
     sketch.setup();
 
