@@ -2,10 +2,12 @@ body {
     margin: 0;
     padding: 0;
 
+    user-select: none;
     -webkit-user-select: none;
     -moz-user-select: -moz-none;
     -ms-user-select: none;
-    user-select: none;
+    
+    overflow: hidden;
 
     background-color: rgb(51, 51, 51);
     color: antiquewhite;
