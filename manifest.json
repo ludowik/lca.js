@@ -1,0 +1,13 @@
+{
+    "name": "Lca",
+    "short_name": "Lca",
+    "start_url": "index.html",
+    "display": "fullscreen",
+    "icons": [
+        {
+            "src": "assets/apple-touch-icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}

@@ -17,17 +17,18 @@ class Engine {
     }
 
     detectWebGLContext() {
-        let paragraph = document.querySelector("p");
-
         let canvas = document.querySelector("canvas");
+        canvas.height = window.innerHeight; // window.innerHeight;
+        canvas.width = window.innerHeight * 9 / 16;
+        
+
         let gl = canvas.getContext("webgl2");
 
         if (gl && gl instanceof WebGL2RenderingContext) {
-            paragraph.innerHTML = "Félicitations, votre navigateur supporte WebGL.";
             return gl;
         }
         
-        paragraph.innerHTML = "Échec du contexte WebGL. " + "Votre navigateur peut ne pas supporter WebGL.";
+        console.log("WebGL context not available");
     }
 
     frame(timestamp) {
