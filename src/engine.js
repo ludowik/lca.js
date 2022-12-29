@@ -48,17 +48,25 @@ class Engine {
         let gl = this.gl;
 
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+
+        if (false) {
+            gl.disable(gl.DEPTH_TEST);
+
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        } else {
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL);
+            
+            gl.disable(gl.BLEND);            
+        }
+
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clearDepth(1.0);
-
-        gl.disable(gl.DEPTH_TEST);
-        // gl.enable(gl.DEPTH_TEST);
-        // gl.depthFunc(gl.LEQUAL);
-
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        resetMatrix();
+        ortho();
 
         draw();
 
