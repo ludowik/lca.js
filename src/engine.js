@@ -1,4 +1,5 @@
 var W, H;
+var ElapsedTime = 0;
 
 class Engine {
     constructor() {
@@ -11,18 +12,18 @@ class Engine {
 
     load() {
         this.gl = this.detectWebGLContext();
-
         W = this.gl.drawingBufferWidth;
         H = this.gl.drawingBufferHeight;
+        
+        this.graphics = new Graphics(this.gl);
     }
 
     detectWebGLContext() {
-        let canvas = document.querySelector("canvas");
-        canvas.height = window.innerHeight; // window.innerHeight;
-        canvas.width = window.innerHeight * 9 / 16;
-        
+        this.canvas = document.querySelector("canvas");
+        this.canvas.height = window.innerHeight; // window.innerHeight;
+        this.canvas.width = window.innerHeight * 9 / 16;        
 
-        let gl = canvas.getContext("webgl2");
+        let gl = this.canvas.getContext("webgl2");
 
         if (gl && gl instanceof WebGL2RenderingContext) {
             return gl;
@@ -32,11 +33,13 @@ class Engine {
     }
 
     frame(timestamp) {
+        ElapsedTime = timestamp / 1000.;
+        
         update();
 
         let gl = this.gl;
 
-        gl.viewport(0, 0, W, H);
+        gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clearDepth(1.0);
         
@@ -55,9 +58,9 @@ class Engine {
     }
 
     requestRender() {
-        window.requestAnimationFrame(() => {
+        window.requestAnimationFrame((timestamp) => {
             engine.stats.begin();
-            engine.frame();
+            engine.frame(timestamp);
 	        engine.stats.end();            
         });
     }

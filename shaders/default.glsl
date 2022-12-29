@@ -3,9 +3,19 @@ var vertexShaderText = `
     #pragma language glsl3
     precision highp float;
     attribute vec3 vPosition;
+    uniform vec2 size;
+    uniform mat4 pMatrix;
+    uniform mat4 mvMatrix;
     void main() {
-        gl_Position = vec4((vPosition/50.)-1., 1.0);
-        gl_PointSize = 2.0;
+        // gl_Position = vec4(
+        //     vPosition.x / (size.x/2.) - 1.,
+        //     vPosition.y / (size.y/2.) - 1.,
+        //     0,
+        //     1);
+
+        gl_Position = mvMatrix * pMatrix * vec4(vPosition, 1.);
+
+        gl_PointSize = 2.;
     }
 `;
 
@@ -16,15 +26,13 @@ var fragmentShaderText = `
     void main() {
         vec2 fragmentPosition = 2.0 * gl_PointCoord - 1.0;
         
-        float distance = length(fragmentPosition);
-        float distanceSqrd = distance * distance;
-        
-        if (distanceSqrd <= 1.) {
+        float distance = length(fragmentPosition);        
+        if (distance <= 1.) {
             gl_FragColor = vec4(
-                1.-distanceSqrd,
-                1.-distanceSqrd,
-                1.-distanceSqrd,
-                1.-distanceSqrd);
+                1.-distance,
+                1.-distance,
+                1.-distance,
+                1.-distance);
         }
     }
 `

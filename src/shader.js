@@ -1,8 +1,13 @@
+//const { glMatrix } = require("../lib/glmatrix/gl-matrix");
+
 class Shader {
-    constructor() {
-        let gl = engine.gl;
-        this.vertexShader = this.compileShader(gl.VERTEX_SHADER, vertexShaderText);
-        this.fragmentShader = this.compileShader(gl.FRAGMENT_SHADER, fragmentShaderText);
+    constructor(gl) {
+        this.load(gl);
+    }
+
+    load(gl) {
+        this.vertexShader = this.compileShader(gl, gl.VERTEX_SHADER, vertexShaderText);
+        this.fragmentShader = this.compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderText);
         
         this.program = gl.createProgram();
         
@@ -20,13 +25,12 @@ class Shader {
         if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
             let linkErrLog = gl.getProgramInfoLog(this.program);
             this.destructor();
-            document.querySelector("p").innerHTML = "La liaison du programme a échoué." + "Journal d'erreur : " + linkErrLog;
+            console.log("La liaison du programme a échoué : " + linkErrLog);
             return;
         }
     }
 
-    compileShader(shaderType, shaderSource) {
-        let gl = engine.gl;
+    compileShader(gl, shaderType, shaderSource) {
         let shader = gl.createShader(shaderType);
         gl.shaderSource(shader, shaderSource);
         gl.compileShader(shader);
@@ -38,6 +42,25 @@ class Shader {
         }
 
         return shader;
+    }
+
+    sendUniform(gl) {
+        var uniformSize = gl.getUniformLocation(this.program, "size");
+        gl.uniform2f(uniformSize, W, H);
+
+        var uniformProjectionMatrix = gl.getUniformLocation(this.program, "pMatrix");
+        var pMatrix = glMatrix.mat4.create();
+        glMatrix.mat4.ortho(pMatrix, 0, W, 0, H, -1., 1.);
+
+        gl.uniformMatrix4fv(uniformProjectionMatrix, false, pMatrix);
+
+        var uniformModelViewMatrix = gl.getUniformLocation(this.program, "mvMatrix");
+        var mvMatrix = glMatrix.mat4.create();
+        var axis = glMatrix.vec3.set(glMatrix.vec3.create(), 0, 0, 1);
+        glMatrix.mat4.identity(mvMatrix);
+        glMatrix.mat4.rotate(mvMatrix, mvMatrix, ElapsedTime, axis);
+
+        gl.uniformMatrix4fv(uniformModelViewMatrix, false, mvMatrix);
     }
     
     destructor() {

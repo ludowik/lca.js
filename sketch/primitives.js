@@ -1,13 +1,14 @@
 class Sketch {
     setup() {
-        this.points = [60, 60, 0, 50, 50, 0, 55, 55, 0];
+        this.points = [];
     }
 
     update(dt) {
-        this.points.push(randomInt(100), randomInt(100), 0)
+        this.points.push(randomInt(W), randomInt(H), 0)
     }
 
     draw() {
+        //point(W/2, H/2);
         points(this.points);
     }
 }
