@@ -11,8 +11,8 @@ class Sketch {
     }
 
     draw() {
-        perspective();
-        camera(0, 0, ElapsedTime);
+        // perspective();
+        // camera(0, 0, ElapsedTime);
 
         translate(W/2, H/2);
         rotate(ElapsedTime);        

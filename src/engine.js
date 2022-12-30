@@ -5,9 +5,9 @@ class Engine {
     constructor() {
         this.load();
 
-        this.stats = new Stats();
-        this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        document.body.appendChild(this.stats.dom);
+        // this.stats = new Stats();
+        // this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        // document.body.appendChild(this.stats.dom);
     }
 
     load() {
@@ -57,11 +57,11 @@ class Engine {
         } else {
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL);
-            
-            gl.disable(gl.BLEND);            
+
+            gl.disable(gl.BLEND);
         }
 
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clearColor(0.1, 0.1, 0.1, 1.0);
         gl.clearDepth(1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -75,16 +75,33 @@ class Engine {
 
     requestRender() {
         window.requestAnimationFrame((timestamp) => {
-            engine.stats.begin();
+            engine.stats?.begin();
             engine.frame(timestamp);
-            engine.stats.end();
+            engine.stats?.end();
         });
     }
 }
 
 var engine, sketch;
 
+ function toggleFullscreen() {
+    if (document.fullscreenEnabled) {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            document.documentElement.requestFullscreen();
+        }
+    } else {
+        alert("Fullscreen is not supported!");
+    }
+}
+
 window.onload = function () {
+    let fullscreenHandler = document.querySelector(".fullscreenButton");
+    fullscreenHandler.addEventListener("click", () => {
+        toggleFullscreen();
+    });
+
     engine = new Engine();
 
     sketch = new Sketch();
