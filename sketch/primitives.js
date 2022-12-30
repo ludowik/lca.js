@@ -20,13 +20,17 @@ class Sketch {
         // perspective();
         // camera(0, 0, ElapsedTime);
 
-        translate(W / 2, H / 2);
-        rotate(ElapsedTime);
+        // translate(W / 2, H / 2);
+        // rotate(ElapsedTime);
 
-        //point(W/2, H/2);
-        points(this.points);
+        // //point(W/2, H/2);
+        // points(this.points);
 
-        circleMode(CENTER);
-        ellipse(0, 0, 50, 30);
+        // circleMode(CENTER);
+        // ellipse(0, 0, 50, 30);
+
+        //resetMatrix();
+
+        text("hello world!", 100, 250);
     }
 }

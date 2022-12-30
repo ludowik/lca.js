@@ -55,7 +55,7 @@ class Engine {
 
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
-        if (false) {
+        if (true) {
             gl.disable(gl.DEPTH_TEST);
 
             gl.enable(gl.BLEND);

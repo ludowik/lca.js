@@ -4,6 +4,7 @@ class Shaders {
         this.point = new Shader(gl, point_vertexShaderText, point_fragmentShaderText);
         this.rect = new Shader(gl, rect_vertexShaderText, rect_fragmentShaderText);
         this.ellipse = new Shader(gl, ellipse_vertexShaderText, ellipse_fragmentShaderText);
+        this.texture = new Shader(gl, texture_vertexShaderText, texture_fragmentShaderText);
     }
 }
 
@@ -60,8 +61,13 @@ class Shader {
         var uniformViewMatrix = gl.getUniformLocation(this.program, "uViewMatrix");
         gl.uniformMatrix4fv(uniformViewMatrix, invert, viewMatrix());
 
-        var uniformModelMatrix = gl.getUniformLocation(this.program, "uModelMatrix");        
+        var uniformModelMatrix = gl.getUniformLocation(this.program, "uModelMatrix");
         gl.uniformMatrix4fv(uniformModelMatrix, invert, modelMatrix());
+
+        var uniformTexture = gl.getUniformLocation(this.program, "uTexture");
+        if (uniformTexture) {
+            gl.uniform1i(uniformTexture, 0);
+        }
     }
 
     use() {

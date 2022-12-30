@@ -8,15 +8,16 @@ class Graphics {
 
 function background() {
     let gl = engine.gl;
+
     gl.clearColor(0.1, 0.1, 0.1, 1.0);
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
 
 function initializeAttributes(shader, array, texCoord) {
-    shader.use();
-
     let gl = engine.gl;
+    
+    shader.use();
 
     let buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -37,6 +38,7 @@ function initializeAttributes(shader, array, texCoord) {
 
 function point(x, y, z = 0) {
     let gl = engine.gl;
+
     let array = [x, y, z];
     initializeAttributes(shaders.point, array);
     gl.drawArrays(gl.POINTS, 0, array.length / 3);
@@ -44,6 +46,7 @@ function point(x, y, z = 0) {
 
 function points(array) {
     let gl = engine.gl;
+
     initializeAttributes(shaders.point, array);
     gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
 }
@@ -58,6 +61,8 @@ function rectMode(mode) {
 }
 
 function rect(x, y, w, h) {
+    let gl = engine.gl;
+
     pushMatrix();
 
     if (__rectMode === CORNER)
@@ -67,7 +72,6 @@ function rect(x, y, w, h) {
 
     scale(w, h);
 
-    let gl = engine.gl;
     let array = [
         0, 0, 0,
         1, 0, 0,
@@ -96,6 +100,8 @@ function ellipseMode(mode) {
 }
 
 function ellipse(x, y, w, h) {
+    let gl = engine.gl;
+    
     pushMatrix();
 
     if (__ellipseMode === CORNER)
@@ -105,7 +111,6 @@ function ellipse(x, y, w, h) {
 
     scale(w, h);
 
-    let gl = engine.gl;
     let array = [
         0, 0, 0,
         1, 0, 0,
@@ -115,6 +120,58 @@ function ellipse(x, y, w, h) {
         0, 1, 0];
 
     initializeAttributes(shaders.ellipse, array, array);
+    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+
+    popMatrix();
+}
+
+let __textMode = CORNER;
+function textMode(mode) {
+    if (mode) __textMode = mode;
+    return __textMode;
+}
+
+function text(txt, x, y) {
+    let gl = engine.gl;
+
+    pushMatrix();
+
+    if (__textMode === CORNER)
+        translate(x, y);
+    else
+        translate(x - w / 2, y - h / 2);
+
+    const ctx = document.createElement("canvas").getContext("2d");
+    const metrics = ctx.measureText(txt);
+    ctx.canvas.width = metrics.width;
+    ctx.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+    ctx.fillStyle = "red";
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillText(txt, 0, 0);
+
+    gl.activeTexture(gl.TEXTURE0);
+    var textTex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, textTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ctx.canvas);
+ 
+    // make sure we can render it even if it's not a power of 2
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    scale(ctx.canvas.width, ctx.canvas.height);
+
+    let array = [
+        0, 0, 0,
+        1, 0, 0,
+        1, 1, 0,
+        0, 0, 0,
+        1, 1, 0,
+        0, 1, 0];
+
+    shaders.texture.texture = textTex;
+
+    initializeAttributes(shaders.texture, array, array);
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();
