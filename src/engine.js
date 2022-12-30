@@ -85,6 +85,8 @@ class Engine {
 var engine, sketch;
 
  function toggleFullscreen() {
+    document.documentElement.requestFullscreen?.();
+    document.documentElement.webkitRequestFullscreen?.();
     if (document.fullscreenEnabled) {
         if (document.fullscreenElement) {
             document.exitFullscreen();
