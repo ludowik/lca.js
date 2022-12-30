@@ -1,26 +1,39 @@
-var W, H;
-var ElapsedTime = 0;
+var W=0, H=0;
+var DeltaTime=0, ElapsedTime=0;
+
+var engine, sketch;
 
 class Engine {
     constructor() {
         this.load();
-
-        // this.stats = new Stats();
-        // this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        // document.body.appendChild(this.stats.dom);
+        this.frameTime = new FrameTime();
     }
 
     load() {
-        this.gl = this.detectWebGLContext();
+        this.gl = this.initWebGLContext();
+
         W = this.gl.drawingBufferWidth;
         H = this.gl.drawingBufferHeight;
 
         this.graphics = new Graphics(this.gl);
     }
 
-    detectWebGLContext() {
+    initWebGLContext() {
         this.canvas = document.querySelector("canvas");
+        this.resizeCanvas();
 
+        let gl = this.canvas.getContext("webgl2", {
+            preserveDrawingBuffer: true
+        });
+
+        if (gl && gl instanceof WebGL2RenderingContext) {
+            return gl;
+        }
+
+        console.log("WebGL context not available");
+    }
+
+    resizeCanvas() {
         var platform = window.navigator?.userAgentData?.platform;
         var iosPlatforms = ['iPhone', 'iPad', 'iPod'];
         if (iosPlatforms.indexOf(platform) !== -1) {
@@ -30,20 +43,13 @@ class Engine {
             this.canvas.height = window.innerHeight;
             this.canvas.width = window.innerHeight * 9 / 16;
         }
-
-        let gl = this.canvas.getContext("webgl2");
-
-        if (gl && gl instanceof WebGL2RenderingContext) {
-            return gl;
-        }
-
-        console.log("WebGL context not available");
     }
 
     frame(timestamp) {
-        ElapsedTime = timestamp / 1000.;
+        DeltaTime = this.frameTime.deltaTime;
+        ElapsedTime = this.frameTime.elapsedTime;
 
-        update();
+        update(this.deltaTime);
 
         let gl = this.gl;
 
@@ -61,10 +67,6 @@ class Engine {
             gl.disable(gl.BLEND);
         }
 
-        gl.clearColor(0.1, 0.1, 0.1, 1.0);
-        gl.clearDepth(1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
         resetMatrix();
         ortho();
 
@@ -74,15 +76,17 @@ class Engine {
     }
 
     requestRender() {
-        window.requestAnimationFrame((timestamp) => {
-            engine.stats?.begin();
-            engine.frame(timestamp);
-            engine.stats?.end();
+        window.requestAnimationFrame(() => {
+            engine.frame();
+            this.frameTime.frame();
         });
     }
 }
 
-var engine, sketch;
+function reload() {
+    let href = location.protocol + '//' + location.hostname + ':' + location.port + location.pathname + '?version=' + Date.now();
+    location.replace(href);
+}
 
 function requestFullScreen() {
     var el = document.body;
@@ -116,11 +120,6 @@ function toggleFullscreen() {
 }
 
 window.onload = function () {
-    let fullscreenHandler = document.querySelector(".fullscreenButton");
-    fullscreenHandler.addEventListener("click", () => {
-        toggleFullscreen();
-    });
-
     engine = new Engine();
 
     sketch = new Sketch();

@@ -59,6 +59,12 @@ class Shader {
         var uniformModelMatrix = gl.getUniformLocation(this.program, "mMatrix");        
         gl.uniformMatrix4fv(uniformModelMatrix, invert, modelMatrix());
     }
+
+    use() {
+        let gl = engine.gl;
+        gl.useProgram(this.program);
+        this.sendUniform(gl);
+    }
     
     destructor() {
         if (this.program)

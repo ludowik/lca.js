@@ -57,3 +57,25 @@ function resetMatrix() {
     glMatrix.mat4.identity(__viewMatrix);
     glMatrix.mat4.identity(__modelMatrix);
 }
+
+var stacks = {}
+function push(stackName, item) {
+    stacks[stackName] = stacks[stackName] || new Array();
+    stacks[stackName].push(item);
+}
+
+function pop(stackName) {
+    return stacks[stackName].pop();
+}
+
+function pushMatrix() {
+    push('__projectionMatrix', glMatrix.mat4.clone(__projectionMatrix));
+    push('__viewMatrix', glMatrix.mat4.clone(__viewMatrix));
+    push('__modelMatrix', glMatrix.mat4.clone(__modelMatrix));
+}
+
+function popMatrix() {
+    __projectionMatrix = pop('__projectionMatrix');
+    __viewMatrix = pop('__viewMatrix');
+    __modelMatrix = pop('__modelMatrix');
+}

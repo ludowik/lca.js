@@ -12,3 +12,5 @@ var max = Math.max;
 function clamp(a, _min, _max) {
     return min(max(a, _min), _max)
 }
+
+var sqrt = Math.sqrt;

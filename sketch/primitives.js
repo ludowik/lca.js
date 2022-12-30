@@ -4,20 +4,28 @@ class Sketch {
     }
 
     update(dt) {
-        this.points.push(
-            randomInt(-W/2, W/2),
-            randomInt(-H/2, H/2),
-            0)
+        let radius = sqrt(W*W, H*H);
+
+        for (var i = 0; i < 10; ++i) {
+            this.points.push(
+                randomInt(-radius, radius),
+                randomInt(-radius, radius),
+                0)
+        }
     }
 
     draw() {
+        background();
+
         // perspective();
         // camera(0, 0, ElapsedTime);
 
-        translate(W/2, H/2);
-        rotate(ElapsedTime);        
+        translate(W / 2, H / 2);
+        rotate(ElapsedTime);
 
         //point(W/2, H/2);
         points(this.points);
+
+        rect(0, 0, 50, 50);
     }
 }
