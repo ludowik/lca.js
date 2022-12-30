@@ -1,4 +1,4 @@
-var default_vertexShaderText = `
+var rect_vertexShaderText = `
     #version 100
     #pragma language glsl3
     precision highp float;
@@ -11,11 +11,11 @@ var default_vertexShaderText = `
     }
 `;
 
-var default_fragmentShaderText = `
+var rect_fragmentShaderText = `
     #version 100
     #pragma language glsl3
     precision highp float;
     void main() {
-        gl_FragColor = vec4(1., 1., 1., 1.);
+        gl_FragColor = vec4(1., 1., 0., 1.);
     }
 `

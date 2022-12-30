@@ -26,6 +26,7 @@ class Sketch {
         //point(W/2, H/2);
         points(this.points);
 
-        rect(0, 0, 50, 50);
+        circleMode(CENTER);
+        ellipse(0, 0, 50, 30);
     }
 }

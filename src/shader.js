@@ -1,11 +1,18 @@
-//const { glMatrix } = require("../lib/glmatrix/gl-matrix");
+class Shaders {
+    constructor(gl) {
+        this.default = new Shader(gl, default_vertexShaderText, default_fragmentShaderText);
+        this.point = new Shader(gl, point_vertexShaderText, point_fragmentShaderText);
+        this.rect = new Shader(gl, rect_vertexShaderText, rect_fragmentShaderText);
+        this.ellipse = new Shader(gl, ellipse_vertexShaderText, ellipse_fragmentShaderText);
+    }
+}
 
 class Shader {
-    constructor(gl) {
-        this.load(gl);
+    constructor(gl, vertexShaderText, fragmentShaderText) {
+        this.load(gl, vertexShaderText, fragmentShaderText);
     }
 
-    load(gl) {
+    load(gl, vertexShaderText, fragmentShaderText) {
         this.vertexShader = this.compileShader(gl, gl.VERTEX_SHADER, vertexShaderText);
         this.fragmentShader = this.compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderText);
         
@@ -45,18 +52,15 @@ class Shader {
     }
 
     sendUniform(gl) {
-        var uniformSize = gl.getUniformLocation(this.program, "size");
-        gl.uniform2f(uniformSize, W, H);
-
         var invert = false;
 
-        var uniformProjectionMatrix = gl.getUniformLocation(this.program, "pMatrix");
+        var uniformProjectionMatrix = gl.getUniformLocation(this.program, "uProjectionMatrix");
         gl.uniformMatrix4fv(uniformProjectionMatrix, invert, projectionMatrix());
 
-        var uniformViewMatrix = gl.getUniformLocation(this.program, "vMatrix");
+        var uniformViewMatrix = gl.getUniformLocation(this.program, "uViewMatrix");
         gl.uniformMatrix4fv(uniformViewMatrix, invert, viewMatrix());
 
-        var uniformModelMatrix = gl.getUniformLocation(this.program, "mMatrix");        
+        var uniformModelMatrix = gl.getUniformLocation(this.program, "uModelMatrix");        
         gl.uniformMatrix4fv(uniformModelMatrix, invert, modelMatrix());
     }
 

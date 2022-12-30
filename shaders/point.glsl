@@ -1,4 +1,4 @@
-var default_vertexShaderText = `
+var point_vertexShaderText = `
     #version 100
     #pragma language glsl3
     precision highp float;
@@ -8,14 +8,24 @@ var default_vertexShaderText = `
     uniform mat4 uModelMatrix;
     void main() {
         gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.);
+        gl_PointSize = 2.;
     }
 `;
 
-var default_fragmentShaderText = `
+var point_fragmentShaderText = `
     #version 100
     #pragma language glsl3
     precision highp float;
     void main() {
-        gl_FragColor = vec4(1., 1., 1., 1.);
+        vec2 fragmentPosition = 2.0 * gl_PointCoord - 1.0;
+        
+        float distance = length(fragmentPosition);        
+        if (distance <= 1.) {
+            gl_FragColor = vec4(
+                1.-distance,
+                1.-distance,
+                1.-distance,
+                1.-distance);
+        }
     }
 `
