@@ -84,14 +84,31 @@ class Engine {
 
 var engine, sketch;
 
- function toggleFullscreen() {
-    document.documentElement.requestFullscreen?.();
-    document.documentElement.webkitRequestFullscreen?.();
+function requestFullScreen() {
+    var el = document.body;
+
+    // Supports most browsers and their versions.
+    var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen
+        || el.mozRequestFullScreen || el.msRequestFullScreen;
+
+    if (requestMethod) {
+        // Native full screen.
+        requestMethod.call(el);
+    } else if (typeof window.ActiveXObject !== "undefined") {
+        // Older IE.
+        var wscript = new ActiveXObject("WScript.Shell");
+        if (wscript !== null) {
+            wscript.SendKeys("{F11}");
+        }
+    }
+}
+
+function toggleFullscreen() {
     if (document.fullscreenEnabled) {
         if (document.fullscreenElement) {
             document.exitFullscreen();
         } else {
-            document.documentElement.requestFullscreen();
+            requestFullScreen?.();
         }
     } else {
         alert("Fullscreen is not supported!");
