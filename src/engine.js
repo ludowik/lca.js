@@ -1,5 +1,5 @@
-var W=0, H=0;
-var DeltaTime=0, ElapsedTime=0;
+var W = 0, H = 0;
+var DeltaTime = 0, ElapsedTime = 0;
 
 var engine, sketch;
 
@@ -19,7 +19,7 @@ class Engine {
     }
 
     initWebGLContext() {
-        this.canvas = document.querySelector("canvas");
+        this.canvas = document.getElementById("canvas");
         this.resizeCanvas();
 
         let gl = this.canvas.getContext("webgl2", {
@@ -89,21 +89,14 @@ function reload() {
 }
 
 function requestFullScreen() {
-    var el = document.body;
-
-    // Supports most browsers and their versions.
-    var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen
-        || el.mozRequestFullScreen || el.msRequestFullScreen;
+    var body = document.body;
+    var requestMethod = body.requestFullScreen
+        || body.webkitRequestFullScreen
+        || body.mozRequestFullScreen
+        || body.msRequestFullScreen;
 
     if (requestMethod) {
-        // Native full screen.
-        requestMethod.call(el);
-    } else if (typeof window.ActiveXObject !== "undefined") {
-        // Older IE.
-        var wscript = new ActiveXObject("WScript.Shell");
-        if (wscript !== null) {
-            wscript.SendKeys("{F11}");
-        }
+        requestMethod.call(body);
     }
 }
 

@@ -4,6 +4,9 @@ class FrameTime {
         this.endTime = this.beginTime;
         this.deltaTime = 0;
         this.elapsedTime = 0;
+        this.fps = 0;
+        this.delay = 0;
+        this.frameCount = 0;
     }
 
     second() {
@@ -18,6 +21,19 @@ class FrameTime {
         this.endTime = this.second();
         this.deltaTime = this.endTime - this.beginTime;
         this.elapsedTime += this.deltaTime;
+
+        this.frameCount++;
+
+        this.delay += this.deltaTime;
+
+        if (this.delay >= 1) {
+            this.fps = this.frameCount;
+            this.delay = 0;
+            this.frameCount = 0;
+
+            this.fpsUI = document.getElementById("fps");
+            this.fpsUI.innerHTML = this.fps;
+        }
     }
 
     frame() {
