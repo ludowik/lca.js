@@ -2,7 +2,7 @@ var shaders;
 
 class Graphics {
     constructor(gl) {
-        shaders = new Shaders(gl)
+        shaders = new Shaders(gl);
     }
 }
 
@@ -16,7 +16,7 @@ function background() {
 
 function initializeAttributes(shader, array, texCoord) {
     let gl = engine.gl;
-    
+
     shader.use();
 
     let buffer = gl.createBuffer();
@@ -49,6 +49,37 @@ function points(array) {
 
     initializeAttributes(shaders.point, array);
     gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
+}
+
+let __strokeSize = 1;
+function strokeSize(size) {
+    if (size) __strokeSize = size;
+    return __strokeSize;
+}
+
+function line(x1, y1, x2, y2) {
+    let gl = engine.gl;
+
+    pushMatrix();
+
+    translate(x1, y1);
+    scale(x2 - x1, y2 - y1);
+
+    let array = [
+        0, -1, 0,
+        1, -1, 0,
+        1, +1, 0,
+        0, -1, 0,
+        1, +1, 0,
+        0, +1, 0,
+    ];
+
+    initializeAttributes(shaders.line, array);
+    gl.uniform2f(gl.getUniformLocation(shaders.line.program, 'lineSize'), x2 - x1, y2 - y1);
+    gl.uniform1f(gl.getUniformLocation(shaders.line.program, 'strokeSize'), __strokeSize);
+    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+
+    popMatrix();
 }
 
 var CENTER = 'center';
@@ -101,7 +132,7 @@ function ellipseMode(mode) {
 
 function ellipse(x, y, w, h) {
     let gl = engine.gl;
-    
+
     pushMatrix();
 
     if (__ellipseMode === CORNER)
@@ -141,7 +172,8 @@ function text(txt, x, y) {
     else
         translate(x - w / 2, y - h / 2);
 
-    const ctx = document.createElement("canvas").getContext("2d");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
     const metrics = ctx.measureText(txt);
     ctx.canvas.width = metrics.width;
     ctx.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
@@ -149,12 +181,12 @@ function text(txt, x, y) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillText(txt, 0, 0);
 
-    gl.activeTexture(gl.TEXTURE0);
     var textTex = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ctx.canvas);
- 
-    // make sure we can render it even if it's not a power of 2
+    gl.generateMipmap(gl.TEXTURE_2D);
+
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);

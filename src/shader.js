@@ -5,6 +5,9 @@ class Shaders {
         this.rect = new Shader(gl, rect_vertexShaderText, rect_fragmentShaderText);
         this.ellipse = new Shader(gl, ellipse_vertexShaderText, ellipse_fragmentShaderText);
         this.texture = new Shader(gl, texture_vertexShaderText, texture_fragmentShaderText);
+        this.line = new Shader(gl,
+            all_vertexShaderText + line_vertexShaderText,
+            all_fragmentShaderText + line_fragmentShaderText);
     }
 }
 
@@ -16,20 +19,20 @@ class Shader {
     load(gl, vertexShaderText, fragmentShaderText) {
         this.vertexShader = this.compileShader(gl, gl.VERTEX_SHADER, vertexShaderText);
         this.fragmentShader = this.compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderText);
-        
+
         this.program = gl.createProgram();
-        
+
         gl.attachShader(this.program, this.vertexShader);
         gl.attachShader(this.program, this.fragmentShader);
-        
+
         gl.linkProgram(this.program);
-        
+
         gl.detachShader(this.program, this.vertexShader);
         gl.detachShader(this.program, this.fragmentShader);
-        
+
         gl.deleteShader(this.vertexShader);
         gl.deleteShader(this.fragmentShader);
-        
+
         if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
             let linkErrLog = gl.getProgramInfoLog(this.program);
             this.destructor();
@@ -75,7 +78,7 @@ class Shader {
         gl.useProgram(this.program);
         this.sendUniform(gl);
     }
-    
+
     destructor() {
         if (this.program)
             gl.deleteProgram(this.program);

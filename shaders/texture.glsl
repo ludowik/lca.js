@@ -23,4 +23,4 @@ var texture_fragmentShaderText = `
     void main() {
         gl_FragColor = texture2D(uTexture, vTexCoord.xy);
     }
-`
+`;

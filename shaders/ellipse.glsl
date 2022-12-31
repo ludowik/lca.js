@@ -33,4 +33,4 @@ var ellipse_fragmentShaderText = `
             discard;
         }
     }
-`
+`;

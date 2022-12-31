@@ -3,49 +3,55 @@
 
 <html>
 
-	<head>
-	  
-		<link rel="manifest" href="manifest.json">
+<head>
 
-		<title>lca.js</title>
+    <link rel="manifest" href="manifest.json">
 
-	  	<meta charset="utf-8"/>
-		<meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>lca.js</title>
 
-		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-		<meta http-equiv="Pragma" content="no-cache">
-		<meta http-equiv="Expires" content="0">
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
-		<link rel="stylesheet" type="text/css" href="assets/style.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
-	</head>
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
 
-	<body>
+</head>
 
-		<canvas id="canvas">!!! SORRY !!!</canvas>
-		<button id="fullscreenButton" onclick="toggleFullscreen()">fullscreen</button>
-		<button id="reloadButton" onclick="reload()">reload</button>
-		<button id="fps">fps</button>
+<body>
 
-	</body>
-	
-	<script src="lib/stats/stats.js" type="text/javascript"></script>
-	<script src="lib/fengari/fengari-web.js" type="text/javascript"></script>
-	<script src="lib/glmatrix/gl-matrix.js" type="text/javascript"></script>
-	
-	<script src="shaders/default.glsl" type="text/javascript"></script>
-	<script src="shaders/point.glsl" type="text/javascript"></script>
-	<script src="shaders/rect.glsl" type="text/javascript"></script>
-	<script src="shaders/ellipse.glsl" type="text/javascript"></script>
-	<script src="shaders/texture.glsl" type="text/javascript"></script>
-	
-	<script src="src/math.js" type="text/javascript"></script>
-	<script src="src/shader.js" type="text/javascript"></script>
-	<script src="src/transform.js" type="text/javascript"></script>
-	<script src="src/graphics2d.js" type="text/javascript"></script>
-	<script src="src/frameTime.js" type="text/javascript"></script>
-	<script src="src/engine.js" type="text/javascript"></script>
+    <canvas id="canvas">!!! SORRY !!!</canvas>
+    <button id="fullscreenButton" onclick="toggleFullscreen()">fullscreen</button>
+    <button id="reloadButton" onclick="reload()">reload</button>
+    <button id="fps">fps</button>
 
-	<script src="sketch/primitives.js" type="text/javascript"></script>	
-	
+</body>
+
+<script src="lib/dat.gui/dat.gui.js" type="text/javascript"></script>
+<script src="lib/fengari/fengari-web.js" type="text/javascript"></script>
+<script src="lib/glmatrix/gl-matrix.js" type="text/javascript"></script>
+
+<script src="shaders/all.glsl?t=<?=time()?>" type="text/javascript"></script>
+<script src="shaders/default.glsl?t=<?=time()?>" type="text/javascript"></script>
+<script src="shaders/point.glsl?t=<?=time()?>" type="text/javascript"></script>
+<script src="shaders/line.glsl?t=<?=time()?>" type="text/javascript"></script>
+<script src="shaders/rect.glsl?t=<?=time()?>" type="text/javascript"></script>
+<script src="shaders/ellipse.glsl?t=<?=time()?>" type="text/javascript"></script>
+<script src="shaders/texture.glsl?t=<?=time()?>" type="text/javascript"></script>
+
+<script src="src/math.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="src/shader.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="src/transform.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="src/color.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="src/graphics2d.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="src/frameTime.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="src/engine.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="src/sketch.js?t=<?=time()?>" type="text/javascript"></script>
+
+<script src="sketch/line.js?t=<?=time()?>" type="text/javascript"></script>
+<script src="sketch/primitives.js?t=<?=time()?>" type="text/javascript"></script>
+
 </html>

@@ -16,6 +16,8 @@ class Engine {
         H = this.gl.drawingBufferHeight;
 
         this.graphics = new Graphics(this.gl);
+
+        this.gui = new dat.GUI({ name: 'My GUI' });
     }
 
     initWebGLContext() {
@@ -34,8 +36,8 @@ class Engine {
     }
 
     resizeCanvas() {
-        var platform = window.navigator?.userAgentData?.platform;
-        var iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+        var platform = window.navigator?.userAgentData?.platform || window.navigator?.platform;
+        var iosPlatforms = ['iPhone', 'iPad', 'iPod',];
         if (iosPlatforms.indexOf(platform) !== -1) {
             this.canvas.height = window.innerHeight;
             this.canvas.width = window.innerWidth;
@@ -66,6 +68,9 @@ class Engine {
 
             gl.disable(gl.BLEND);
         }
+
+        gl.enable(gl.TEXTURE_2D);
+        gl.enable(gl.TEXTURING);
 
         resetMatrix();
         ortho();
@@ -115,11 +120,11 @@ function toggleFullscreen() {
 window.onload = function () {
     engine = new Engine();
 
-    sketch = new Sketch();
+    sketch = new Lines();
     sketch.setup();
 
     engine.requestRender();
-}
+};
 
 function update(dt) {
     sketch.update(dt);

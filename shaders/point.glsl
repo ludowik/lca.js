@@ -28,4 +28,4 @@ var point_fragmentShaderText = `
                 1.-distance);
         }
     }
-`
+`;
