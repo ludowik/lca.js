@@ -3,7 +3,7 @@ class Color {
         this.r = r;
         this.g = g;
         this.b = b;
-        this.a = a;
+        this.a = a || 1;
     }
 }
 
@@ -12,6 +12,10 @@ function color(r, g, b, a) {
 }
 
 colors = {
-    black: color(0, 0, 0, 1),
-    white: color(1, 1, 1, 1),
+    black: color(0, 0, 0),
+    white: color(1, 1, 1),
+
+    red: color(1, 0, 0),
+    green: color(0, 1, 0),
+    blue: color(0, 0, 1),
 };

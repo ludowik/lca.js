@@ -57,6 +57,13 @@ function strokeSize(size) {
     return __strokeSize;
 }
 
+let __strokeColor;
+function strokeColor(clr) {
+    if (clr) __strokeColor = clr;
+    return __strokeColor; 
+}
+
+let meshLine = {};
 function line(x1, y1, x2, y2) {
     let gl = engine.gl;
 
@@ -77,6 +84,9 @@ function line(x1, y1, x2, y2) {
     initializeAttributes(shaders.line, array);
     gl.uniform2f(gl.getUniformLocation(shaders.line.program, 'lineSize'), x2 - x1, y2 - y1);
     gl.uniform1f(gl.getUniformLocation(shaders.line.program, 'strokeSize'), __strokeSize);
+
+    let clr = __strokeColor || colors.white;
+    gl.uniform4f(gl.getUniformLocation(shaders.line.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();

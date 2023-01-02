@@ -12,7 +12,8 @@ var line_vertexShaderText = `
 `;
 
 var line_fragmentShaderText = `
+    uniform vec4 strokeColor;
     void main() {
-        gl_FragColor = vec4(1., 1., 1., 1.);
+        gl_FragColor = strokeColor;
     }
 `;
