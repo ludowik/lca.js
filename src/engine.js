@@ -18,6 +18,18 @@ class Engine {
         this.graphics = new Graphics(this.gl);
 
         this.gui = new dat.GUI({ name: 'My GUI' });
+
+        this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mousedown", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mousemove", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseup", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseenter", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseover", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseleave", (evt) => { this.mouseEvent(evt); });
+    }
+
+    mouseEvent(evt) {
     }
 
     initWebGLContext() {
@@ -69,9 +81,6 @@ class Engine {
             gl.disable(gl.BLEND);
         }
 
-        gl.enable(gl.TEXTURE_2D);
-        gl.enable(gl.TEXTURING);
-
         resetMatrix();
         ortho();
 
@@ -117,10 +126,14 @@ function toggleFullscreen() {
     }
 }
 
+function frameRate() {
+    return engine.frameTime.fps;
+}
+
 window.onload = function () {
     engine = new Engine();
 
-    sketch = new Lines();
+    sketch = new ComputePI();
     sketch.setup();
 
     engine.requestRender();

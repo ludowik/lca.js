@@ -36,12 +36,25 @@ function initializeAttributes(shader, array, texCoord) {
     }
 }
 
+var meshPoint;
 function point(x, y, z = 0) {
     let gl = engine.gl;
 
-    let array = [x, y, z];
-    initializeAttributes(shaders.point, array);
+    pushMatrix();
+
+    let array;
+    if (!meshPoint) {
+        meshPoint = new Mesh();
+        array = [x, y, z];
+        meshPoint.initializeAttributes(shaders.point, array);
+    } else {
+        array = [x, y, z];
+        meshPoint.updateAttributes(shaders.point, array);
+    }
+
     gl.drawArrays(gl.POINTS, 0, array.length / 3);
+
+    popMatrix();
 }
 
 function points(array) {
@@ -58,12 +71,26 @@ function strokeSize(size) {
 }
 
 let __strokeColor;
-function strokeColor(clr) {
+function stroke(clr) {
     if (clr) __strokeColor = clr;
-    return __strokeColor; 
+    return __strokeColor;
 }
 
-let meshLine = {};
+function noStroke() {
+    __strokeColor = null;
+}
+
+let __fillColor;
+function fill(clr) {
+    if (clr) __fillColor = clr;
+    return __fillColor;
+}
+
+function noFill() {
+    __fillColor = null;
+}
+
+let meshLine;
 function line(x1, y1, x2, y2) {
     let gl = engine.gl;
 
@@ -72,22 +99,28 @@ function line(x1, y1, x2, y2) {
     translate(x1, y1);
     scale(x2 - x1, y2 - y1);
 
-    let array = [
-        0, -1, 0,
-        1, -1, 0,
-        1, +1, 0,
-        0, -1, 0,
-        1, +1, 0,
-        0, +1, 0,
-    ];
+    if (!meshLine) {
+        meshLine = new Mesh();
+        let array = [
+            0, -1, 0,
+            1, -1, 0,
+            1, +1, 0,
+            0, -1, 0,
+            1, +1, 0,
+            0, +1, 0,
+        ];
 
-    initializeAttributes(shaders.line, array);
+        meshLine.initializeAttributes(shaders.line, array);
+    } else {
+        meshLine.useAttributes();
+    }
+
     gl.uniform2f(gl.getUniformLocation(shaders.line.program, 'lineSize'), x2 - x1, y2 - y1);
     gl.uniform1f(gl.getUniformLocation(shaders.line.program, 'strokeSize'), __strokeSize);
 
     let clr = __strokeColor || colors.white;
     gl.uniform4f(gl.getUniformLocation(shaders.line.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
-    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }
@@ -166,10 +199,32 @@ function ellipse(x, y, w, h) {
     popMatrix();
 }
 
+let __shape;
+function beginShape() { 
+    __shape = [];
+}
+
+function vertex(x, y, z=0) {
+    __shape.push(x, y, z);
+}
+
+function endShape() { 
+    points(__shape);
+}
+
+function fontName() { }
+function fontSize() { }
+
 let __textMode = CORNER;
 function textMode(mode) {
     if (mode) __textMode = mode;
     return __textMode;
+}
+
+var LEFT = 'left';
+
+function textAlign() {
+
 }
 
 function text(txt, x, y) {
