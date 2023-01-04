@@ -200,15 +200,15 @@ function ellipse(x, y, w, h) {
 }
 
 let __shape;
-function beginShape() { 
+function beginShape() {
     __shape = [];
 }
 
-function vertex(x, y, z=0) {
+function vertex(x, y, z = 0) {
     __shape.push(x, y, z);
 }
 
-function endShape() { 
+function endShape() {
     points(__shape);
 }
 
@@ -227,6 +227,7 @@ function textAlign() {
 
 }
 
+let meshText;
 function text(txt, x, y) {
     let gl = engine.gl;
 
@@ -236,27 +237,35 @@ function text(txt, x, y) {
         translate(x, y);
     else
         translate(x - w / 2, y - h / 2);
+ 
+    if (!meshText) {
+        const canvas = document.createElement("canvas");
+        meshText = {
+            canvas: canvas,
+            context: canvas.getContext("2d"),
+        };
+    }
 
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const metrics = ctx.measureText(txt);
-    ctx.canvas.width = metrics.width;
-    ctx.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
-    ctx.fillStyle = "red";
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillText(txt, 0, 0);
+    const context = meshText.context;
+    const metrics = context.measureText(txt);
+    context.canvas.width = metrics.width;
+    context.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    context.fillStyle = "white";
+    context.font = '12px serif';
+    context.fillText(txt, 0, context.canvas.height);
 
     var textTex = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ctx.canvas);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, context.canvas);
     gl.generateMipmap(gl.TEXTURE_2D);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    scale(ctx.canvas.width, ctx.canvas.height);
+    scale(context.canvas.width, -context.canvas.height);
 
     let array = [
         0, 0, 0,
