@@ -17,12 +17,12 @@ class Engine {
 
         this.graphics = new Graphics(this.gl);
 
-        this.gui = new dat.GUI({
+        this.gui = new dat.gui.GUI({
             name: 'Parameter',
-            //autoPlace: false,
         });
-        //this.gui.domElement.id = 'gui';
-        this.params = {}
+        this.gui.domElement.id = 'gui';
+
+        this.params = {};
 
         this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });

@@ -213,7 +213,14 @@ function endShape() {
 }
 
 function fontName() { }
-function fontSize() { }
+
+let __fontSize = 16;
+function fontSize(size) {
+    if (size) {
+        __fontSize = size
+    }
+    return  __fontSize;
+}
 
 let __textMode = CORNER;
 function textMode(mode) {
@@ -248,43 +255,50 @@ function text(txt, x, y) {
 
     const context = meshText.context;
     
-    context.fillStyle = "white";
-    context.font = '12px serif';
+    const fontColor = 'white';
+    const fontRef = fontSize() + 'px cursive';
+
+    context.fillStyle = fontColor;
+    context.font = fontRef;
     const metrics = context.measureText(txt);
 
     context.canvas.width = metrics.width;
     context.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-    context.fillStyle = "white";
-    context.font = '12px serif';
+    context.fillStyle = fontColor;
+    context.strokeStyle = fontColor;
+    context.font = fontRef;
     context.fillText(txt, 0, context.canvas.height);
 
     var textTex = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, context.canvas);
     gl.generateMipmap(gl.TEXTURE_2D);
 
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-
+    gl.activeTexture(gl.TEXTURE0);
+    
     if (getOrigin() === TOP_LEFT) {        
         scale(context.canvas.width, context.canvas.height);
     } else {
         scale(context.canvas.width, -context.canvas.height);
-        //translate(0, context.canvas.height);
     }
+
+    let w = 1;
+    let h = 1;
 
     let array = [
         0, 0, 0,
-        1, 0, 0,
-        1, 1, 0,
+        w, 0, 0,
+        w, h, 0,
         0, 0, 0,
-        1, 1, 0,
-        0, 1, 0];
+        w, h, 0,
+        0, h, 0];
 
     shaders.texture.texture = textTex;
 
