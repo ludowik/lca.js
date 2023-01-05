@@ -247,10 +247,15 @@ function text(txt, x, y) {
     }
 
     const context = meshText.context;
+    
+    context.fillStyle = "white";
+    context.font = '12px serif';
     const metrics = context.measureText(txt);
+
     context.canvas.width = metrics.width;
     context.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
     context.fillStyle = "white";
     context.font = '12px serif';
     context.fillText(txt, 0, context.canvas.height);
@@ -265,7 +270,13 @@ function text(txt, x, y) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    scale(context.canvas.width, -context.canvas.height);
+
+    if (getOrigin() === TOP_LEFT) {        
+        scale(context.canvas.width, context.canvas.height);
+    } else {
+        scale(context.canvas.width, -context.canvas.height);
+        //translate(0, context.canvas.height);
+    }
 
     let array = [
         0, 0, 0,

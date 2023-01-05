@@ -17,7 +17,12 @@ class Engine {
 
         this.graphics = new Graphics(this.gl);
 
-        this.gui = new dat.GUI({ name: 'My GUI' });
+        this.gui = new dat.GUI({
+            name: 'Parameter',
+            //autoPlace: false,
+        });
+        //this.gui.domElement.id = 'gui';
+        this.params = {}
 
         this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
@@ -84,6 +89,11 @@ class Engine {
         resetMatrix();
         ortho();
 
+        if (getOrigin() == TOP_LEFT) {
+            translate(0, H);
+            scale(1, -1);
+        }
+
         draw();
 
         this.requestRender();
@@ -130,8 +140,17 @@ function frameRate() {
     return engine.frameTime.fps;
 }
 
+var TOP_LEFT = 'top_left';
+var BOTTOM_LEFT = 'bottom_left';
+function getOrigin() {
+    return engine.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
+}
+
 window.onload = function () {
     engine = new Engine();
+    engine.params.topLeft = true;
+
+    engine.gui.add(engine.params, 'topLeft');
 
     sketch = new ComputePI();
     sketch.setup();
