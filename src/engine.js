@@ -39,9 +39,13 @@ class Engine {
 
     initWebGLContext() {
         this.canvas = document.getElementById("canvas");
-        this.resizeCanvas();
+        this.resizeCanvas(this.canvas);
+        this.canvasContext = this.canvas.getContext('bitmaprenderer');
 
-        let gl = this.canvas.getContext("webgl2", {
+        this.offscreen = new OffscreenCanvas(0, 0);
+        this.resizeCanvas(this.offscreen);
+
+        let gl = this.offscreen.getContext("webgl2", {
             preserveDrawingBuffer: true
         });
 
@@ -52,15 +56,15 @@ class Engine {
         console.log("WebGL context not available");
     }
 
-    resizeCanvas() {
+    resizeCanvas(canvas) {
         var platform = window.navigator?.userAgentData?.platform || window.navigator?.platform;
         var iosPlatforms = ['iPhone', 'iPad', 'iPod',];
         if (iosPlatforms.indexOf(platform) !== -1) {
-            this.canvas.height = window.innerHeight;
-            this.canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
         } else {
-            this.canvas.height = window.innerHeight;
-            this.canvas.width = window.innerHeight * 9 / 16;
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerHeight * 9 / 16;
         }
     }
 
@@ -72,7 +76,7 @@ class Engine {
 
         let gl = this.gl;
 
-        gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        gl.viewport(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
 
         if (true) {
             gl.disable(gl.DEPTH_TEST);
@@ -96,6 +100,8 @@ class Engine {
 
         draw();
 
+        this.canvasContext.transferFromImageBitmap(this.offscreen.transferToImageBitmap());
+
         this.requestRender();
     }
 
@@ -105,6 +111,13 @@ class Engine {
             this.frameTime.frame();
         });
     }
+}
+
+function getContext() {
+    return engine.gl;
+}
+
+function setContext() {
 }
 
 function reload() {
@@ -152,7 +165,7 @@ window.onload = function () {
 
     engine.gui.add(engine.params, 'topLeft');
 
-    sketch = new ComputePI();
+    sketch = new CirclePacking();
     sketch.setup();
 
     engine.requestRender();

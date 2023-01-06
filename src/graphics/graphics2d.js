@@ -7,7 +7,7 @@ class Graphics {
 }
 
 function background() {
-    let gl = engine.gl;
+    let gl = getContext();
 
     gl.clearColor(0.1, 0.1, 0.1, 1.0);
     gl.clearDepth(1.0);
@@ -15,7 +15,7 @@ function background() {
 }
 
 function initializeAttributes(shader, array, texCoord) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     shader.use();
 
@@ -38,7 +38,7 @@ function initializeAttributes(shader, array, texCoord) {
 
 var meshPoint;
 function point(x, y, z = 0) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -58,7 +58,7 @@ function point(x, y, z = 0) {
 }
 
 function points(array) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     initializeAttributes(shaders.point, array);
     gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
@@ -92,7 +92,7 @@ function noFill() {
 
 let meshLine;
 function line(x1, y1, x2, y2) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -135,7 +135,7 @@ function rectMode(mode) {
 }
 
 function rect(x, y, w, h) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -174,7 +174,7 @@ function ellipseMode(mode) {
 }
 
 function ellipse(x, y, w, h) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -236,7 +236,7 @@ function textAlign() {
 
 let meshText;
 function text(txt, x, y) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -256,7 +256,7 @@ function text(txt, x, y) {
     const context = meshText.context;
     
     const fontColor = 'white';
-    const fontRef = fontSize() + 'px cursive';
+    const fontRef = fontSize() + 'px monospace';
 
     context.fillStyle = fontColor;
     context.font = fontRef;

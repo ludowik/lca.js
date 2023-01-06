@@ -39,6 +39,8 @@ button {
     text-decoration: none;
 
     text-transform: uppercase;
+
+    z-index: 100;
 }
 
 button:hover, select:hover, a:hover {

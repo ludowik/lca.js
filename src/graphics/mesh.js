@@ -1,6 +1,6 @@
 class Mesh {
     initializeAttributes(shader, array, texCoord) {
-        let gl = engine.gl;
+        let gl = getContext();
 
         this.shader = shader;
         this.buffers = {
@@ -28,7 +28,7 @@ class Mesh {
     }
 
     updateAttributes(shader, array, texCoord) {
-        let gl = engine.gl;
+        let gl = getContext();
 
         this.shader = shader;
         this.buffers = {
@@ -56,7 +56,7 @@ class Mesh {
     }
 
     useAttributes() {
-        let gl = engine.gl;
+        let gl = getContext();
         this.shader.use();
     }
 }

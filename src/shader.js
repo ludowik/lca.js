@@ -74,7 +74,7 @@ class Shader {
     }
 
     use() {
-        let gl = engine.gl;
+        let gl = getContext();
         gl.useProgram(this.program);
         this.sendUniform(gl);
     }
