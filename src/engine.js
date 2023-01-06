@@ -165,7 +165,7 @@ window.onload = function () {
 
     engine.gui.add(engine.params, 'topLeft');
 
-    sketch = new CirclePacking();
+    sketch = new ComputePI();
     sketch.setup();
 
     engine.requestRender();
