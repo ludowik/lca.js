@@ -5,6 +5,10 @@ class Color {
         this.b = b;
         this.a = a || 1;
     }
+
+    static random() {
+        return new Color(random(), random(), random(), 1);
+    }
 }
 
 function color(r, g, b, a) {

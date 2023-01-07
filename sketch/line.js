@@ -10,7 +10,7 @@ class Lines extends Sketch {
         background(colors.black);
 
         strokeSize(1);
-        strokeColor(colors.red);
+        stroke(colors.red);
 
         let w = W / 4;
         let h = W / 4;

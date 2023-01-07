@@ -17,14 +17,35 @@ class Engine {
 
         this.graphics = new Graphics(this.gl);
 
-        this.gui = new dat.GUI({ name: 'My GUI' });
+        this.gui = new dat.gui.GUI({
+            name: 'Parameter',
+        });
+        this.gui.domElement.id = 'gui';
+
+        this.params = {};
+
+        this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mousedown", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mousemove", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseup", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseenter", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseover", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("mouseleave", (evt) => { this.mouseEvent(evt); });
+    }
+
+    mouseEvent(evt) {
     }
 
     initWebGLContext() {
         this.canvas = document.getElementById("canvas");
-        this.resizeCanvas();
+        this.resizeCanvas(this.canvas);
+        this.canvasContext = this.canvas.getContext('bitmaprenderer');
 
-        let gl = this.canvas.getContext("webgl2", {
+        this.offscreen = new OffscreenCanvas(0, 0);
+        this.resizeCanvas(this.offscreen);
+
+        let gl = this.offscreen.getContext("webgl2", {
             preserveDrawingBuffer: true
         });
 
@@ -35,15 +56,15 @@ class Engine {
         console.log("WebGL context not available");
     }
 
-    resizeCanvas() {
+    resizeCanvas(canvas) {
         var platform = window.navigator?.userAgentData?.platform || window.navigator?.platform;
         var iosPlatforms = ['iPhone', 'iPad', 'iPod',];
         if (iosPlatforms.indexOf(platform) !== -1) {
-            this.canvas.height = window.innerHeight;
-            this.canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
         } else {
-            this.canvas.height = window.innerHeight;
-            this.canvas.width = window.innerHeight * 9 / 16;
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerHeight * 9 / 16;
         }
     }
 
@@ -55,7 +76,7 @@ class Engine {
 
         let gl = this.gl;
 
-        gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        gl.viewport(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
 
         if (true) {
             gl.disable(gl.DEPTH_TEST);
@@ -69,13 +90,17 @@ class Engine {
             gl.disable(gl.BLEND);
         }
 
-        gl.enable(gl.TEXTURE_2D);
-        gl.enable(gl.TEXTURING);
-
         resetMatrix();
         ortho();
 
+        if (getOrigin() == TOP_LEFT) {
+            translate(0, H);
+            scale(1, -1);
+        }
+
         draw();
+
+        this.canvasContext.transferFromImageBitmap(this.offscreen.transferToImageBitmap());
 
         this.requestRender();
     }
@@ -86,6 +111,13 @@ class Engine {
             this.frameTime.frame();
         });
     }
+}
+
+function getContext() {
+    return engine.gl;
+}
+
+function setContext() {
 }
 
 function reload() {
@@ -117,12 +149,25 @@ function toggleFullscreen() {
     }
 }
 
+function frameRate() {
+    return engine.frameTime.fps;
+}
+
+var TOP_LEFT = 'top_left';
+var BOTTOM_LEFT = 'bottom_left';
+function getOrigin() {
+    return engine.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
+}
+
 window.onload = function () {
     var sketches = [
         Lines
     ];
 
     engine = new Engine();
+    engine.params.topLeft = true;
+
+    engine.gui.add(engine.params, 'topLeft');
 
     sketch = new sketches[0]();
     sketch.setup();

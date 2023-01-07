@@ -7,7 +7,7 @@ class Graphics {
 }
 
 function background() {
-    let gl = engine.gl;
+    let gl = getContext();
 
     gl.clearColor(0.1, 0.1, 0.1, 1.0);
     gl.clearDepth(1.0);
@@ -15,7 +15,7 @@ function background() {
 }
 
 function initializeAttributes(shader, array, texCoord) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     shader.use();
 
@@ -36,16 +36,29 @@ function initializeAttributes(shader, array, texCoord) {
     }
 }
 
+var meshPoint;
 function point(x, y, z = 0) {
-    let gl = engine.gl;
+    let gl = getContext();
 
-    let array = [x, y, z];
-    initializeAttributes(shaders.point, array);
+    pushMatrix();
+
+    let array;
+    if (!meshPoint) {
+        meshPoint = new Mesh();
+        array = [x, y, z];
+        meshPoint.initializeAttributes(shaders.point, array);
+    } else {
+        array = [x, y, z];
+        meshPoint.updateAttributes(shaders.point, array);
+    }
+
     gl.drawArrays(gl.POINTS, 0, array.length / 3);
+
+    popMatrix();
 }
 
 function points(array) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     initializeAttributes(shaders.point, array);
     gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
@@ -58,36 +71,56 @@ function strokeSize(size) {
 }
 
 let __strokeColor;
-function strokeColor(clr) {
+function stroke(clr) {
     if (clr) __strokeColor = clr;
-    return __strokeColor; 
+    return __strokeColor;
 }
 
-let meshLine = {};
+function noStroke() {
+    __strokeColor = null;
+}
+
+let __fillColor;
+function fill(clr) {
+    if (clr) __fillColor = clr;
+    return __fillColor;
+}
+
+function noFill() {
+    __fillColor = null;
+}
+
+let meshLine;
 function line(x1, y1, x2, y2) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
     translate(x1, y1);
     scale(x2 - x1, y2 - y1);
 
-    let array = [
-        0, -1, 0,
-        1, -1, 0,
-        1, +1, 0,
-        0, -1, 0,
-        1, +1, 0,
-        0, +1, 0,
-    ];
+    if (!meshLine) {
+        meshLine = new Mesh();
+        let array = [
+            0, -1, 0,
+            1, -1, 0,
+            1, +1, 0,
+            0, -1, 0,
+            1, +1, 0,
+            0, +1, 0,
+        ];
 
-    initializeAttributes(shaders.line, array);
+        meshLine.initializeAttributes(shaders.line, array);
+    } else {
+        meshLine.useAttributes();
+    }
+
     gl.uniform2f(gl.getUniformLocation(shaders.line.program, 'lineSize'), x2 - x1, y2 - y1);
     gl.uniform1f(gl.getUniformLocation(shaders.line.program, 'strokeSize'), __strokeSize);
 
     let clr = __strokeColor || colors.white;
     gl.uniform4f(gl.getUniformLocation(shaders.line.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
-    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }
@@ -102,7 +135,7 @@ function rectMode(mode) {
 }
 
 function rect(x, y, w, h) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -141,7 +174,7 @@ function ellipseMode(mode) {
 }
 
 function ellipse(x, y, w, h) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -166,14 +199,44 @@ function ellipse(x, y, w, h) {
     popMatrix();
 }
 
+let __shape;
+function beginShape() {
+    __shape = [];
+}
+
+function vertex(x, y, z = 0) {
+    __shape.push(x, y, z);
+}
+
+function endShape() {
+    points(__shape);
+}
+
+function fontName() { }
+
+let __fontSize = 16;
+function fontSize(size) {
+    if (size) {
+        __fontSize = size
+    }
+    return  __fontSize;
+}
+
 let __textMode = CORNER;
 function textMode(mode) {
     if (mode) __textMode = mode;
     return __textMode;
 }
 
+var LEFT = 'left';
+
+function textAlign() {
+
+}
+
+let meshText;
 function text(txt, x, y) {
-    let gl = engine.gl;
+    let gl = getContext();
 
     pushMatrix();
 
@@ -181,35 +244,61 @@ function text(txt, x, y) {
         translate(x, y);
     else
         translate(x - w / 2, y - h / 2);
+ 
+    if (!meshText) {
+        const canvas = document.createElement("canvas");
+        meshText = {
+            canvas: canvas,
+            context: canvas.getContext("2d"),
+        };
+    }
 
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const metrics = ctx.measureText(txt);
-    ctx.canvas.width = metrics.width;
-    ctx.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
-    ctx.fillStyle = "red";
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillText(txt, 0, 0);
+    const context = meshText.context;
+    
+    const fontColor = 'white';
+    const fontRef = fontSize() + 'px monospace';
+
+    context.fillStyle = fontColor;
+    context.font = fontRef;
+    const metrics = context.measureText(txt);
+
+    context.canvas.width = metrics.width;
+    context.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+    context.fillStyle = fontColor;
+    context.strokeStyle = fontColor;
+    context.font = fontRef;
+    context.fillText(txt, 0, context.canvas.height);
 
     var textTex = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ctx.canvas);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, context.canvas);
     gl.generateMipmap(gl.TEXTURE_2D);
 
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    scale(ctx.canvas.width, ctx.canvas.height);
+    gl.activeTexture(gl.TEXTURE0);
+    
+    if (getOrigin() === TOP_LEFT) {        
+        scale(context.canvas.width, context.canvas.height);
+    } else {
+        scale(context.canvas.width, -context.canvas.height);
+    }
+
+    let w = 1;
+    let h = 1;
 
     let array = [
         0, 0, 0,
-        1, 0, 0,
-        1, 1, 0,
+        w, 0, 0,
+        w, h, 0,
         0, 0, 0,
-        1, 1, 0,
-        0, 1, 0];
+        w, h, 0,
+        0, h, 0];
 
     shaders.texture.texture = textTex;
 
