@@ -118,9 +118,13 @@ function toggleFullscreen() {
 }
 
 window.onload = function () {
+    var sketches = [
+        Lines
+    ];
+
     engine = new Engine();
 
-    sketch = new Lines();
+    sketch = new sketches[0]();
     sketch.setup();
 
     engine.requestRender();
