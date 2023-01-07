@@ -3,6 +3,10 @@ class Sketch {
         this.params = {};
     }
 
+    toString() {
+        return this.constructor.name;
+    }
+
     setup() { }
     update() { }
     draw() { }
