@@ -159,14 +159,29 @@ function getOrigin() {
     return engine.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
 }
 
+function setSketch(name) {
+    sketch = eval('new ' + name + '()');
+    sketch.setup();
+}
+
 window.onload = function () {
     engine = new Engine();
+
+    engine.params.sketches = [
+        'Lines',
+        'ComputePI',
+        'Primitives',
+    ];
+    engine.params.sketchName = 'Lines';
+
     engine.params.topLeft = true;
 
     engine.gui.add(engine.params, 'topLeft');
+    engine.gui.add(engine.params, 'sketchName', engine.params.sketches).onChange((controller) => {
+        setSketch(engine.params.sketchName);
+    });
 
-    sketch = new ComputePI();
-    sketch.setup();
+    setSketch(engine.params.sketchName);
 
     engine.requestRender();
 };
