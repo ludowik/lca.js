@@ -21,6 +21,11 @@ canvas {
     padding: 0px;
 }
 
+div {
+    position: relative;
+    z-index: 100;
+}
+
 button {
     position: relative;
     padding: 8px 12px;

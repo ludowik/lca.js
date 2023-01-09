@@ -24,10 +24,12 @@
 <body>
 
     <canvas id="canvas">!!! SORRY !!!</canvas>
-    
+
     <button id="fullscreenButton" onclick="toggleFullscreen()">fullscreen</button>
     <button id="reloadButton" onclick="reload()">reload</button>
     <button id="fps">fps</button>
+
+    <div id="log">hello</div>
 
 </body>
 
@@ -35,30 +37,6 @@
 <script src="lib/fengari/fengari-web.js" type="text/javascript"></script>
 <script src="lib/glmatrix/gl-matrix.js" type="text/javascript"></script>
 
-<script src="shaders/all.glsl?t=<?=time()?>" type="text/javascript"></script>
-<script src="shaders/default.glsl?t=<?=time()?>" type="text/javascript"></script>
-<script src="shaders/point.glsl?t=<?=time()?>" type="text/javascript"></script>
-<script src="shaders/line.glsl?t=<?=time()?>" type="text/javascript"></script>
-<script src="shaders/rect.glsl?t=<?=time()?>" type="text/javascript"></script>
-<script src="shaders/ellipse.glsl?t=<?=time()?>" type="text/javascript"></script>
-<script src="shaders/texture.glsl?t=<?=time()?>" type="text/javascript"></script>
-
-<script src="src/math.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/shader.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/transform.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/color.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/graphics/graphics2d.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/graphics/mesh.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/frameTime.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/engine.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/sketch.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="src/range.js?t=<?=time()?>" type="text/javascript"></script>
-
-<script src="sketch/line.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="sketch/primitives.js?t=<?=time()?>" type="text/javascript"></script>
-<script src="sketch/circle_packing.js?t=<?=time()?" type="text/javascript"></script>
-<script src="sketch/circle_recursive.js?t=<?=time()?" type="text/javascript"></script>
-<script src="sketch/circle_sizing.js?t=<?=time()?" type="text/javascript"></script>
-<script src="sketch/pi.js?t=<?=time()?" type="text/javascript"></script>
+<script src="src/load.js" type="text/javascript"></script>
 
 </html>
