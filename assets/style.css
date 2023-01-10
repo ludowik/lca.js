@@ -23,7 +23,6 @@ canvas {
 
 div {
     position: relative;
-    z-index: 100;
 }
 
 button {

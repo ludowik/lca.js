@@ -33,7 +33,7 @@ let shaderFiles = [
 let sketchFiles = [
     'lines.js',
     'compute_pi.js',
-    'primitive.js',
+    'primitives.js',
 ];
 
 include('src/graphics/shaders', shaderFiles);
