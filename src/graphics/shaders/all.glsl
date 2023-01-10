@@ -14,4 +14,5 @@ var all_fragmentShaderText = `
     #version 100
     #pragma language glsl3
     precision highp float;
+    varying vec3 vTexCoord;
 `;

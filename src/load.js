@@ -11,6 +11,7 @@ let scriptFiles = [
     'math.js',
     'transform.js',
     'color.js',
+    'vec2.js',
     'graphics/graphics2d.js',
     'graphics/shader.js',
     'graphics/mesh.js',
@@ -34,6 +35,7 @@ let sketchFiles = [
     'lines.js',
     'compute_pi.js',
     'primitives.js',
+    'circle_packing.js',
 ];
 
 include('src/graphics/shaders', shaderFiles);
