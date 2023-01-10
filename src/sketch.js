@@ -1,6 +1,5 @@
-class Sketch {
+class Entity {
     constructor() {
-        this.params = {};
     }
 
     toString() {
@@ -8,6 +7,19 @@ class Sketch {
     }
 
     setup() { }
-    update() { }
+
+    update(dt) { 
+        if (this.step) {
+            return this.step(dt);
+        }
+    }
+    
     draw() { }
+} 
+
+class Sketch extends Entity {
+    constructor() {
+        super();
+        this.params = {};
+    }
 }

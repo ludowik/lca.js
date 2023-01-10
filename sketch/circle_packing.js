@@ -41,7 +41,8 @@ class CirclePacking extends Sketch {
         this.circles.push(newCircle);
 
         this.params.N = this.circles.length;
-        this.gui.updateDisplay('N');
+        // TOFIX
+        // this.gui.updateDisplay('N');
     }
 
     step(dt) {
@@ -66,7 +67,7 @@ class CirclePacking extends Sketch {
     draw() {
         for (let circle of this.circles) {
             if (circle.state !== 'dead') {
-                circle.render();
+                circle.draw();
             }
         }
 
@@ -91,9 +92,9 @@ class CirclePacking extends Sketch {
 class Circle {
     constructor(x, y, radius) {
         this.position = x && y ? createVector(x, y) : randomPoint();
-        this.radiusTarget = radius || random(minSize / 20);
+        this.radiusTarget = radius || randomInt(minSize / 20);
         this.radius = 0;
-        this.clr = randomColor();
+        this.clr = Color.random();
         this.state = 'alive';
     }
 

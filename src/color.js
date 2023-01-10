@@ -15,7 +15,14 @@ function color(r, g, b, a) {
     return new Color(r, g, b, a);
 }
 
-colors = {
+var HSB = 'hsb';
+var RGB = 'rgb';
+
+function colorMode() {
+    // TODO
+}
+
+var colors = {
     black: color(0, 0, 0),
     white: color(1, 1, 1),
 

@@ -120,6 +120,7 @@ function line(x1, y1, x2, y2) {
 
     let clr = __strokeColor || colors.white;
     gl.uniform4f(gl.getUniformLocation(shaders.line.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
@@ -194,6 +195,13 @@ function ellipse(x, y, w, h) {
         0, 1, 0];
 
     initializeAttributes(shaders.ellipse, array, array);
+
+    let clr = __strokeColor || colors.white;
+    gl.uniform4f(gl.getUniformLocation(shaders.line.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+
+    clr = __fillColor || colors.white;
+    gl.uniform4f(gl.getUniformLocation(shaders.line.program, '__fillColor'), clr.r, clr.g, clr.b, clr.a);
+
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();

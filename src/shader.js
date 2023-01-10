@@ -3,7 +3,9 @@ class Shaders {
         this.default = new Shader(gl, default_vertexShaderText, default_fragmentShaderText);
         this.point = new Shader(gl, point_vertexShaderText, point_fragmentShaderText);
         this.rect = new Shader(gl, rect_vertexShaderText, rect_fragmentShaderText);
-        this.ellipse = new Shader(gl, ellipse_vertexShaderText, ellipse_fragmentShaderText);
+        this.ellipse = new Shader(gl, 
+            all_vertexShaderText + ellipse_vertexShaderText, 
+            all_fragmentShaderText + ellipse_fragmentShaderText);
         this.texture = new Shader(gl, texture_vertexShaderText, texture_fragmentShaderText);
         this.line = new Shader(gl,
             all_vertexShaderText + line_vertexShaderText,
