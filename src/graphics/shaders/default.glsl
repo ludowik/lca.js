@@ -3,6 +3,7 @@ var default_vertexShaderText = `
     #pragma language glsl3
     precision highp float;
     attribute vec3 aPosition;
+    attribute vec3 aTexCoord;
     uniform mat4 uProjectionMatrix;
     uniform mat4 uViewMatrix;
     uniform mat4 uModelMatrix;

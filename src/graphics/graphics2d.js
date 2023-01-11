@@ -78,6 +78,7 @@ function stroke(clr) {
 
 function noStroke() {
     __strokeColor = null;
+    __strokeSize = 0;
 }
 
 let __fillColor;
@@ -120,6 +121,7 @@ function line(x1, y1, x2, y2) {
 
     let clr = __strokeColor || colors.white;
     gl.uniform4f(gl.getUniformLocation(shaders.line.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
@@ -194,6 +196,16 @@ function ellipse(x, y, w, h) {
         0, 1, 0];
 
     initializeAttributes(shaders.ellipse, array, array);
+
+    let clr = __strokeColor || colors.white;
+    gl.uniform4f(gl.getUniformLocation(shaders.ellipse.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+
+    clr = __fillColor || colors.white;
+    gl.uniform4f(gl.getUniformLocation(shaders.ellipse.program, 'fillColor'), clr.r, clr.g, clr.b, clr.a);
+
+    gl.uniform2f(gl.getUniformLocation(shaders.ellipse.program, 'size'), w, h);
+    gl.uniform1f(gl.getUniformLocation(shaders.ellipse.program, 'strokeSize'), __strokeSize);
+
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();
@@ -217,9 +229,9 @@ function fontName() { }
 let __fontSize = 16;
 function fontSize(size) {
     if (size) {
-        __fontSize = size
+        __fontSize = size;
     }
-    return  __fontSize;
+    return __fontSize;
 }
 
 let __textMode = CORNER;
@@ -231,7 +243,6 @@ function textMode(mode) {
 var LEFT = 'left';
 
 function textAlign() {
-
 }
 
 let meshText;
@@ -244,7 +255,7 @@ function text(txt, x, y) {
         translate(x, y);
     else
         translate(x - w / 2, y - h / 2);
- 
+
     if (!meshText) {
         const canvas = document.createElement("canvas");
         meshText = {
@@ -254,7 +265,7 @@ function text(txt, x, y) {
     }
 
     const context = meshText.context;
-    
+
     const fontColor = 'white';
     const fontRef = fontSize() + 'px monospace';
 
@@ -282,8 +293,8 @@ function text(txt, x, y) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
     gl.activeTexture(gl.TEXTURE0);
-    
-    if (getOrigin() === TOP_LEFT) {        
+
+    if (getOrigin() === TOP_LEFT) {
         scale(context.canvas.width, context.canvas.height);
     } else {
         scale(context.canvas.width, -context.canvas.height);

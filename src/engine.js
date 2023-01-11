@@ -1,7 +1,10 @@
 var W = 0, H = 0;
 var DeltaTime = 0, ElapsedTime = 0;
+var minSize, minSizeFont;
 
 var engine, sketch;
+
+var offscreenMode = 'canvas';
 
 class Engine {
     constructor() {
@@ -15,14 +18,19 @@ class Engine {
         W = this.gl.drawingBufferWidth;
         H = this.gl.drawingBufferHeight;
 
+        minSize = Math.min(W, H);
+        minSizeFont = minSize / 24;
+
         this.graphics = new Graphics(this.gl);
 
+        this.params = {};
         this.gui = new dat.gui.GUI({
             name: 'Parameter',
         });
         this.gui.domElement.id = 'gui';
 
-        this.params = {};
+        this.gui.remember(this.params);
+        this.gui.useLocalStorage = true;
 
         this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
@@ -40,9 +48,15 @@ class Engine {
     initWebGLContext() {
         this.canvas = document.getElementById("canvas");
         this.resizeCanvas(this.canvas);
-        this.canvasContext = this.canvas.getContext('bitmaprenderer');
 
-        this.offscreen = new OffscreenCanvas(0, 0);
+        if (offscreenMode == 'bitmap') {
+            this.canvasContext = this.canvas.getContext('bitmaprenderer');
+            this.offscreen = new OffscreenCanvas(0, 0);
+        } else {
+            this.canvasContext = this.canvas.getContext('2d');
+            this.offscreen = document.createElement("canvas");
+        }
+
         this.resizeCanvas(this.offscreen);
 
         let gl = this.offscreen.getContext("webgl2", {
@@ -100,7 +114,11 @@ class Engine {
 
         draw();
 
-        this.canvasContext.transferFromImageBitmap(this.offscreen.transferToImageBitmap());
+        if (offscreenMode == 'bitmap') {
+            this.canvasContext.transferFromImageBitmap(this.offscreen.transferToImageBitmap());
+        } else {
+            this.canvasContext.drawImage(this.offscreen, 0, 0, W, H);
+        }
 
         this.requestRender();
     }
@@ -171,6 +189,7 @@ window.onload = function () {
         'Lines',
         'ComputePI',
         'Primitives',
+        'CirclePacking'
     ];
     engine.params.sketchName = 'Lines';
 
@@ -194,9 +213,9 @@ function draw() {
     sketch.draw();
 }
 
-// let cl = console.log
-// console.log = function (...args) {
-//     let log =  document.getElementById('log');
-//     log.innerHTML = args + "<br>" + log.innerHTML;
-//     cl.apply(console, args);
-// }
+let cl = console.log
+console.log = function (...args) {
+    let log =  document.getElementById('log');
+    log.innerHTML = args + "<br>" + log.innerHTML;
+    cl.apply(console, args);
+}

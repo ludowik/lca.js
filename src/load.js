@@ -10,6 +10,7 @@ function include(path, files) {
 let scriptFiles = [
     'math.js',
     'transform.js',
+    'vec2.js',
     'graphics/color.js',
     'graphics/graphics2d.js',
     'graphics/shader.js',
@@ -34,6 +35,7 @@ let sketchFiles = [
     'lines.js',
     'compute_pi.js',
     'primitives.js',
+    'circle_packing.js',
 ];
 
 include('src/graphics/shaders', shaderFiles);
