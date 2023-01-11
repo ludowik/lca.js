@@ -10,7 +10,7 @@ function include(path, files) {
 let scriptFiles = [
     'math.js',
     'transform.js',
-    'color.js',
+    'graphics/color.js',
     'graphics/graphics2d.js',
     'graphics/shader.js',
     'graphics/mesh.js',
