@@ -1,21 +1,20 @@
 class Shaders {
     constructor(gl) {
-        this.default = new Shader(gl, default_vertexShaderText, default_fragmentShaderText);
-        this.point = new Shader(gl, point_vertexShaderText, point_fragmentShaderText);
-        this.rect = new Shader(gl, rect_vertexShaderText, rect_fragmentShaderText);
-        this.ellipse = new Shader(gl, 
-            all_vertexShaderText + ellipse_vertexShaderText, 
-            all_fragmentShaderText + ellipse_fragmentShaderText);
-        this.texture = new Shader(gl, texture_vertexShaderText, texture_fragmentShaderText);
-        this.line = new Shader(gl,
-            all_vertexShaderText + line_vertexShaderText,
-            all_fragmentShaderText + line_fragmentShaderText);
+        this.default = new Shader(gl, 'default', default_vertexShaderText, default_fragmentShaderText);
+        this.point = new Shader(gl, 'point', point_vertexShaderText, point_fragmentShaderText);
+        this.rect = new Shader(gl, 'rect', rect_vertexShaderText, rect_fragmentShaderText);
+        this.ellipse = new Shader(gl, 'ellipse', ellipse_vertexShaderText, ellipse_fragmentShaderText);
+        this.texture = new Shader(gl, 'texture', texture_vertexShaderText, texture_fragmentShaderText);
+        this.line = new Shader(gl, 'line', line_vertexShaderText, line_fragmentShaderText);
     }
 }
 
 class Shader {
-    constructor(gl, vertexShaderText, fragmentShaderText) {
-        this.load(gl, vertexShaderText, fragmentShaderText);
+    constructor(gl, name, vertexShaderText, fragmentShaderText) {
+        this.name = name;
+        this.load(gl,
+            all_vertexShaderText + vertexShaderText,
+            all_fragmentShaderText + fragmentShaderText);
     }
 
     load(gl, vertexShaderText, fragmentShaderText) {
@@ -50,7 +49,7 @@ class Shader {
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
             let compileErrLog = gl.getShaderInfoLog(shader);
-            console.log("La compilation du shader a échoué : " + compileErrLog);
+            console.log("La compilation du shader '" + this.name +"' a échoué : " + compileErrLog);
             return;
         }
 

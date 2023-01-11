@@ -1,6 +1,5 @@
 var line_vertexShaderText = `
     uniform vec2 lineSize;
-    uniform float strokeSize;
     void main() {
         vec2 direction = normalize(lineSize).yx;
         direction.y = -direction.y;
@@ -12,7 +11,6 @@ var line_vertexShaderText = `
 `;
 
 var line_fragmentShaderText = `
-    uniform vec4 strokeColor;
     void main() {
         gl_FragColor = strokeColor;
     }

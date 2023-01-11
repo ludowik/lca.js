@@ -8,14 +8,17 @@ class Entity {
 
     setup() { }
 
-    update(dt) { 
+    pause() { }
+    resume() { }
+
+    update(dt) {
         if (this.step) {
             return this.step(dt);
         }
     }
-    
+
     draw() { }
-} 
+}
 
 class Sketch extends Entity {
     constructor() {

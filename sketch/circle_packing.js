@@ -117,7 +117,6 @@ class Circle {
     }
 
     draw() {
-        background();
         noStroke();
         fill(this.clr);
         circle(this.position.x, this.position.y, this.radius);

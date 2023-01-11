@@ -177,9 +177,20 @@ function getOrigin() {
     return engine.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
 }
 
+var sketchesRef = {};
 function setSketch(name) {
-    sketch = eval('new ' + name + '()');
-    sketch.setup();
+    if (sketch) {
+        sketch.pause();
+    }
+    
+    if (!sketchesRef[name]) {
+        sketchesRef[name] = eval('new ' + name + '()');
+        sketch = sketchesRef[name];
+        sketch.setup();
+    } else {
+        sketch = sketchesRef[name];
+        sketch.resume();
+    }    
 }
 
 window.onload = function () {
@@ -215,7 +226,7 @@ function draw() {
 
 let cl = console.log
 console.log = function (...args) {
-    let log =  document.getElementById('log');
+    let log = document.getElementById('log');
     log.innerHTML = args + "<br>" + log.innerHTML;
     cl.apply(console, args);
 }

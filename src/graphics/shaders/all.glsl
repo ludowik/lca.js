@@ -7,6 +7,7 @@ var all_vertexShaderText = `
     uniform mat4 uProjectionMatrix;
     uniform mat4 uViewMatrix;
     uniform mat4 uModelMatrix;
+    uniform float strokeSize;    
     varying vec3 vTexCoord;
 `;
 
@@ -15,4 +16,8 @@ var all_fragmentShaderText = `
     #pragma language glsl3
     precision highp float;
     varying vec3 vTexCoord;
+    uniform float strokeSize;
+    uniform vec4 strokeColor;
+    uniform vec4 fillColor;
+    uniform sampler2D uTexture;    
 `;
