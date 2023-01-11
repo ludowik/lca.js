@@ -1,7 +1,7 @@
 function include(path, files) {
     for (src of files) {
         var script = document.createElement('script');
-        script.src = path + '/' + src + '?t=<?=time()?';
+        script.src = path + '/' + src + '?' + Date.now();
 
         document.body.appendChild(script);
     }
