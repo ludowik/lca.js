@@ -1,5 +1,5 @@
 class CircleRecursive extends Sketch {
-    init() {
+    setup() {
         this.angle = 0;
         colorMode(HSB, 1);
         this.params.color = false;
@@ -9,28 +9,28 @@ class CircleRecursive extends Sketch {
         this.angle += dt;
     }
 
-    draw(x, y, radius, level = 0) {
+    render(x, y, radius, level = 0) {
         if (radius <= 3) { return; }
-        push();
+        pushMatrix();
         translate(x, y);
         rotate(this.angle * (level % 2 ? -1.5 : 1));
         if (this.params.color) {
             fill(level % 2 ? radius / (W / 2) : 1 - radius / (W / 2), 0.5, 1);
         } else {
-            fill(level % 2 ? 1 : 0);
+            fill(level % 2 ? colors.white : colors.black);
         }
         circle(0, 0, radius);
         level++;
-        this.draw(- radius / 2, 0, radius / 2, level);
-        this.draw(+ radius / 2, 0, radius / 2, level);
-        this.draw(0, - radius * 2 / 3, radius / 3, level);
-        this.draw(0, + radius * 2 / 3, radius / 3, level);
-        pop();
+        this.render(- radius / 2, 0, radius / 2, level);
+        this.render(+ radius / 2, 0, radius / 2, level);
+        this.render(0, - radius * 2 / 3, radius / 3, level);
+        this.render(0, + radius * 2 / 3, radius / 3, level);
+        popMatrix();
     }
 
-    render() {
+    draw() {
         background(colors.green);
         noStroke();
-        this.draw(xc, yc, W / 2);
+        this.render(W / 2, H / 2, W / 2);
     }
 }

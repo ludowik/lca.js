@@ -6,10 +6,12 @@ class Graphics {
     }
 }
 
-function background() {
+function background(clr) {
     let gl = getContext();
 
-    gl.clearColor(0.1, 0.1, 0.1, 1.0);
+    clr = clr || colors.black;
+
+    gl.clearColor(clr.r, clr.g, clr.b, clr.a);
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
@@ -108,7 +110,7 @@ function line(x1, y1, x2, y2) {
             1, +1, 0,
             0, -1, 0,
             1, +1, 0,
-            0, +1, 0,
+            0, +1, 0
         ];
 
         meshLine.initializeAttributes(shaders.line, array);
@@ -116,11 +118,11 @@ function line(x1, y1, x2, y2) {
         meshLine.useAttributes();
     }
 
-    gl.uniform2f(gl.getUniformLocation(shaders.line.program, 'lineSize'), x2 - x1, y2 - y1);
-    gl.uniform1f(gl.getUniformLocation(shaders.line.program, 'strokeSize'), __strokeSize);
+    gl.uniform2f(gl.getUniformLocation(meshLine.shader.program, 'lineSize'), x2 - x1, y2 - y1);
+    gl.uniform1f(gl.getUniformLocation(meshLine.shader.program, 'strokeSize'), __strokeSize);
 
     let clr = __strokeColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(shaders.line.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(gl.getUniformLocation(meshLine.shader.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -154,9 +156,21 @@ function rect(x, y, w, h) {
         1, 1, 0,
         0, 0, 0,
         1, 1, 0,
-        0, 1, 0];
+        0, 1, 0
+    ];
+
     initializeAttributes(shaders.rect, array);
-    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+
+    let clr = __strokeColor || colors.white;
+    gl.uniform4f(gl.getUniformLocation(shaders.rect.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+
+    clr = __fillColor || colors.white;
+    gl.uniform4f(gl.getUniformLocation(shaders.rect.program, 'fillColor'), clr.r, clr.g, clr.b, clr.a);
+
+    gl.uniform2f(gl.getUniformLocation(shaders.rect.program, 'size'), w, h);
+    gl.uniform1f(gl.getUniformLocation(shaders.rect.program, 'strokeSize'), __strokeSize);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }
@@ -175,6 +189,7 @@ function ellipseMode(mode) {
     return __ellipseMode;
 }
 
+let meshEllipse;
 function ellipse(x, y, w, h) {
     let gl = getContext();
 
@@ -187,26 +202,32 @@ function ellipse(x, y, w, h) {
 
     scale(w, h);
 
-    let array = [
-        0, 0, 0,
-        1, 0, 0,
-        1, 1, 0,
-        0, 0, 0,
-        1, 1, 0,
-        0, 1, 0];
+    if (!meshEllipse) {
+        meshEllipse = new Mesh();
+        let array = [
+            0, 0, 0,
+            1, 0, 0,
+            1, 1, 0,
+            0, 0, 0,
+            1, 1, 0,
+            0, 1, 0
+        ];
 
-    initializeAttributes(shaders.ellipse, array, array);
+        meshEllipse.initializeAttributes(shaders.ellipse, array, array);
+    } else {
+        meshEllipse.useAttributes();
+    }
 
     let clr = __strokeColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(shaders.ellipse.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(gl.getUniformLocation(meshEllipse.shader.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
 
     clr = __fillColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(shaders.ellipse.program, 'fillColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(gl.getUniformLocation(meshEllipse.shader.program, 'fillColor'), clr.r, clr.g, clr.b, clr.a);
 
-    gl.uniform2f(gl.getUniformLocation(shaders.ellipse.program, 'size'), w, h);
-    gl.uniform1f(gl.getUniformLocation(shaders.ellipse.program, 'strokeSize'), __strokeSize);
+    gl.uniform2f(gl.getUniformLocation(meshEllipse.shader.program, 'size'), w, h);
+    gl.uniform1f(gl.getUniformLocation(meshEllipse.shader.program, 'strokeSize'), __strokeSize);
 
-    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }
@@ -309,7 +330,8 @@ function text(txt, x, y) {
         w, h, 0,
         0, 0, 0,
         w, h, 0,
-        0, h, 0];
+        0, h, 0
+    ];
 
     shaders.texture.texture = textTex;
 

@@ -36,6 +36,7 @@ let sketchFiles = [
     'compute_pi.js',
     'primitives.js',
     'circle_packing.js',
+    'circle_recursive.js',
 ];
 
 include('src/graphics/shaders', shaderFiles);

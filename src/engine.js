@@ -86,7 +86,7 @@ class Engine {
         DeltaTime = this.frameTime.deltaTime;
         ElapsedTime = this.frameTime.elapsedTime;
 
-        update(this.deltaTime);
+        update(DeltaTime);
 
         let gl = this.gl;
 
@@ -200,7 +200,8 @@ window.onload = function () {
         'Lines',
         'ComputePI',
         'Primitives',
-        'CirclePacking'
+        'CirclePacking',
+        'CircleRecursive',
     ];
     engine.params.sketchName = 'Lines';
 
