@@ -82,12 +82,7 @@ class Engine {
         }
     }
 
-    frame(timestamp) {
-        DeltaTime = this.frameTime.deltaTime;
-        ElapsedTime = this.frameTime.elapsedTime;
-
-        update(DeltaTime);
-
+    beforeDraw() {
         let gl = this.gl;
 
         gl.viewport(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
@@ -112,13 +107,25 @@ class Engine {
             scale(1, -1);
         }
 
-        draw();
+    }
 
+    afterDraw() {
         if (offscreenMode == 'bitmap') {
             this.canvasContext.transferFromImageBitmap(this.offscreen.transferToImageBitmap());
         } else {
             this.canvasContext.drawImage(this.offscreen, 0, 0, W, H);
         }
+    }
+
+    frame(timestamp) {
+        DeltaTime = this.frameTime.deltaTime;
+        ElapsedTime = this.frameTime.elapsedTime;
+
+        update(DeltaTime);
+
+        this.beforeDraw();
+        draw();
+        this.afterDraw();
 
         this.requestRender();
     }
@@ -182,15 +189,17 @@ function setSketch(name) {
     if (sketch) {
         sketch.pause();
     }
-    
+
     if (!sketchesRef[name]) {
         sketchesRef[name] = eval('new ' + name + '()');
         sketch = sketchesRef[name];
+        engine.beforeDraw();
         sketch.setup();
+        engine.afterDraw();
     } else {
         sketch = sketchesRef[name];
         sketch.resume();
-    }    
+    }
 }
 
 function run() {
