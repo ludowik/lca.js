@@ -8,7 +8,9 @@ function include(path, files) {
 }
 
 let scriptFiles = [
+    'log.js',
     'math.js',
+    'perlin.js',
     'transform.js',
     'vec2.js',
     'graphics/color.js',
@@ -37,8 +39,15 @@ let sketchFiles = [
     'primitives.js',
     'circle_packing.js',
     'circle_recursive.js',
+    'circle_sizing.js',
 ];
 
 include('src/graphics/shaders', shaderFiles);
 include('src', scriptFiles);
 include('sketch', sketchFiles);
+
+// let worker = new Worker('src/engine.js')
+
+window.onload = function () {
+    run();    
+};

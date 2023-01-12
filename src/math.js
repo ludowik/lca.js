@@ -1,4 +1,5 @@
 var random = Math.random;
+
 function randomInt(_min, _max) {
     if (_max == undefined) {
         _max = _min;
@@ -9,6 +10,23 @@ function randomInt(_min, _max) {
 
 var PI = Math.PI;
 
+var sin = Math.sin;
+var cos = Math.cos;
+
+Math.radians = function (degrees) {
+    return degrees * Math.PI / 180;
+}
+
+Math.degrees = function (radians) {
+    return radians * 180 / Math.PI;
+}
+
+var radians = Math.radians;
+var degr = Math.degrees;
+
+var abs = Math.abs;
+var ceil = Math.ceil;
+var floor = Math.floor;
 var min = Math.min;
 var max = Math.max;
 function clamp(a, _min, _max) {
@@ -16,7 +34,6 @@ function clamp(a, _min, _max) {
 }
 
 var sqrt = Math.sqrt;
-var abs = Math.abs;
 
 function map(v, i1, i2, o1, o2) {
     return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
@@ -60,3 +77,5 @@ function dist(x1, y1, x2, y2) {
     let dy = y2 - y1;
     return sqrt(dx * dx + dy * dy);
 }
+
+var noise = random;

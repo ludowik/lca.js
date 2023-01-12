@@ -193,7 +193,7 @@ function setSketch(name) {
     }    
 }
 
-window.onload = function () {
+function run() {
     engine = new Engine();
 
     engine.params.sketches = [
@@ -202,8 +202,9 @@ window.onload = function () {
         'Primitives',
         'CirclePacking',
         'CircleRecursive',
+        'CircleSizing',
     ];
-    engine.params.sketchName = 'Lines';
+    engine.params.sketchName = 'CircleSizing';
 
     engine.params.topLeft = true;
 
@@ -215,7 +216,7 @@ window.onload = function () {
     setSketch(engine.params.sketchName);
 
     engine.requestRender();
-};
+}
 
 function update(dt) {
     sketch.update(dt);
@@ -223,11 +224,4 @@ function update(dt) {
 
 function draw() {
     sketch.draw();
-}
-
-let cl = console.log
-console.log = function (...args) {
-    let log = document.getElementById('log');
-    log.innerHTML = args + "<br>" + log.innerHTML;
-    cl.apply(console, args);
 }

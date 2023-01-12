@@ -12,9 +12,12 @@ class Shaders {
 class Shader {
     constructor(gl, name, vertexShaderText, fragmentShaderText) {
         this.name = name;
+
         this.load(gl,
             all_vertexShaderText + vertexShaderText,
             all_fragmentShaderText + fragmentShaderText);
+
+        this.getUniformsLocation(gl);
     }
 
     load(gl, vertexShaderText, fragmentShaderText) {
@@ -49,28 +52,31 @@ class Shader {
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
             let compileErrLog = gl.getShaderInfoLog(shader);
-            console.log("La compilation du shader '" + this.name +"' a échoué : " + compileErrLog);
+            console.log("La compilation du shader '" + this.name + "' a échoué : " + compileErrLog);
             return;
         }
 
         return shader;
     }
 
+    getUniformsLocation(gl) {
+        this.uniformsLocation = {
+            uniformProjectionMatrix: gl.getUniformLocation(this.program, "uProjectionMatrix"),
+            uniformViewMatrix: gl.getUniformLocation(this.program, "uViewMatrix"),
+            uniformModelMatrix: gl.getUniformLocation(this.program, "uModelMatrix"),
+            uniformTexture: gl.getUniformLocation(this.program, "uTexture"),
+        }
+    }
+
     sendUniform(gl) {
-        var invert = false;
+        let ul = this.uniformsLocation;
 
-        var uniformProjectionMatrix = gl.getUniformLocation(this.program, "uProjectionMatrix");
-        gl.uniformMatrix4fv(uniformProjectionMatrix, invert, projectionMatrix());
+        gl.uniformMatrix4fv(ul.uniformProjectionMatrix, false, projectionMatrix());
+        gl.uniformMatrix4fv(ul.uniformViewMatrix, false, viewMatrix());
+        gl.uniformMatrix4fv(ul.uniformModelMatrix, false, modelMatrix());
 
-        var uniformViewMatrix = gl.getUniformLocation(this.program, "uViewMatrix");
-        gl.uniformMatrix4fv(uniformViewMatrix, invert, viewMatrix());
-
-        var uniformModelMatrix = gl.getUniformLocation(this.program, "uModelMatrix");
-        gl.uniformMatrix4fv(uniformModelMatrix, invert, modelMatrix());
-
-        var uniformTexture = gl.getUniformLocation(this.program, "uTexture");
-        if (uniformTexture) {
-            gl.uniform1i(uniformTexture, 0);
+        if (ul.uniformTexture) {
+            gl.uniform1i(ul.uniformTexture, 0);
         }
     }
 
@@ -81,7 +87,8 @@ class Shader {
     }
 
     destructor() {
-        if (this.program)
+        if (this.program) {
             gl.deleteProgram(this.program);
+        }
     }
 }
