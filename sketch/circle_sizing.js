@@ -30,7 +30,7 @@ class CircleSizing extends Sketch {
 
                 let val = 0.5 + cos(radians(ElapsedTime * 10 * nval)) / 2;
 
-                fill(1 - val, val ** 2, val, a);
+                fill(color(1 - val, val ** 2, val, a));
 
                 strokeSize(sin(ElapsedTime * nval) * radius);
                 stroke(color(val, 0.5, 0.5, a));
