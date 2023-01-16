@@ -2,8 +2,8 @@ class Primitives extends Sketch {
     setup() {
         this.points = [];
 
-        this.strokeSize = 1;
-        engine.gui.add(this, 'strokeSize', 1, 20);
+        this.params.strokeSize = 1;
+        engine.gui.add(this.params, 'strokeSize', 1, 20);
     }
 
     update(dt) {
@@ -20,23 +20,44 @@ class Primitives extends Sketch {
     draw() {
         background();
 
-        // perspective();
-        // camera(0, 0, ElapsedTime);
+        let top = 100;
 
-        // translate(W / 2, H / 2);
-        // rotate(ElapsedTime);
+        function render(x, y, setup, draw) {
+            setup();
+            for (const i of range(25)) {
+                strokeSize(i);
+                stroke(colors.white);
+                draw(i, x, y);
+                x += i * 2;
+            }
+            top += 50;
+        }
 
-        // //point(W/2, H/2);
-        // points(this.points);
+        render(0, top,
+            () => {
+                strokeSize(1);
+                stroke(colors.red);
+                fill(colors.white);
+            },
+            (i, x, y) => {
+                circle(x, y, i, i);
+            });
 
-        // circleMode(CENTER);
-        // ellipse(0, 0, 50, 30);
+        render(0, top,
+            () => {
+                strokeSize(1);
+                stroke(colors.red);
+                fill(colors.white);
+            },
+            (i, x, y) => {
+                rect(x, y, i, i);
+            });
 
-        //resetMatrix();
+        render(0, top,
+            () => { },
+            (i, x, y) => {
+                point(x, y);
+            })
 
-        strokeSize(this.strokeSize);
-        line(20, 200, 220, 200);
-
-        text("hello world! ludovic est dans la place", 100, 250);
     }
 }

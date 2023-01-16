@@ -83,7 +83,7 @@ class Engine {
     }
 
     beforeDraw() {
-        let gl = this.gl;
+        let gl = getContext();
 
         gl.viewport(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
 

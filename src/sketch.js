@@ -6,10 +6,14 @@ class Entity {
         return this.constructor.name;
     }
 
-    setup() { }
+    setup() {        
+    }
 
-    pause() { }
-    resume() { }
+    pause() {        
+    }
+
+    resume() {        
+    }
 
     update(dt) {
         if (this.step) {
@@ -17,7 +21,8 @@ class Entity {
         }
     }
 
-    draw() { }
+    draw() {        
+    }
 }
 
 class Sketch extends Entity {

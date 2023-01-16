@@ -24,17 +24,15 @@ function initializeAttributes(shader, array, texCoord) {
     let buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array), gl.STATIC_DRAW);
-    let loc = gl.getAttribLocation(shader.program, 'aPosition');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(shader.attribsLocation.aPosition);
+    gl.vertexAttribPointer(shader.attribsLocation.aPosition, 3, gl.FLOAT, false, 0, 0);
 
     if (texCoord) {
         let buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoord), gl.STATIC_DRAW);
-        let loc = gl.getAttribLocation(shader.program, 'aTexCoord');
-        gl.enableVertexAttribArray(loc);
-        gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(shader.attribsLocation.aTexCoord);
+        gl.vertexAttribPointer(shader.attribsLocation.aTexCoord, 3, gl.FLOAT, false, 0, 0);
     }
 }
 
@@ -54,6 +52,12 @@ function point(x, y, z = 0) {
         meshPoint.updateAttributes(shaders.point, array);
     }
 
+    let ul = shaders.point.uniformsLocation;
+    gl.uniform1f(ul.strokeSize, __strokeSize);
+
+    let clr = __strokeColor || colors.white;
+    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
+
     gl.drawArrays(gl.POINTS, 0, array.length / 3);
 
     popMatrix();
@@ -63,6 +67,13 @@ function points(array) {
     let gl = getContext();
 
     initializeAttributes(shaders.point, array);
+
+    let ul = shaders.point.uniformsLocation;
+    gl.uniform1f(ul.strokeSize, __strokeSize);
+
+    let clr = __strokeColor || colors.white;
+    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
+    
     gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
 }
 
@@ -118,11 +129,13 @@ function line(x1, y1, x2, y2) {
         meshLine.useAttributes();
     }
 
-    gl.uniform2f(gl.getUniformLocation(meshLine.shader.program, 'lineSize'), x2 - x1, y2 - y1);
-    gl.uniform1f(gl.getUniformLocation(meshLine.shader.program, 'strokeSize'), __strokeSize);
+    let ul = meshLine.shader.uniformsLocation;
+
+    gl.uniform2f(ul.lineSize, x2 - x1, y2 - y1);
+    gl.uniform1f(ul.strokeSize, __strokeSize);
 
     let clr = __strokeColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(meshLine.shader.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -138,6 +151,7 @@ function rectMode(mode) {
     return __rectMode;
 }
 
+let meshRect;
 function rect(x, y, w, h) {
     let gl = getContext();
 
@@ -150,25 +164,32 @@ function rect(x, y, w, h) {
 
     scale(w, h);
 
-    let array = [
-        0, 0, 0,
-        1, 0, 0,
-        1, 1, 0,
-        0, 0, 0,
-        1, 1, 0,
-        0, 1, 0
-    ];
+    if (!meshRect) {
+        meshRect = new Mesh();
+        let array = [
+            0, 0, 0,
+            1, 0, 0,
+            1, 1, 0,
+            0, 0, 0,
+            1, 1, 0,
+            0, 1, 0
+        ];
 
-    initializeAttributes(shaders.rect, array);
+        meshRect.initializeAttributes(shaders.rect, array);
+    } else {
+        meshRect.useAttributes();
+    }
+
+    let ul = meshRect.shader.uniformsLocation;
 
     let clr = __strokeColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(shaders.rect.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
     clr = __fillColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(shaders.rect.program, 'fillColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.uniform2f(gl.getUniformLocation(shaders.rect.program, 'size'), w, h);
-    gl.uniform1f(gl.getUniformLocation(shaders.rect.program, 'strokeSize'), __strokeSize);
+    gl.uniform2f(ul.size, w, h);
+    gl.uniform1f(ul.strokeSize, __strokeSize);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -219,13 +240,13 @@ function ellipse(x, y, w, h) {
     }
 
     let clr = __strokeColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(meshEllipse.shader.program, 'strokeColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(meshEllipse.shader.uniformsLocation.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
     clr = __fillColor || colors.white;
-    gl.uniform4f(gl.getUniformLocation(meshEllipse.shader.program, 'fillColor'), clr.r, clr.g, clr.b, clr.a);
+    gl.uniform4f(meshEllipse.shader.uniformsLocation.fillColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.uniform2f(gl.getUniformLocation(meshEllipse.shader.program, 'size'), w, h);
-    gl.uniform1f(gl.getUniformLocation(meshEllipse.shader.program, 'strokeSize'), __strokeSize);
+    gl.uniform2f(meshEllipse.shader.uniformsLocation.size, w, h);
+    gl.uniform1f(meshEllipse.shader.uniformsLocation.strokeSize, __strokeSize);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
