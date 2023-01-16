@@ -386,3 +386,26 @@ function sprite(x, y, w, h, texture) {
 
     popMatrix();
 }
+
+function shade(x, y, w, h, shader) {
+    let gl = getContext();
+
+    pushMatrix();
+
+    translate(x, y);
+    scale(w, h);
+
+    let array = [
+        0, 0, 0,
+        1, 0, 0,
+        1, 1, 0,
+        0, 0, 0,
+        1, 1, 0,
+        0, 1, 0
+    ];
+
+    initializeAttributes(shader, array, array);
+    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+
+    popMatrix();
+}

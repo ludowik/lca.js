@@ -208,8 +208,9 @@ function run() {
         'CirclePacking',
         'CircleRecursive',
         'CircleSizing',
+        'ShaderBox',
     ];
-    engine.params.sketchName = 'CircleSketch';
+    engine.params.sketchName = engine.params.sketches[engine.params.sketches.length-1];
 
     engine.params.topLeft = true;
 
