@@ -35,6 +35,7 @@ let shaderFiles = [
 
 let sketchFiles = [
     'lines.js',
+    'circle.js',
     'compute_pi.js',
     'primitives.js',
     'circle_packing.js',

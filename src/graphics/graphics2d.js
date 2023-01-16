@@ -342,19 +342,44 @@ function text(txt, x, y) {
         scale(context.canvas.width, -context.canvas.height);
     }
 
-    let w = 1;
-    let h = 1;
-
     let array = [
         0, 0, 0,
-        w, 0, 0,
-        w, h, 0,
+        1, 0, 0,
+        1, 1, 0,
         0, 0, 0,
-        w, h, 0,
-        0, h, 0
+        1, 1, 0,
+        0, 1, 0
     ];
 
     shaders.texture.texture = textTex;
+
+    initializeAttributes(shaders.texture, array, array);
+    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+
+    popMatrix();
+}
+
+function sprite(x, y, w, h, texture) {
+    let gl = getContext();
+
+    pushMatrix();
+
+    translate(x, y);
+    scale(w, h);
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.activeTexture(gl.TEXTURE0);
+
+    let array = [
+        0, 0, 0,
+        1, 0, 0,
+        1, 1, 0,
+        0, 0, 0,
+        1, 1, 0,
+        0, 1, 0
+    ];
+
+    shaders.texture.texture = texture;
 
     initializeAttributes(shaders.texture, array, array);
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);

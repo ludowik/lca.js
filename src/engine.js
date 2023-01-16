@@ -4,8 +4,6 @@ var minSize, minSizeFont;
 
 var engine, sketch;
 
-var offscreenMode = 'canvas';
-
 class Engine {
     constructor() {
         this.load();
@@ -49,17 +47,7 @@ class Engine {
         this.canvas = document.getElementById("canvas");
         this.resizeCanvas(this.canvas);
 
-        if (offscreenMode == 'bitmap') {
-            this.canvasContext = this.canvas.getContext('bitmaprenderer');
-            this.offscreen = new OffscreenCanvas(0, 0);
-        } else {
-            this.canvasContext = this.canvas.getContext('2d');
-            this.offscreen = document.createElement("canvas");
-        }
-
-        this.resizeCanvas(this.offscreen);
-
-        let gl = this.offscreen.getContext("webgl2", {
+        let gl = this.canvas.getContext("webgl2", {
             preserveDrawingBuffer: true
         });
 
@@ -85,7 +73,9 @@ class Engine {
     beforeDraw() {
         let gl = getContext();
 
-        gl.viewport(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
+        sketch.bindFramebuffer();
+
+        gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
         if (true) {
             gl.disable(gl.DEPTH_TEST);
@@ -106,15 +96,20 @@ class Engine {
             translate(0, H);
             scale(1, -1);
         }
-
     }
 
     afterDraw() {
-        if (offscreenMode == 'bitmap') {
-            this.canvasContext.transferFromImageBitmap(this.offscreen.transferToImageBitmap());
-        } else {
-            this.canvasContext.drawImage(this.offscreen, 0, 0, W, H);
-        }
+        sketch.unbindFrameBuffer();
+
+        let gl = getContext();
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ZERO);
+
+        resetMatrix();
+        ortho();
+
+        sprite(0, 0, W, H, sketch.targetTexture);
     }
 
     frame(timestamp) {
@@ -207,13 +202,14 @@ function run() {
 
     engine.params.sketches = [
         'Lines',
+        'CircleSketch',
         'ComputePI',
         'Primitives',
         'CirclePacking',
         'CircleRecursive',
         'CircleSizing',
     ];
-    engine.params.sketchName = 'CircleSizing';
+    engine.params.sketchName = 'CircleSketch';
 
     engine.params.topLeft = true;
 

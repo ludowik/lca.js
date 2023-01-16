@@ -11,11 +11,22 @@ var ellipse_fragmentShaderText = `
         vec2 fragmentPosition = 2.0 * vTexCoord.xy - 1.0;
         
         float distance = length(fragmentPosition);
+
         if (distance <= 1. - (strokeSize / size.x)) {
-            gl_FragColor = fillColor;
+            float alpha = smoothstep(
+                1. - (strokeSize / size.x),
+                1. - (strokeSize / size.x) - 1. / size.x,
+                distance);
+
+            gl_FragColor = vec4(fillColor.xyz, fillColor.w * alpha);
 
         } else if (distance <= 1.) {
-            gl_FragColor = strokeColor;
+            float alpha = smoothstep(
+                1.,
+                1. - 1. / size.x,
+                distance);
+                
+            gl_FragColor = vec4(strokeColor.xyz, strokeColor.w * alpha);
 
         } else {
             discard;
