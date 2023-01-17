@@ -3,7 +3,7 @@ var random = Math.random;
 function randomInt(_min, _max) {
     if (_max == undefined) {
         _max = _min;
-        _min = 1;
+        _min = 0;
     }
     return Math.ceil(Math.random() * (_max - _min) + _min);
 }

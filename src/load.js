@@ -20,6 +20,8 @@ let scriptFiles = [
     'sketch.js',
     'frameTime.js',
     'range.js',
+    'grid.js',
+    'data.js',
     'engine.js',
 ];
 
@@ -41,6 +43,7 @@ let sketchFiles = [
     'circle_packing.js',
     'circle_recursive.js',
     'circle_sizing.js',
+    '2048.js',
 ];
 
 include('src/graphics/shaders', shaderFiles);
@@ -50,5 +53,5 @@ include('sketch', sketchFiles);
 // let worker = new Worker('src/engine.js')
 
 window.onload = function () {
-    run();    
+    run();
 };

@@ -4,6 +4,11 @@ var minSize, minSizeFont;
 
 var engine, sketch;
 
+var LEFT_ARROW = 'ArrowLeft';
+var RIGHT_ARROW = 'ArrowRight';
+var DOWN_ARROW = 'ArrowDown';
+var UP_ARROW = 'ArrowUp';
+
 class Engine {
     constructor() {
         this.load();
@@ -38,6 +43,11 @@ class Engine {
         this.canvas.addEventListener("mouseenter", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("mouseover", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("mouseleave", (evt) => { this.mouseEvent(evt); });
+
+        document.addEventListener('keydown', (evt) => {
+            const keyName = evt.key;
+            sketch.keyPressed(keyName);
+        });
     }
 
     mouseEvent(evt) {
@@ -208,6 +218,7 @@ function run() {
         'CirclePacking',
         'CircleRecursive',
         'CircleSizing',
+        'Game2048',
     ];
     engine.params.sketchName = 'CircleSketch';
 

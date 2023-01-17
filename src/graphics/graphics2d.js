@@ -74,7 +74,13 @@ function strokeSize(size) {
 
 let __strokeColor;
 function stroke(clr) {
-    if (clr) __strokeColor = clr;
+    if (clr) {
+        if (clr instanceof Color) {
+            __strokeColor = clr;
+        } else {
+            __strokeColor = color(clr);
+        }
+    }
     return __strokeColor;
 }
 
@@ -85,7 +91,13 @@ function noStroke() {
 
 let __fillColor;
 function fill(clr) {
-    if (clr) __fillColor = clr;
+    if (clr) {
+        if (clr instanceof Color) {
+            __fillColor = clr;
+        } else {
+            __fillColor = color(clr);
+        }
+    }
     return __fillColor;
 }
 
@@ -255,7 +267,7 @@ function fontSize(size) {
     return __fontSize;
 }
 
-let __textMode = CORNER;
+let __textMode = CENTER;
 function textMode(mode) {
     if (mode) __textMode = mode;
     return __textMode;
@@ -271,11 +283,6 @@ function text(txt, x, y) {
     let gl = getContext();
 
     pushMatrix();
-
-    if (__textMode === CORNER)
-        translate(x, y);
-    else
-        translate(x - w / 2, y - h / 2);
 
     if (!meshText) {
         const canvas = document.createElement("canvas");
@@ -294,14 +301,19 @@ function text(txt, x, y) {
     context.font = fontRef;
     const metrics = context.measureText(txt);
 
-    context.canvas.width = metrics.width;
-    context.canvas.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    let w, h;
+    w = metrics.width;
+    h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+
+    context.canvas.width = w;
+    context.canvas.height = h;
+
+    context.clearRect(0, 0, w, h);
 
     context.fillStyle = fontColor;
     context.strokeStyle = fontColor;
     context.font = fontRef;
-    context.fillText(txt, 0, context.canvas.height);
+    context.fillText(txt, 0, h);
 
     var textTex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, textTex);
@@ -315,10 +327,16 @@ function text(txt, x, y) {
 
     gl.activeTexture(gl.TEXTURE0);
 
-    if (getOrigin() === TOP_LEFT) {
-        scale(context.canvas.width, context.canvas.height);
+    if (__textMode === CORNER) {
+        translate(x, y);
     } else {
-        scale(context.canvas.width, -context.canvas.height);
+        translate(x - w / 2, y - h / 2);
+    }
+
+    if (getOrigin() === TOP_LEFT) {
+        scale(w, h);
+    } else {
+        scale(w, -h);
     }
 
     let array = [
