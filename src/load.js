@@ -11,6 +11,8 @@ let scriptFiles = [
     'sketch.js',
     'frameTime.js',
     'range.js',
+    'grid.js',
+    'data.js',
     'engine.js',
 ];
 
@@ -33,6 +35,19 @@ let sketchFiles = [
     'circle_packing.js',
     'circle_recursive.js',
     'circle_sizing.js',
+    '2048.js',
+];
+
+var sketches = [
+    'Lines',
+    'CircleSketch',
+    'ComputePI',
+    'Primitives',
+    'CirclePacking',
+    'CircleRecursive',
+    'CircleSizing',
+    'ShaderBox',
+    'Game2048',
 ];
 
 let n = scriptFiles.length + shaderFiles.length + sketchFiles.length;

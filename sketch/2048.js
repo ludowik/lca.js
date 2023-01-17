@@ -14,7 +14,7 @@ class Button extends Entity {
         return false;
     }
 
-    render() {
+    draw() {
         fill(colors.white);
         rectMode(CORNER);
         rect(this.position.x, this.position.y, this.size.x, this.size.y, 5);
@@ -37,7 +37,7 @@ class Cell {
         this.translate = null;
     }
 
-    render(cell, x, y, size, marge) {
+    draw(cell, x, y, size, marge) {
         push(); {
             translate(x * size + size / 2, y * size + size / 2);
 
@@ -59,7 +59,7 @@ class Cell {
                 scale(this.scale);
             }
 
-            textSize(size / 2);
+            fontSize(size / 2);
 
             let clr = this.color(cell);
             fill(clr[1]);
@@ -94,8 +94,9 @@ class Cell {
 class Game2048 extends Sketch {
     setup() {
         colorMode(HSB, 1);
-
         this.params.autoPlay = false;
+
+        this.init();
     }
 
     init() {
@@ -105,8 +106,8 @@ class Game2048 extends Sketch {
             this.addCell();
         }
 
-        this.size = width / (this.grid.w + 1);
-        this.button = new Button('new', this.size, height - this.size, this.size, this.size / 2);
+        this.size = W / (this.grid.w + 1);
+        this.button = new Button('new', this.size, H - this.size, this.size, this.size / 2);
     }
 
     newGame() {
@@ -177,7 +178,7 @@ class Game2048 extends Sketch {
         }
     }
 
-    render() {
+    draw() {
         background(colors.black);
 
         noStroke();
@@ -190,23 +191,24 @@ class Game2048 extends Sketch {
         fill('#dcb');
         rectMode(CENTER);
         rect(
-            xc,
-            yc,
+            CX,
+            CY,
             this.grid.w * size + marge * 2,
             this.grid.w * size + marge * 2,
             size / 8);
 
-        textSize(size / 2);
+        fontSize(size / 2);
+
         text(this.score, size * 1.5, size / 2);
         text(this.highScore, size * 3.5, size / 2);
 
         this.grid.render((cell, x, y) => {
             if (cell) {
-                cell.render(cell, x, y, size, marge);
+                cell.draw(cell, x, y, size, marge);
             }
         });
 
-        this.button.render();
+        this.button.draw();
     }
 
     mouseReleased() {
@@ -283,5 +285,3 @@ class Game2048 extends Sketch {
         return totalMoves;
     }
 }
-
-setSketch(Game2048);

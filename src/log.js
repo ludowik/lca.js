@@ -1,28 +1,26 @@
 let __log = console.log;
+let __assert = console.assert;
 let __error = console.error;
-let __warn  = console.warn;
-let __trace  = console.trace;
+let __warn = console.warn;
 
-console.log = function (...args) {
+function overload(f, ...args) {
     let log = document.getElementById('log');
     log.innerHTML = args + "<br>" + log.innerHTML;
-    __log.apply(console, args);
+    f.apply(console, args);
+}
+
+console.log = function (...args) {
+    overload(__log, args);
+}
+
+console.assert = function (...args) {
+    overload(__assert, args);
 }
 
 console.error = function (...args) {
-    let log = document.getElementById('log');
-    log.innerHTML = args + "<br>" + log.innerHTML;
-    __error.apply(console, args);
+    overload(__error, args);
 }
 
 console.warn = function (...args) {
-    let log = document.getElementById('log');
-    log.innerHTML = args + "<br>" + log.innerHTML;
-    __warn.apply(console, args);
-}
-
-console.trace = function (...args) {
-    let log = document.getElementById('log');
-    log.innerHTML = args + "<br>" + log.innerHTML;
-    __trace.apply(console, args);
+    overload(__warn, args);
 }

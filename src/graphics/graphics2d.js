@@ -16,6 +16,18 @@ function background(clr) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
 
+function push() {
+    pushMatrix();
+    // TODO
+    //pushStyles();
+}
+
+function pop() {
+    popMatrix();
+    // TODO
+    //popStyles();
+}
+
 function initializeAttributes(shader, array, texCoord) {
     let gl = getContext();
 
