@@ -20,7 +20,7 @@ class Button extends Entity {
         rect(this.position.x, this.position.y, this.size.x, this.size.y, 5);
 
         fill(colors.black);
-        textAlign(CENTER, CENTER);
+        textMode(CENTER);
         text(this.name, this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
 
         stroke(colors.red);
@@ -102,6 +102,7 @@ class Game2048 extends Sketch {
     init() {
         this.grid = new Grid(4);
         this.score = 0;
+        this.highScore = 0;
         if (!this.load()) {
             this.addCell();
         }
@@ -212,7 +213,7 @@ class Game2048 extends Sketch {
     }
 
     mouseReleased() {
-        if (this.button.contains(mouseX, mouseY)) {
+        if (this.button.contains(mouse.x, mouse.y)) {
             this.newGame();
         }
     }

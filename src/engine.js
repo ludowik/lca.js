@@ -48,16 +48,44 @@ class Engine {
         this.canvas.addEventListener("mouseenter", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("mouseover", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("mouseleave", (evt) => { this.mouseEvent(evt); });
+        this.canvas.addEventListener("wheel", (evt) => { this.mouseEvent(evt); }, { passive: false });
 
         document.addEventListener('keydown', (evt) => {
-            const keyName = evt.key;
-            sketch.keyPressed(keyName);
+            sketch.keyPressed(evt.key, evt.key);
         });
     }
 
     mouseEvent(evt) {
+        evt.preventDefault();
+
         mouse.x = evt.clientX;
         mouse.y = evt.clientY;
+
+        // console.log(evt.type);
+
+        switch (evt.type) {
+            case 'mousedown': {
+                mouse.start = {
+                    x: mouse.x,
+                    y: mouse.y,
+                };
+                break;
+            }
+            case 'mouseup': {
+                mouse.stop = {
+                    x: mouse.x,
+                    y: mouse.y,
+                };
+                sketch.mouseReleased();
+                break;
+            }
+            case 'wheel': {
+                console.log(evt.deltaX);
+                break;
+            }
+        }
+
+        evt.returnValue = false;
     }
 
     initWebGLContext() {

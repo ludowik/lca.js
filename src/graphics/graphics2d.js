@@ -308,7 +308,8 @@ function textMode(mode) {
 
 var LEFT = 'left';
 
-function textAlign() {
+function textAlign(horizontal, vertical) {
+    textMode(horizontal === LEFT ? CORNER : CENTER);
 }
 
 let meshText;

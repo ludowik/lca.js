@@ -9,31 +9,27 @@ class Lines extends Sketch {
     draw() {
         background(colors.black);
 
-        strokeSize(40);
-        stroke(colors.red);
+        strokeSize(1);
+        stroke(colors.white);
 
-        fill(colors.white);
+        let w = W / 4;
+        let h = W / 4;
 
-        circle(W / 2, H / 2, 100);
+        this.horiz(0, 0, w, h);
+        this.verti(0, h, w, h);
+        this.diag1(w, 0, w, h);
+        this.diag2(w, h, w, h);
 
-        // let w = W / 4;
-        // let h = W / 4;
+        this.circle(w * 2, 0, w, h);
 
-        // this.horiz(0, 0, w, h);
-        // this.verti(0, h, w, h);
-        // this.diag1(w, 0, w, h);
-        // this.diag2(w, h, w, h);
+        this.horiz(0, h * 2, w, h);
+        this.verti(0, h * 2, w, h);
 
-        // this.circle(w * 2, 0, w, h);
+        this.diag1(w, h * 2, w, h);
+        this.diag2(w, h * 2, w, h);
 
-        // this.horiz(0, h * 2, w, h);
-        // this.verti(0, h * 2, w, h);
-
-        // this.diag1(w, h * 2, w, h);
-        // this.diag2(w, h * 2, w, h);
-
-        // this.horiz(0, h * 3, w, h);
-        // this.diag1(0, h * 3, w, h);
+        this.horiz(0, h * 3, w, h);
+        this.diag1(0, h * 3, w, h);
     }
 
     horiz(ox, oy, w, h) {

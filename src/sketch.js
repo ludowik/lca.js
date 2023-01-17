@@ -23,6 +23,12 @@ class Entity {
 
     draw() {        
     }
+
+    mouseReleased() {
+    }
+
+    keyPressed(keyCode, key) {
+    }
 }
 
 class Sketch extends Entity {

@@ -34,7 +34,7 @@ class ComputePI extends Sketch {
 
         let h = 24;
 
-        let x = (W/2) / 8;
+        let x = (W / 2) / 8;
         let y = 2 * h;
 
         fontSize(h);

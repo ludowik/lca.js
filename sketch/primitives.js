@@ -28,7 +28,7 @@ class Primitives extends Sketch {
                 strokeSize(i);
                 stroke(colors.white);
                 draw(i, x, y);
-                x += i * 2;
+                x += i * 3;
             }
             top += 50;
         }
@@ -38,6 +38,7 @@ class Primitives extends Sketch {
                 strokeSize(1);
                 stroke(colors.red);
                 fill(colors.white);
+                circleMode(CENTER);
             },
             (i, x, y) => {
                 circle(x, y, i, i);
@@ -48,6 +49,7 @@ class Primitives extends Sketch {
                 strokeSize(1);
                 stroke(colors.red);
                 fill(colors.white);
+                rectMode(CENTER);
             },
             (i, x, y) => {
                 rect(x, y, i, i);
@@ -57,7 +59,15 @@ class Primitives extends Sketch {
             () => { },
             (i, x, y) => {
                 point(x, y);
-            })
+            });
+
+        render(0, top,
+            () => {
+                strokeSize(12);
+            },
+            (i, x, y) => {
+                line(x - i, y - i, x + i, y + i);
+            });
 
     }
 }
