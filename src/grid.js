@@ -45,8 +45,8 @@ class Grid {
         push(); {
             let size = W / (this.w + 1);
             translate(
-                W/2 - size * this.w / 2,
-                H/2 - size * this.w / 2);
+                CX - size * this.w / 2,
+                CY - size * this.w / 2);
 
             this.forEach(f || this.renderCell, size);
         }

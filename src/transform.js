@@ -57,23 +57,23 @@ function resetMatrix() {
 }
 
 var stacks = {};
-function push(stackName, item) {
+function pushItem(stackName, item) {
     stacks[stackName] = stacks[stackName] || new Array();
     stacks[stackName].push(item);
 }
 
-function pop(stackName) {
+function popItem(stackName) {
     return stacks[stackName].pop();
 }
 
 function pushMatrix() {
-    push('__projectionMatrix', glMatrix.mat4.clone(__projectionMatrix));
-    push('__viewMatrix', glMatrix.mat4.clone(__viewMatrix));
-    push('__modelMatrix', glMatrix.mat4.clone(__modelMatrix));
+    pushItem('__projectionMatrix', glMatrix.mat4.clone(__projectionMatrix));
+    pushItem('__viewMatrix', glMatrix.mat4.clone(__viewMatrix));
+    pushItem('__modelMatrix', glMatrix.mat4.clone(__modelMatrix));
 }
 
 function popMatrix() {
-    __projectionMatrix = pop('__projectionMatrix');
-    __viewMatrix = pop('__viewMatrix');
-    __modelMatrix = pop('__modelMatrix');
+    __projectionMatrix = popItem('__projectionMatrix');
+    __viewMatrix = popItem('__viewMatrix');
+    __modelMatrix = popItem('__modelMatrix');
 }

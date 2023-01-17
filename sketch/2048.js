@@ -14,7 +14,7 @@ class Button extends Entity {
         return false;
     }
 
-    render() {
+    draw() {
         fill(colors.white);
         rectMode(CORNER);
         rect(this.position.x, this.position.y, this.size.x, this.size.y, 5);
@@ -37,8 +37,8 @@ class Cell {
         this.translate = null;
     }
 
-    render(cell, x, y, size, marge) {
-        pushMatrix(); {
+    draw(cell, x, y, size, marge) {
+        push(); {
             translate(x * size + size / 2, y * size + size / 2);
 
             if (this.translate) {
@@ -68,7 +68,7 @@ class Cell {
             fill(clr[0]);
             text(cell.value, 0, 0);
         }
-        popMatrix();
+        pop();
     }
 
     color(cell) {
@@ -191,8 +191,8 @@ class Game2048 extends Sketch {
         fill('#dcb');
         rectMode(CENTER);
         rect(
-            W / 2,
-            H / 2,
+            CX,
+            CY,
             this.grid.w * size + marge * 2,
             this.grid.w * size + marge * 2,
             size / 8);
@@ -204,11 +204,11 @@ class Game2048 extends Sketch {
 
         this.grid.render((cell, x, y) => {
             if (cell) {
-                cell.render(cell, x, y, size, marge);
+                cell.draw(cell, x, y, size, marge);
             }
         });
 
-        this.button.render();
+        this.button.draw();
     }
 
     mouseReleased() {

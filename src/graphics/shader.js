@@ -60,23 +60,32 @@ class Shader {
     }
 
     getUniformsLocation(gl) {
-        this.uniformsLocation = {
-            uniformProjectionMatrix: gl.getUniformLocation(this.program, "uProjectionMatrix"),
-            uniformViewMatrix: gl.getUniformLocation(this.program, "uViewMatrix"),
-            uniformModelMatrix: gl.getUniformLocation(this.program, "uModelMatrix"),
-            uniformTexture: gl.getUniformLocation(this.program, "uTexture"),
+        this.attribsLocation = {};
+
+        const numAttribs = gl.getProgramParameter(this.program, gl.ACTIVE_ATTRIBUTES);
+        for (let i = 0; i < numAttribs; ++i) {
+            const info = gl.getActiveAttrib(this.program, i);
+            this.attribsLocation[info.name] = gl.getAttribLocation(this.program, info.name);
+        }
+
+        this.uniformsLocation = {};
+
+        const numUniforms = gl.getProgramParameter(this.program, gl.ACTIVE_UNIFORMS);
+        for (let i = 0; i < numUniforms; ++i) {
+            const info = gl.getActiveUniform(this.program, i);
+            this.uniformsLocation[info.name] = gl.getUniformLocation(this.program, info.name);
         }
     }
 
     sendUniform(gl) {
         let ul = this.uniformsLocation;
 
-        gl.uniformMatrix4fv(ul.uniformProjectionMatrix, false, projectionMatrix());
-        gl.uniformMatrix4fv(ul.uniformViewMatrix, false, viewMatrix());
-        gl.uniformMatrix4fv(ul.uniformModelMatrix, false, modelMatrix());
+        gl.uniformMatrix4fv(ul.uProjectionMatrix, false, projectionMatrix());
+        gl.uniformMatrix4fv(ul.uViewMatrix, false, viewMatrix());
+        gl.uniformMatrix4fv(ul.uModelMatrix, false, modelMatrix());
 
-        if (ul.uniformTexture) {
-            gl.uniform1i(ul.uniformTexture, 0);
+        if (ul.uTexture) {
+            gl.uniform1i(ul.uTexture, 0);
         }
     }
 

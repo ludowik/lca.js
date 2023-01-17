@@ -1,8 +1,10 @@
+var engine, sketch;
+
 var W = 0, H = 0;
+var CX, CY;
 var DeltaTime = 0, ElapsedTime = 0;
 var minSize, minSizeFont;
-
-var engine, sketch;
+var mouse = { x: 0, y: 0 };
 
 var LEFT_ARROW = 'ArrowLeft';
 var RIGHT_ARROW = 'ArrowRight';
@@ -20,6 +22,9 @@ class Engine {
 
         W = this.gl.drawingBufferWidth;
         H = this.gl.drawingBufferHeight;
+
+        CX = W / 2;
+        CY = H / 2;
 
         minSize = Math.min(W, H);
         minSizeFont = minSize / 24;
@@ -51,6 +56,8 @@ class Engine {
     }
 
     mouseEvent(evt) {
+        mouse.x = evt.clientX;
+        mouse.y = evt.clientY;
     }
 
     initWebGLContext() {
@@ -172,7 +179,7 @@ function toggleFullscreen() {
         if (document.fullscreenElement) {
             document.exitFullscreen();
         } else {
-            requestFullScreen?.();
+            requestFullScreen();
         }
     } else {
         alert("Fullscreen is not supported!");
@@ -210,17 +217,8 @@ function setSketch(name) {
 function run() {
     engine = new Engine();
 
-    engine.params.sketches = [
-        'Lines',
-        'CircleSketch',
-        'ComputePI',
-        'Primitives',
-        'CirclePacking',
-        'CircleRecursive',
-        'CircleSizing',
-        'Game2048',
-    ];
-    engine.params.sketchName = 'CircleSketch';
+    engine.params.sketches = sketches;
+    engine.params.sketchName = engine.params.sketches[engine.params.sketches.length - 1];
 
     engine.params.topLeft = true;
 

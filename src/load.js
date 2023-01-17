@@ -1,12 +1,3 @@
-function include(path, files) {
-    for (src of files) {
-        var script = document.createElement('script');
-        script.src = path + '/' + src + '?' + Date.now();
-
-        document.body.appendChild(script);
-    }
-}
-
 let scriptFiles = [
     'log.js',
     'math.js',
@@ -40,18 +31,43 @@ let sketchFiles = [
     'circle.js',
     'compute_pi.js',
     'primitives.js',
+    'shaderbox.js',
     'circle_packing.js',
     'circle_recursive.js',
     'circle_sizing.js',
     '2048.js',
 ];
 
+var sketches = [
+    'Lines',
+    'CircleSketch',
+    'ComputePI',
+    'Primitives',
+    'CirclePacking',
+    'CircleRecursive',
+    'CircleSizing',
+    'ShaderBox',
+    'Game2048',
+];
+
+let n = scriptFiles.length + shaderFiles.length + sketchFiles.length;
+
+function include(path, files) {
+    for (src of files) {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = path + '/' + src + '?' + Date.now();
+        script.async = false;
+        document.head.appendChild(script);
+    }
+
+    return files.lenght;
+}
+
 include('src/graphics/shaders', shaderFiles);
 include('src', scriptFiles);
 include('sketch', sketchFiles);
 
-// let worker = new Worker('src/engine.js')
-
-window.onload = function () {
+window.onload = () => {
     run();
 };
