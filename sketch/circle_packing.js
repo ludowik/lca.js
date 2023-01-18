@@ -41,9 +41,6 @@ class CirclePacking extends Sketch {
         this.circles.push(newCircle);
 
         this.params.N = this.circles.length;
-
-        // TOFIX
-        // this.gui.updateDisplay('N');
     }
 
     step(dt) {

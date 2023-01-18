@@ -32,13 +32,6 @@ class Engine {
         this.graphics = new Graphics(this.gl);
 
         this.params = {};
-        this.gui = new dat.gui.GUI({
-            name: 'Parameter',
-        });
-        this.gui.domElement.id = 'gui';
-
-        this.gui.remember(this.params);
-        this.gui.useLocalStorage = true;
 
         this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
@@ -53,6 +46,58 @@ class Engine {
         document.addEventListener('keydown', (evt) => {
             sketch.keyPressed(evt.key, evt.key);
         });
+    }
+
+    initGui() {
+        if (!this.gui) {
+            this.gui = new dat.gui.GUI({
+                name: 'Parameters',
+                width: 250,
+                hideable: true,
+                closeOnTop: true,
+            });
+
+            this.gui.domElement.id = 'gui';
+            this.gui.domElement.style = 'position: absolute; left: ' + (W - 250) + 'px;';
+
+            this.gui.useLocalStorage = true;
+
+            this.gui.remember(this.params);
+
+            this.gui.add(this.params, 'autotest');
+            this.gui.add(this.params, 'topLeft');
+            this.guiController = this.gui.add(this.params, 'sketchName', this.params.sketches).onChange((controller) => {
+                setSketch(this.params.sketchName);
+            });
+        }
+
+        if (this.guiFolder) {
+            this.gui.removeFolder(this.guiFolder);
+        }
+
+        if (Object.keys(sketch.params).length > 0) {
+            this.guiFolder = this.gui.addFolder(this.params.sketchName);
+            this.guiFolder.open();
+
+            for (let param in sketch.params) {
+                let value = sketch.params[param];
+                switch (typeof (value)) {
+                    case 'object': {
+                        this.guiFolder.add(value, 'value',
+                            value.min || 1,
+                            value.max || 100,
+                            value.step || 1);
+                        break;
+                    }
+                    default: {
+                        this.guiFolder.add(sketch.params, param, 1, 100);
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.guiFolder = null;
+        }
     }
 
     mouseEvent(evt) {
@@ -90,6 +135,8 @@ class Engine {
 
     initWebGLContext() {
         this.canvas = document.getElementById("canvas");
+        this.canvas.focus();
+
         this.resizeCanvas(this.canvas);
 
         let gl = this.canvas.getContext("webgl2", {
@@ -154,6 +201,9 @@ class Engine {
         resetMatrix();
         ortho();
 
+        stroke(colors.white);
+        fill(colors.white);
+
         sprite(0, 0, W, H, sketch.targetTexture);
     }
 
@@ -161,18 +211,33 @@ class Engine {
         DeltaTime = this.frameTime.deltaTime;
         ElapsedTime = this.frameTime.elapsedTime;
 
-        update(DeltaTime);
+        this.update(DeltaTime);
 
         this.beforeDraw();
-        draw();
+        this.draw();
         this.afterDraw();
 
         this.requestRender();
     }
 
+    update(dt) {
+        if (this.params.autotest) {
+            let nextIndex = sketches.indexOf(this.params.sketchName) + 1;
+            let nextItem = sketches[nextIndex] || sketches[0];
+            setSketch(nextItem);
+        }
+
+        sketch.update(dt);
+    }
+
+    draw() {
+        sketch.draw();
+    }
+
+
     requestRender() {
         window.requestAnimationFrame(() => {
-            engine.frame();
+            this.frame();
             this.frameTime.frame();
         });
     }
@@ -230,6 +295,9 @@ function setSketch(name) {
         sketch.pause();
     }
 
+    engine.params.sketchName = name;
+    engine.guiController?.updateDisplay();
+
     if (!sketchesRef[name]) {
         sketchesRef[name] = eval('new ' + name + '()');
         sketch = sketchesRef[name];
@@ -240,6 +308,8 @@ function setSketch(name) {
         sketch = sketchesRef[name];
         sketch.resume();
     }
+
+    engine.initGui();
 }
 
 function run() {
@@ -247,23 +317,10 @@ function run() {
 
     engine.params.sketches = sketches;
     engine.params.sketchName = engine.params.sketches[engine.params.sketches.length - 1];
-
     engine.params.topLeft = true;
-
-    engine.gui.add(engine.params, 'topLeft');
-    engine.gui.add(engine.params, 'sketchName', engine.params.sketches).onChange((controller) => {
-        setSketch(engine.params.sketchName);
-    });
+    engine.params.autotest = false;
 
     setSketch(engine.params.sketchName);
 
     engine.requestRender();
-}
-
-function update(dt) {
-    sketch.update(dt);
-}
-
-function draw() {
-    sketch.draw();
 }

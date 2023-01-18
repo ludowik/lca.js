@@ -85,7 +85,7 @@ function points(array) {
 
     let clr = __strokeColor || colors.white;
     gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
-    
+
     gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
 }
 
@@ -337,7 +337,7 @@ function text(txt, x, y) {
 
     let w, h;
     w = metrics.width;
-    h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+    h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent + 1;
 
     context.canvas.width = w;
     context.canvas.height = h;
@@ -347,7 +347,7 @@ function text(txt, x, y) {
     context.fillStyle = fontColor;
     context.strokeStyle = fontColor;
     context.font = fontRef;
-    context.fillText(txt, 0, h);
+    context.fillText(txt, 0, h - 1);
 
     var textTex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, textTex);
@@ -368,8 +368,10 @@ function text(txt, x, y) {
     }
 
     if (getOrigin() === TOP_LEFT) {
+        translate(0, -metrics.fontBoundingBoxDescent);
         scale(w, h);
     } else {
+        translate(0, h + metrics.fontBoundingBoxDescent);
         scale(w, -h);
     }
 
@@ -385,6 +387,12 @@ function text(txt, x, y) {
     shaders.texture.texture = textTex;
 
     initializeAttributes(shaders.texture, array, array);
+
+    let ul = shaders.texture.uniformsLocation;
+
+    let clr = __fillColor || colors.white;
+    gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
+
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();
@@ -413,6 +421,12 @@ function sprite(x, y, w, h, texture) {
     shaders.texture.texture = texture;
 
     initializeAttributes(shaders.texture, array, array);
+
+    let ul = shaders.texture.uniformsLocation;
+
+    let clr = colors.white;
+    gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
+
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();

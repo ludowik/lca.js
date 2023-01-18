@@ -1,14 +1,12 @@
 class CircleSketch extends Sketch {
     setup() {
-        this.params.strokeSize = 15;
-
-        engine.gui.add(this.params, 'strokeSize', 1, 60);
+        this.params.strokeSize = { value: 15, min: 1, max: 60 };
     }
 
     draw() {
         background();
 
-        strokeSize(this.params.strokeSize);
+        strokeSize(this.params.strokeSize.value);
         stroke(colors.white);
 
         fill(colors.blue);

@@ -11,6 +11,7 @@ class ShaderBox extends Sketch {
             uniform float iTime;
             uniform vec2 uMouse;
             uniform vec2 uResolution;
+            uniform float h;
         
             float random (vec2 st) {
                 return fract(
@@ -38,10 +39,19 @@ class ShaderBox extends Sketch {
                 // color = vec3(fpos, 0.0);
 
                 gl_FragColor = vec4(color, 1.0);
+
+                float x = 10. * iTime + (gl_FragCoord.x - uResolution.x / 2.) / h;
+                float y = (gl_FragCoord.y - uResolution.y / 2.) / h;
+
+                float d = smoothstep(1., 1.-1./h, 1. - abs(sin(x) - y));
+
+                gl_FragColor = vec4(d,d,d, 1.0);
             }
         `;
 
         this.shader = new Shader(getContext(), 'shaderbox', this.vertexShaderText, this.fragmentShaderText);
+
+        this.params.h = 10;
     }
 
     sendUniforms(uniforms) {
@@ -86,6 +96,7 @@ class ShaderBox extends Sketch {
             iTime: ElapsedTime,
             uResolution: createVector(W, H),
             uMouse: createVector(mouse.x, mouse.y),
+            h: this.params.h,
         }
 
         this.shader.use();

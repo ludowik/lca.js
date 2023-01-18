@@ -124,21 +124,21 @@ class Game2048 extends Sketch {
 
     load() {
         let items = getItem('2048/grid');
-        if (items) {
-            this.score = getItem('2048/score') || 0;
-            this.highScore = getItem('2048/highScore') || 0;
-            this.grid.items = items;
-            iterate(index(this.grid.w), col => {
-                iterate(index(this.grid.h), row => {
-                    if (this.grid.get(col, row) !== null) {
-                        this.grid.set(col, row, new Cell(this.grid.get(col, row).value));
-                    }
-                });
-            });
-            return true;
+        if (!items) {
+            return false;
         }
 
-        return false;
+        this.score = getItem('2048/score') || 0;
+        this.highScore = getItem('2048/highScore') || 0;
+        this.grid.items = items;
+        iterate(index(this.grid.w), col => {
+            iterate(index(this.grid.h), row => {
+                if (this.grid.get(col, row) !== null) {
+                    this.grid.set(col, row, new Cell(this.grid.get(col, row).value));
+                }
+            });
+        });
+        return true;
     }
 
     addCell() {
@@ -146,8 +146,8 @@ class Game2048 extends Sketch {
             let x;
             let y;
             do {
-                x = randomInt(this.grid.w);
-                y = randomInt(this.grid.h);
+                x = randomInt(this.grid.w)-1;
+                y = randomInt(this.grid.h)-1;
             } while (this.grid.get(x, y) !== null);
 
             this.grid.set(x, y, new Cell(random() < 0.85 ? 2 : 4));
@@ -163,9 +163,7 @@ class Game2048 extends Sketch {
                 isGameOver = false;
             }
         });
-        if (isGameOver) {
-            log_clear('Game Over');
-        }
+        
         return isGameOver;
     }
 
@@ -258,7 +256,7 @@ class Game2048 extends Sketch {
                                 grid.set(col, row, null);
                                 moves++;
                                 availableMove = true;
-                                this.score += from * 2;
+                                this.score += target.value * 2;
                                 this.highScore = max(this.score, this.highScore);
                             }
                         }

@@ -1,9 +1,7 @@
 class Primitives extends Sketch {
     setup() {
         this.points = [];
-
         this.params.strokeSize = 1;
-        engine.gui.add(this.params, 'strokeSize', 1, 20);
     }
 
     update(dt) {

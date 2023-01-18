@@ -7,6 +7,6 @@ var texture_vertexShaderText = `
 
 var texture_fragmentShaderText = `
     void main() {
-        gl_FragColor = texture2D(uTexture, vTexCoord.xy);
+        gl_FragColor = texture2D(uTexture, vTexCoord.xy) * fillColor;
     }
 `;

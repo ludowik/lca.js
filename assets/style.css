@@ -51,8 +51,3 @@ button:hover, select:hover, a:hover {
     background-color: #FFFFFF;
     color: #000000;
 }
-
-#gui {
-    position: absolute;
-    left: 50%;
-}
