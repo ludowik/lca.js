@@ -101,7 +101,7 @@ class Engine {
     }
 
     mouseEvent(evt) {
-        evt.preventDefault();
+        // evt.preventDefault();
 
         mouse.x = evt.clientX;
         mouse.y = evt.clientY;
