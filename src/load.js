@@ -27,28 +27,25 @@ let shaderFiles = [
 ];
 
 let sketchFiles = [
-    'lines.js',
+    '3d.js',
+    '2048.js',
+    'attraction.js',
+    'bees.js',
+    'brick_breaker.js',
     'circle.js',
-    'compute_pi.js',
-    'primitives.js',
-    'shaderbox.js',
     'circle_packing.js',
     'circle_recursive.js',
     'circle_sizing.js',
-    '2048.js',
+    'compute_pi.js',
+    'lines.js',    
+    'primitives.js',
+    'shaderbox.js',
 ];
 
-var sketches = [
-    'Lines',
-    'CircleSketch',
-    'ComputePI',
-    'Primitives',
-    'CirclePacking',
-    'CircleRecursive',
-    'CircleSizing',
-    'ShaderBox',
-    'Game2048',
-];
+var sketches = [];
+function declareSketch(sketch) {
+    sketches.push(sketch.name);
+}
 
 let n = scriptFiles.length + shaderFiles.length + sketchFiles.length;
 

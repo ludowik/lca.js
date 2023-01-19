@@ -6,13 +6,13 @@ class Entity {
         return this.constructor.name;
     }
 
-    setup() {        
+    setup() {
     }
 
-    pause() {        
+    pause() {
     }
 
-    resume() {        
+    resume() {
     }
 
     update(dt) {
@@ -21,13 +21,42 @@ class Entity {
         }
     }
 
-    draw() {        
+    draw() {
     }
 
     mouseReleased() {
     }
 
     keyPressed(keyCode, key) {
+    }
+}
+
+class Node extends Entity {
+    constructor() {
+        super();
+        this.items = [];
+    }
+
+    push(item) {
+        this.items.push(item);
+    }
+
+    update(dt) {
+        for (const item of this.items) {
+            item.update(dt);
+        }
+    }
+
+    draw() {
+        for (const item of this.items) {
+            item.draw();
+        }
+    }
+}
+
+class Scene extends Node {
+    constructor() {
+        super();
     }
 }
 

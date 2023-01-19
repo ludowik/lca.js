@@ -9,6 +9,7 @@ function randomInt(_min, _max) {
 }
 
 var PI = Math.PI;
+var TAU = Math.PI * 2;
 
 var sin = Math.sin;
 var cos = Math.cos;
@@ -22,8 +23,10 @@ Math.degrees = function (radians) {
 }
 
 var radians = Math.radians;
-var degr = Math.degrees;
+var degrees = Math.degrees;
 
+var tan = Math.tan;
+var atan2 = Math.atan2;
 var abs = Math.abs;
 var ceil = Math.ceil;
 var floor = Math.floor;

@@ -1,5 +1,7 @@
 class Attraction extends Sketch {
-    init() {
+    static { declareSketch(this) };
+
+    setup() {
         this.comets = [];
         for (const i of range(100)) {
             this.comets.push(new Comet());
@@ -28,14 +30,14 @@ class Attraction extends Sketch {
         }
     }
 
-    render() {
+    draw() {
         background(0);
         for (const comet of this.comets) {
-            comet.render();
+            comet.draw();
         }
 
         for (const attractor of this.attractors) {
-            attractor.render();
+            attractor.draw();
         }
     }
 
@@ -52,32 +54,30 @@ class Comet {
 
     update() {
         this.position.add(this.speed);
-        if (this.position.x >= width) {
+        if (this.position.x >= W) {
             this.position.x = 0;
         } else if (this.position.x < 0) {
-            this.position.x = width;
+            this.position.x = W;
         }
 
-        if (this.position.y >= height) {
+        if (this.position.y >= H) {
             this.position.y = 0;
         } else if (this.position.y < 0) {
-            this.position.y = height;
+            this.position.y = H;
         }
     }
 
     attraction(dt, attractor) {
         // influencer la direction via une rotation
         let dist = attractor.position.dist(this.position);
-        if (dist < width) {
-            let v = attractor.position.copy().sub(this.position).normalize();
+        if (dist < W) {
+            let v = attractor.position.clone().sub(this.position).normalize();
             let angle = this.speed.angleBetween(v);
             this.speed.rotate(angle / 100);
         }
     }
 
-    render() {
+    draw() {
         circle(this.position.x, this.position.y, 10);
     }
 }
-
-setSketch(Attraction);

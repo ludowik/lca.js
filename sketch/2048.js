@@ -92,6 +92,8 @@ class Cell {
 }
 
 class Game2048 extends Sketch {
+    static { declareSketch(this) };
+    
     setup() {
         colorMode(HSB, 1);
         this.params.autoPlay = false;

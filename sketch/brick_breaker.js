@@ -1,5 +1,7 @@
 class BrickBreaker extends Sketch {
-    init() {
+    static { declareSketch(this) };
+
+    setup() {
         this.scene = new Scene();
 
         this.ball = new Ball();
@@ -24,7 +26,7 @@ class BrickBreaker extends Sketch {
     step(dt) {
         this.scene.update(dt);
 
-        for (const brick of this.bricks) {
+        for (const brick of this.bricks.items) {
             //brick.update(dt);
             if (this.collide(this.ball, brick)) {
                 this.reaction(this.ball, brick);
@@ -32,10 +34,10 @@ class BrickBreaker extends Sketch {
             }
         }
 
-        for (let i = this.bricks.length - 1; i >= 0; i--) {
-            const brick = this.bricks[i];
+        for (let i = this.bricks.items.length - 1; i >= 0; i--) {
+            const brick = this.bricks.items[i];
             if (brick.life <= 0) {
-                this.bricks.splice(i, 1);
+                this.bricks.items.splice(i, 1);
             }
         }
     }
@@ -92,9 +94,9 @@ class BrickBreaker extends Sketch {
         }
     }
 
-    render() {
+    draw() {
         background(colors.black);
-        this.scene.render();
+        this.scene.draw();
     }
 
     mousePressed() {
@@ -105,19 +107,19 @@ class BrickBreaker extends Sketch {
 class Ball extends Entity {
     constructor() {
         super();
-        this.position = createVector(xc, yc);
-        this.speed = random2D(width);
+        this.position = createVector(CX, CY);
+        this.speed = randomPoint(W);
         this.radius = 8;
     }
 
     update(dt) {
-        this.previousPosition = this.position.copy();
-        this.position.add(this.speed.copy().mult(dt));
+        this.previousPosition = this.position.clone();
+        this.position.add(this.speed.clone().mult(dt));
 
-        if (this.position.x >= width - this.radius) {
-            let dx = this.position.x - (width - this.radius);
+        if (this.position.x >= W - this.radius) {
+            let dx = this.position.x - (W - this.radius);
             this.speed.x *= -1;
-            this.position.x = width - this.radius - dx;
+            this.position.x = W - this.radius - dx;
 
         } else if (this.position.x < this.radius) {
             let dx = this.radius - this.position.x;
@@ -125,10 +127,10 @@ class Ball extends Entity {
             this.position.x = this.radius + dx;
         }
 
-        if (this.position.y >= height - this.radius) {
-            let dy = this.position.y - (height - this.radius);
+        if (this.position.y >= H - this.radius) {
+            let dy = this.position.y - (H - this.radius);
             this.speed.y *= -1;
-            this.position.y = height - this.radius - dy;
+            this.position.y = H - this.radius - dy;
 
         } else if (this.position.y < this.radius) {
             let dy = this.radius - this.position.y;
@@ -137,8 +139,8 @@ class Ball extends Entity {
         }
     }
 
-    render() {
-        let direction = p5.Vector.sub(this.position, this.previousPosition).normalize().mult(5);
+    draw() {
+        let direction = this.position.clone().sub(this.previousPosition).normalize().mult(5);
 
         fill('grey');
         circle(this.position.x - direction.x, this.position.y - direction.y, this.radius * 2);
@@ -156,7 +158,7 @@ class Brick extends Entity {
         this.life = 1;
     }
 
-    render() {
+    draw() {
         fill(colors.blue);
         rect(this.position.x, this.position.y, this.size.x, this.size.y);
     }
@@ -164,14 +166,12 @@ class Brick extends Entity {
 
 class BrickMouse extends Brick {
     constructor() {
-        super(width / 2, height * 0.8, width / 4, 10);
+        super(W / 2, H * 0.8, W / 4, 10);
         this.life = Math.MAX_VALUE;
         this.isPlayer = true;
     }
 
     update() {
-        this.position.x = mouseX - this.size.x / 2;
+        this.position.x = mouse.x - this.size.x / 2;
     }
 }
-
-setSketch(BrickBreaker);
