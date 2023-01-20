@@ -1,0 +1,1 @@
+declareSketch(SketchLua, 'collatz');

@@ -5,7 +5,10 @@ let scriptFiles = [
     'transform.js',
     'vec2.js',
     'graphics/color.js',
+    'graphics/style.js',
     'graphics/graphics2d.js',
+    'graphics/graphics3d.js',
+    'graphics/shape.js',
     'graphics/shader.js',
     'graphics/mesh.js',
     'sketch.js',
@@ -40,6 +43,8 @@ let sketchFiles = [
     'lines.js',    
     'primitives.js',
     'shaderbox.js',
+    'trees.js',
+    'game_of_life.js',
 ];
 
 var sketches = [];

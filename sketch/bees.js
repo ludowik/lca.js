@@ -1,9 +1,7 @@
 class Bees extends Sketch {
-    setup(config) {
-        config.mode = WEBGL;
-    }
-
-    init(config) {
+    static { declareSketch(this) };
+    
+    setup() {
         this.angle = getItem('bees:angle') || 0;
 
         this.params = {
@@ -15,7 +13,7 @@ class Bees extends Sketch {
         };
     }
 
-    render() {
+    draw() {
         background(0);
 
         ortho(-minSize, minSize, -minSize, minSize, -2000, 2000);

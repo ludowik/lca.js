@@ -1,4 +1,6 @@
 class ShaderBox extends Sketch {
+    static { declareSketch(this) };
+    
     setup() {
         this.vertexShaderText = `        
             void main() {

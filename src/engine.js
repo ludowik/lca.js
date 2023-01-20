@@ -14,7 +14,18 @@ var UP_ARROW = 'ArrowUp';
 class Engine {
     constructor() {
         this.load();
+
         this.frameTime = new FrameTime();
+
+        this.params = {};
+        this.params.sketches = sketches;
+        this.params.sketchName = this.params.sketches[this.params.sketches.length - 1];
+        this.params.topLeft = true;
+        this.params.autotest = false;
+
+        this.initGui();
+
+        this.loop = true;
     }
 
     load() {
@@ -30,8 +41,6 @@ class Engine {
         minSizeFont = minSize / 24;
 
         this.graphics = new Graphics(this.gl);
-
-        this.params = {};
 
         this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
@@ -70,6 +79,8 @@ class Engine {
                 setSketch(this.params.sketchName);
             });
         }
+
+        if (!sketch) return;
 
         if (this.guiFolder) {
             this.gui.removeFolder(this.guiFolder);
@@ -235,11 +246,13 @@ class Engine {
     }
 
 
-    requestRender() {
-        window.requestAnimationFrame(() => {
-            this.frame();
-            this.frameTime.frame();
-        });
+    requestRender(forceRender) {
+        if (engine.loop || forceRender) {
+            window.requestAnimationFrame(() => {
+                this.frame();
+                this.frameTime.frame();
+            });
+        }
     }
 }
 
@@ -289,6 +302,18 @@ function getOrigin() {
     return engine.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
 }
 
+function loop() {
+    engine.loop = true;
+}
+
+function noLoop() {
+    engine.loop = false;
+}
+
+function redraw() {
+    engine.requestRender(true);
+}
+
 var sketchesRef = {};
 function setSketch(name) {
     if (sketch) {
@@ -314,13 +339,7 @@ function setSketch(name) {
 
 function run() {
     engine = new Engine();
-
-    engine.params.sketches = sketches;
-    engine.params.sketchName = engine.params.sketches[engine.params.sketches.length - 1];
-    engine.params.topLeft = true;
-    engine.params.autotest = false;
-
     setSketch(engine.params.sketchName);
 
-    engine.requestRender();
+    engine.requestRender(true);
 }

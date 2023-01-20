@@ -9,8 +9,8 @@ class Sketch3D extends Sketch {
         let dirX = (mouse.x / W - 0.5) * 2;
         let dirY = (mouse.y / H - 0.5) * 2;
 
-        // ambientLight(0.5);
-        // directionalLight(1, 1, 1, -dirX, -dirY, -1);
+        ambientLight(0.5);
+        directionalLight(1, 1, 1, -dirX, -dirY, -1);
 
         // noStroke();
         // fill(colors.red);

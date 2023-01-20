@@ -1,4 +1,6 @@
 class Lines extends Sketch {
+    static { declareSketch(this) };
+    
     setup() {
         this.params.step = { value: 6, min: 1, max: 10, step: 1 };
     }

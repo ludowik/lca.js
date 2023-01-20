@@ -28,26 +28,6 @@ function pop() {
     //popStyles();
 }
 
-function initializeAttributes(shader, array, texCoord) {
-    let gl = getContext();
-
-    shader.use();
-
-    let buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(shader.attribsLocation.aPosition);
-    gl.vertexAttribPointer(shader.attribsLocation.aPosition, 3, gl.FLOAT, false, 0, 0);
-
-    if (texCoord) {
-        let buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoord), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(shader.attribsLocation.aTexCoord);
-        gl.vertexAttribPointer(shader.attribsLocation.aTexCoord, 3, gl.FLOAT, false, 0, 0);
-    }
-}
-
 var meshPoint;
 function point(x, y, z = 0) {
     let gl = getContext();
@@ -75,10 +55,16 @@ function point(x, y, z = 0) {
     popMatrix();
 }
 
+let meshPoints;
 function points(array) {
     let gl = getContext();
 
-    initializeAttributes(shaders.point, array);
+    if (!meshPoints) {
+        meshPoints = new Mesh();
+        meshPoints.initializeAttributes(shaders.point, array);
+    } else {
+        meshPoints.updateAttributes(shaders.point, array);
+    }
 
     let ul = shaders.point.uniformsLocation;
     gl.uniform1f(ul.strokeSize, __strokeSize);
@@ -87,45 +73,6 @@ function points(array) {
     gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
     gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
-}
-
-let __strokeSize = 1;
-function strokeSize(size) {
-    if (size) __strokeSize = size;
-    return __strokeSize;
-}
-
-let __strokeColor;
-function stroke(clr) {
-    if (clr) {
-        if (clr instanceof Color) {
-            __strokeColor = clr;
-        } else {
-            __strokeColor = color(clr);
-        }
-    }
-    return __strokeColor;
-}
-
-function noStroke() {
-    __strokeColor = null;
-    __strokeSize = 0;
-}
-
-let __fillColor;
-function fill(clr) {
-    if (clr) {
-        if (clr instanceof Color) {
-            __fillColor = clr;
-        } else {
-            __fillColor = color(clr);
-        }
-    }
-    return __fillColor;
-}
-
-function noFill() {
-    __fillColor = null;
 }
 
 let meshLine;
@@ -164,15 +111,6 @@ function line(x1, y1, x2, y2) {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
-}
-
-var CENTER = 'center';
-var CORNER = 'corner';
-
-let __rectMode = CORNER;
-function rectMode(mode) {
-    if (mode) __rectMode = mode;
-    return __rectMode;
 }
 
 let meshRect;
@@ -220,18 +158,8 @@ function rect(x, y, w, h) {
     popMatrix();
 }
 
-function circleMode(mode) {
-    return ellipseMode(mode);
-}
-
 function circle(x, y, radius) {
     ellipse(x, y, radius * 2, radius * 2);
-}
-
-let __ellipseMode = CENTER;
-function ellipseMode(mode) {
-    if (mode) __ellipseMode = mode;
-    return __ellipseMode;
 }
 
 let meshEllipse;
@@ -275,41 +203,6 @@ function ellipse(x, y, w, h) {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
-}
-
-let __shape;
-function beginShape() {
-    __shape = [];
-}
-
-function vertex(x, y, z = 0) {
-    __shape.push(x, y, z);
-}
-
-function endShape() {
-    points(__shape);
-}
-
-function fontName() { }
-
-let __fontSize = 16;
-function fontSize(size) {
-    if (size) {
-        __fontSize = size;
-    }
-    return __fontSize;
-}
-
-let __textMode = CENTER;
-function textMode(mode) {
-    if (mode) __textMode = mode;
-    return __textMode;
-}
-
-var LEFT = 'left';
-
-function textAlign(horizontal, vertical) {
-    textMode(horizontal === LEFT ? CORNER : CENTER);
 }
 
 let meshText;
@@ -386,7 +279,12 @@ function text(txt, x, y) {
 
     shaders.texture.texture = textTex;
 
-    initializeAttributes(shaders.texture, array, array);
+    if (!meshText.mesh) {
+        meshText.mesh = new Mesh();
+        meshText.mesh.initializeAttributes(shaders.texture, array, array);
+    } else {
+        meshText.mesh.updateAttributes(shaders.texture, array, array);
+    }
 
     let ul = shaders.texture.uniformsLocation;
 
@@ -398,6 +296,7 @@ function text(txt, x, y) {
     popMatrix();
 }
 
+var meshSprite;
 function sprite(x, y, w, h, texture) {
     let gl = getContext();
 
@@ -420,7 +319,12 @@ function sprite(x, y, w, h, texture) {
 
     shaders.texture.texture = texture;
 
-    initializeAttributes(shaders.texture, array, array);
+    if (!meshSprite) {
+        meshSprite = new Mesh();
+        meshSprite.initializeAttributes(shaders.texture, array, array);
+    } else {
+        meshSprite.updateAttributes(shaders.texture, array, array);
+    }
 
     let ul = shaders.texture.uniformsLocation;
 
@@ -432,6 +336,7 @@ function sprite(x, y, w, h, texture) {
     popMatrix();
 }
 
+var meshShade;
 function shade(x, y, w, h, shader) {
     let gl = getContext();
 
@@ -449,7 +354,13 @@ function shade(x, y, w, h, shader) {
         0, 1, 0
     ];
 
-    initializeAttributes(shader, array, array);
+    if (!meshShade) {
+        meshShade = new Mesh();
+        meshShade.initializeAttributes(shader, array, array);
+    } else {
+        meshShade.updateAttributes(shader, array, array);
+    }
+
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();

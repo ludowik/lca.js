@@ -1,4 +1,6 @@
 class CirclePacking extends Sketch {
+    static { declareSketch(this) };
+    
     setup() {
         this.circles = [];
         this.newCircles(100);

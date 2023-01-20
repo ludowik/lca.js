@@ -1,8 +1,6 @@
 class ComputePI extends Sketch {
-    static { declareSketch(this) };
-    
-    setup() {
-        this.iteration = W + 1;
+    init() {
+        this.iteration = width + 1;
 
         this.methods = [
             new EstimatePI(),
@@ -31,15 +29,15 @@ class ComputePI extends Sketch {
         }
     }
 
-    draw() {
+    render() {
         background(colors.black);
 
-        let h = 24;
+        let h = minSizeFont;
 
-        let x = (W / 2) / 8;
+        let x = xc / 8;
         let y = 2 * h;
 
-        fontSize(h);
+        textSize(h);
         textAlign(LEFT, CENTER);
 
         for (const method of this.methods) {
@@ -48,6 +46,8 @@ class ComputePI extends Sketch {
         }
     }
 }
+
+declareSketch(ComputePI);
 
 class EstimatePI {
     constructor() {
@@ -70,7 +70,7 @@ class EstimatePI {
     update() {
         let pi = this.compute();
         this.values.push(pi);
-        if (this.values.length > W) {
+        if (this.values.length > width) {
             this.values.shift();
         }
     }
@@ -109,7 +109,7 @@ class EstimatePI {
             maxY = PI + maxFromPI;
 
             let piY = map(PI, minY, maxY, h, 0);
-            line(ox, oy + piY, ox + W, oy + piY);
+            line(ox, oy + piY, ox + width, oy + piY);
 
             beginShape();
             for (let x = 0; x < values.length; x++) {

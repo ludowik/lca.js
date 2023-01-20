@@ -1,4 +1,12 @@
-var random = Math.random;
+function random(_min, _max) {
+    if (!_min && !_max) return Math.random();
+
+    if (!_max) {
+        _max = _min;
+        _min = 0;
+    }
+    return Math.random() * (_max - _min) + _min;
+}
 
 function randomInt(_min, _max) {
     if (_max == undefined) {
