@@ -99,7 +99,7 @@ class Carto extends Sketch {
                     endShape();
                 }
             }
-            // noLoop();
+            noLoop();
 
         }
     }

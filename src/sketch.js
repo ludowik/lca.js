@@ -63,11 +63,14 @@ class Scene extends Node {
 class Sketch extends Entity {
     constructor() {
         super();
+
         this.params = {};
 
         this.createTexture();
         this.createRenderbuffer();
         this.createFramebuffer();
+
+        this.loop = true;
     }
 
     // TODO : compose FrameBuffer
@@ -139,7 +142,7 @@ class Sketch extends Entity {
 class SketchLua extends Sketch {
     constructor(script) {
         super();
-        this.script = script;
+        this.script = 'sketch_lua/main.lua';
     }
 
     dofile(filename) {
@@ -172,12 +175,22 @@ class SketchLua extends Sketch {
         this.lauxlib.luaL_requiref(this.L, fengari.to_luastring("js"), fengari.interop.luaopen_js, 1);
 
         this.dofile('src/lua/init.lua');
-        this.dofile('sketch_lua/main.lua');
+        this.dofile(this.script);
 
         this.dostring('setup()');
     }
 
     draw() {
         this.dostring('draw()');
+    }
+}
+
+class SketchPython extends Sketch {
+    constructor() {
+        super();
+    }
+
+    draw() {
+        //drawPython();
     }
 }

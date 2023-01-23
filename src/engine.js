@@ -24,8 +24,6 @@ class Engine {
         this.params.autotest = false;
 
         this.initGui();
-
-        this.loop = true;
     }
 
     load() {
@@ -52,9 +50,7 @@ class Engine {
         this.canvas.addEventListener("mouseleave", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("wheel", (evt) => { this.mouseEvent(evt); }, { passive: false });
 
-        document.addEventListener('keydown', (evt) => {
-            sketch.keyPressed(evt.key, evt.key);
-        });
+        document.addEventListener('keydown', (evt) => { this.keyboardEvent(evt); });
     }
 
     initGui() {
@@ -71,9 +67,9 @@ class Engine {
 
             this.gui.useLocalStorage = true;
             this.gui.remember(this.params);
-            
+
             this.guiGlobals = this.gui.addFolder('engine');
-            this.guiGlobals.open();            
+            this.guiGlobals.open();
 
             this.guiGlobals.add(this.params, 'autotest');
             this.guiGlobals.add(this.params, 'topLeft');
@@ -149,6 +145,14 @@ class Engine {
         }
 
         evt.returnValue = false;
+    }
+
+    keyboardEvent(evt) {
+        if (evt.key === 'n') {
+            this.nextSketch();
+        }
+
+        sketch.keyPressed(evt.key, evt.key);
     }
 
     initWebGLContext() {
@@ -234,17 +238,9 @@ class Engine {
         this.beforeDraw();
         this.draw();
         this.afterDraw();
-
-        this.requestRender();
     }
 
     update(dt) {
-        if (this.params.autotest) {
-            let nextIndex = sketches.indexOf(this.params.sketchName) + 1;
-            let nextItem = sketches[nextIndex] || sketches[0];
-            setSketch(nextItem);
-        }
-
         sketch.update(dt);
     }
 
@@ -252,14 +248,31 @@ class Engine {
         sketch.draw();
     }
 
+    nextSketch() {
+        let nextIndex = sketches.indexOf(this.params.sketchName) + 1;
+        let nextItem = sketches[nextIndex] || sketches[0];
+        setSketch(nextItem);
+    }
 
     requestRender(forceRender) {
-        if (engine.loop || forceRender) {
-            window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+            if (this.params.autotest) {
+                if (!sketch.nFrames) {
+                    sketch.nFrames = 10;
+                }
+                sketch.nFrames--;
+                if (sketch.nFrames === 0) {
+                    this.nextSketch();
+                }
+            }
+
+            if (sketch.loop || forceRender) {
                 this.frame();
                 this.frameTime.frame();
-            });
-        }
+            }
+
+            this.requestRender();
+        });
     }
 }
 
@@ -310,11 +323,11 @@ function getOrigin() {
 }
 
 function loop() {
-    engine.loop = true;
+    sketch.loop = true;
 }
 
 function noLoop() {
-    engine.loop = false;
+    sketch.loop = false;
 }
 
 function redraw() {

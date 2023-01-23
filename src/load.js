@@ -46,14 +46,13 @@ let sketchFiles = [
     'trees.js',
     'game_of_life.js',
     'lua.js',
+    'py.js',
 ];
 
 var sketches = [];
 function declareSketch(sketch) {
     sketches.push(sketch.name);
 }
-
-let n = scriptFiles.length + shaderFiles.length + sketchFiles.length;
 
 function include(path, files) {
     for (src of files) {
@@ -72,5 +71,6 @@ include('src', scriptFiles);
 include('sketch', sketchFiles);
 
 window.onload = () => {
+    brython();
     run();
 };
