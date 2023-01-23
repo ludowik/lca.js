@@ -1,6 +1,4 @@
 class Bees extends Sketch {
-    static { declareSketch(this) };
-    
     setup() {
         this.angle = getItem('bees:angle') || 0;
 
@@ -52,3 +50,5 @@ class Bees extends Sketch {
         storeItem('bees:angle', this.angle);
     }
 }
+
+declareSketch(Bees);

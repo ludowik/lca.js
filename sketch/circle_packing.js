@@ -1,6 +1,4 @@
 class CirclePacking extends Sketch {
-    static { declareSketch(this) };
-    
     setup() {
         this.circles = [];
         this.newCircles(100);
@@ -88,6 +86,8 @@ class CirclePacking extends Sketch {
         this.newCircle(floor(mouseX), floor(mouseY), width);
     }
 }
+
+declareSketch(CirclePacking);
 
 class Circle {
     constructor(x, y, radius) {

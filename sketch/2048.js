@@ -92,8 +92,6 @@ class Cell {
 }
 
 class Game2048 extends Sketch {
-    static { declareSketch(this) };
-    
     setup() {
         colorMode(HSB, 1);
         this.params.autoPlay = false;
@@ -148,8 +146,8 @@ class Game2048 extends Sketch {
             let x;
             let y;
             do {
-                x = randomInt(this.grid.w)-1;
-                y = randomInt(this.grid.h)-1;
+                x = randomInt(this.grid.w) - 1;
+                y = randomInt(this.grid.h) - 1;
             } while (this.grid.get(x, y) !== null);
 
             this.grid.set(x, y, new Cell(random() < 0.85 ? 2 : 4));
@@ -165,7 +163,7 @@ class Game2048 extends Sketch {
                 isGameOver = false;
             }
         });
-        
+
         return isGameOver;
     }
 
@@ -286,3 +284,5 @@ class Game2048 extends Sketch {
         return totalMoves;
     }
 }
+
+declareSketch(Game2048);

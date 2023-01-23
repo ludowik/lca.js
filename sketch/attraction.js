@@ -1,6 +1,4 @@
 class Attraction extends Sketch {
-    static { declareSketch(this) };
-
     setup() {
         this.comets = [];
         for (const i of range(100)) {
@@ -45,6 +43,8 @@ class Attraction extends Sketch {
         this.attractors.push(new Comet(mouseX, mouseY));
     }
 }
+
+declareSketch(Attraction);
 
 class Comet {
     constructor(x, y) {

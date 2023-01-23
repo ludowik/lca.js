@@ -1,6 +1,4 @@
 class ComputePI extends Sketch {
-    static { declareSketch(this) };
-    
     setup() {
         this.iteration = W + 1;
 
@@ -48,6 +46,8 @@ class ComputePI extends Sketch {
         }
     }
 }
+
+declareSketch(ComputePI);
 
 class EstimatePI {
     constructor() {

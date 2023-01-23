@@ -1,6 +1,4 @@
 class ShaderBox extends Sketch {
-    static { declareSketch(this) };
-    
     setup() {
         this.vertexShaderText = `        
             void main() {
@@ -59,7 +57,7 @@ class ShaderBox extends Sketch {
     sendUniforms(uniforms) {
         let gl = getContext();
 
-        for (let uniform in uniforms) {            
+        for (let uniform in uniforms) {
             let ul = this.shader.uniformsLocation[uniform];
             if (!ul) {
                 // console.log('unknown uniform ' + uniform);
@@ -84,7 +82,7 @@ class ShaderBox extends Sketch {
                     break;
                 }
                 default: {
-                    console.log('unknown type ' + type)
+                    console.log('unknown type ' + type);
                     break;
                 }
             }
@@ -99,7 +97,7 @@ class ShaderBox extends Sketch {
             uResolution: createVector(W, H),
             uMouse: createVector(mouse.x, mouse.y),
             h: this.params.h,
-        }
+        };
 
         this.shader.use();
         this.sendUniforms(this.uniforms);
@@ -108,3 +106,4 @@ class ShaderBox extends Sketch {
     }
 }
 
+declareSketch(ShaderBox);

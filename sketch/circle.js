@@ -1,6 +1,4 @@
 class CircleSketch extends Sketch {
-    static { declareSketch(this) };
-    
     setup() {
         this.params.strokeSize = { value: 15, min: 1, max: 60 };
     }
@@ -16,3 +14,5 @@ class CircleSketch extends Sketch {
         circle(W / 2, H / 2, 100 * abs(sin(ElapsedTime)));
     }
 }
+
+declareSketch(CircleSketch);

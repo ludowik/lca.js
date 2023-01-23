@@ -1,6 +1,4 @@
 class CircleRecursive extends Sketch {
-    static { declareSketch(this) };
-    
     setup() {
         this.angle = 0;
         colorMode(HSB, 1);
@@ -36,3 +34,5 @@ class CircleRecursive extends Sketch {
         this.render(W / 2, H / 2, W / 2);
     }
 }
+
+declareSketch(CircleRecursive);

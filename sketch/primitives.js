@@ -1,6 +1,4 @@
 class Primitives extends Sketch {
-    static { declareSketch(this) };
-
     setup() {
         this.points = [];
         let radius = 20;
@@ -81,3 +79,5 @@ class Primitives extends Sketch {
 
     }
 }
+
+declareSketch(Primitives);

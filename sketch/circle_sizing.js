@@ -1,6 +1,4 @@
-class CircleSizing extends Sketch {
-    static { declareSketch(this) };
-    
+class CircleSizing extends Sketch {    
     setup() {
         background(colors.black);
     }
@@ -42,3 +40,5 @@ class CircleSizing extends Sketch {
         }
     }
 }
+
+declareSketch(CircleSizing);

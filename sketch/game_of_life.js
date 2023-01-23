@@ -3,7 +3,7 @@ class Gol extends Sketch {
         this.n = Math.min(minSize / 2, 250);
         this.size = minSize / this.n;
 
-        this.size = 15;
+        this.size = 6;
         this.nw = Math.floor(W / this.size);
         this.nh = Math.floor(H / this.size);
 
@@ -12,8 +12,7 @@ class Gol extends Sketch {
 
         this.params = {
             'clear': () => this.reset(),
-
-            'state': '1',
+            'state': '2',
             'stateList': ['1', '2'],
             'stateOnChange': () => this.state(),
         };
@@ -98,13 +97,17 @@ class Gol extends Sketch {
         background(colors.white);
 
         noStroke();
-        rectMode(CENTER);
+        rectMode(CORNER);
 
         const size = this.size;
         const area = this.area1;
 
         const w = this.width;
         const h = this.height;
+
+        translate(
+            w / size / 2,
+            h / size / 2);
 
         for (let i = 0; i < w; i++) {
             for (let j = 0; j < h; j++) {

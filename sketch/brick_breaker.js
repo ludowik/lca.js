@@ -1,6 +1,4 @@
 class BrickBreaker extends Sketch {
-    static { declareSketch(this) };
-
     setup() {
         this.scene = new Scene();
 
@@ -103,6 +101,8 @@ class BrickBreaker extends Sketch {
         redraw();
     }
 }
+
+declareSketch(BrickBreaker);
 
 class Ball extends Entity {
     constructor() {
