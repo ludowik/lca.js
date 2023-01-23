@@ -94,10 +94,15 @@ class Engine {
                 let value = sketch.params[param];
                 switch (typeof (value)) {
                     case 'object': {
-                        this.guiFolder.add(value, 'value',
-                            value.min || 1,
-                            value.max || 100,
-                            value.step || 1);
+                        if (value instanceof Array) {
+                            //this.guiFolder.add(sketch.params, param);
+
+                        } else {
+                            this.guiFolder.add(value, 'value',
+                                value.min || 1,
+                                value.max || 100,
+                                value.step || 1);
+                        }
                         break;
                     }
                     default: {
