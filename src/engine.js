@@ -70,12 +70,14 @@ class Engine {
             this.gui.domElement.style = 'position: absolute; left: ' + (W - 250) + 'px;';
 
             this.gui.useLocalStorage = true;
-
             this.gui.remember(this.params);
+            
+            this.guiGlobals = this.gui.addFolder('engine');
+            this.guiGlobals.open();            
 
-            this.gui.add(this.params, 'autotest');
-            this.gui.add(this.params, 'topLeft');
-            this.guiController = this.gui.add(this.params, 'sketchName', this.params.sketches).onChange((controller) => {
+            this.guiGlobals.add(this.params, 'autotest');
+            this.guiGlobals.add(this.params, 'topLeft');
+            this.guiSketchSelecter = this.guiGlobals.add(this.params, 'sketchName', this.params.sketches).onChange((controller) => {
                 setSketch(this.params.sketchName);
             });
         }
@@ -326,7 +328,7 @@ function setSketch(name) {
     }
 
     engine.params.sketchName = name;
-    engine.guiController?.updateDisplay();
+    engine.guiSketchSelecter?.updateDisplay();
 
     if (!sketchesRef[name]) {
         sketchesRef[name] = eval('new ' + name + '()');

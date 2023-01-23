@@ -45,6 +45,7 @@ let sketchFiles = [
     'shaderbox.js',
     'trees.js',
     'game_of_life.js',
+    'lua.js',
 ];
 
 var sketches = [];

@@ -10,7 +10,7 @@ function stroke(clr) {
         if (clr instanceof Color) {
             __strokeColor = clr;
         } else {
-            __strokeColor = color(clr);
+            __strokeColor = color.apply(null, arguments);
         }
     }
     return __strokeColor;
@@ -22,12 +22,12 @@ function noStroke() {
 }
 
 var __fillColor;
-function fill(clr) {
+function fill(clr) {    
     if (clr) {
         if (clr instanceof Color) {
             __fillColor = clr;
         } else {
-            __fillColor = color(clr);
+            __fillColor = color.apply(null, arguments);
         }
     }
     return __fillColor;
