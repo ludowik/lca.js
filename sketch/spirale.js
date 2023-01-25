@@ -1,18 +1,16 @@
 class Spirale extends Sketch {
-    setup(config) {
-        config.mode = WEBGL;
-    }
-
-    init() {
+    setup() {
         colorMode(HSB, 1);
 
-        perspective(PI / 3.0, width / height, 0.1, 5000);
-        normalMaterial();
+        perspective(PI / 3.0, W / H, 0.1, 5000);
+        
+        // TODO
+        //normalMaterial();
 
-        this.cam = createEasyCam();
+        //this.cam = createEasyCam();
 
-        let state = getItem('cam_state');
-        this.cam.setState(state);
+        //let state = getItem('cam_state');
+        //this.cam.setState(state);
 
         this.params = {
             'update': true,
@@ -31,18 +29,19 @@ class Spirale extends Sketch {
             'noise': 100
         };
 
-        this.elapsedTime = 0;
+        this.ElapsedTime = 0;
     }
 
     update(dt) {
         if (this.params.update) {
-            this.elapsedTime += dt;
+            this.ElapsedTime += dt;
         }
 
-        storeItem('cam_state', this.cam.getState());
+        // TODO
+        //storeItem('cam_state', this.cam.getState());
     }
 
-    render() {
+    draw() {
         background(0);
 
         let angle = 0;
@@ -54,12 +53,12 @@ class Spirale extends Sketch {
         beginShape(TRIANGLE_STRIP);
 
         for (let i = -this.params.height; i < this.params.height; i++) {
-            y += noise(this.elapsedTime + (i / this.params.noise));
+            y += noise(this.ElapsedTime + (i / this.params.noise));
         }
         y = -y / 2;
 
         for (let i = -this.params.height; i < this.params.height; i++) {
-            let n = noise(this.elapsedTime + (i / this.params.noise));
+            let n = noise(this.ElapsedTime + (i / this.params.noise));
             y += n;
 
             x = cos(angle) * this.params.width * n ^ 2;
@@ -68,13 +67,13 @@ class Spirale extends Sketch {
             stroke(n);
             fill(n, 0.5, 1);
 
-            strokeWeight(n);
+            strokeSize(n);
 
             vertex(x, y, z);
             vertex(0, y, 0);
 
             // if (px) {
-            //     strokeWeight(2);
+            //     strokeSize(2);
             //     vertex(0, y, 0, 0, py, 0);
             //     vertex(x, y, z, px, py, pz);
             // }
@@ -89,5 +88,3 @@ class Spirale extends Sketch {
         endShape();
     }
 }
-
-declareSketch(Spirale);

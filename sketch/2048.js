@@ -284,5 +284,3 @@ class Game2048 extends Sketch {
         return totalMoves;
     }
 }
-
-declareSketch(Game2048);

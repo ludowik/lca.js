@@ -102,8 +102,6 @@ class BrickBreaker extends Sketch {
     }
 }
 
-declareSketch(BrickBreaker);
-
 class Ball extends Entity {
     constructor() {
         super();

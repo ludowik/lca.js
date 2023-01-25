@@ -16,6 +16,16 @@ function background(clr) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
 
+var BLEND = 'blend';
+
+function blendMode(mode) {
+    let gl = getContext();
+
+    // TODO
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+}
+
 function push() {
     pushMatrix();
     // TODO
@@ -34,14 +44,15 @@ function point(x, y, z = 0) {
 
     pushMatrix();
 
+    scale(x, y, z);
+
     let array;
     if (!meshPoint) {
         meshPoint = new Mesh();
-        array = [x, y, z];
+        array = [0, 0, 0];
         meshPoint.initializeAttributes(shaders.point, array);
     } else {
-        array = [x, y, z];
-        meshPoint.updateAttributes(shaders.point, array);
+        meshLine.useAttributes();
     }
 
     let ul = shaders.point.uniformsLocation;
@@ -50,7 +61,7 @@ function point(x, y, z = 0) {
     let clr = __strokeColor || colors.white;
     gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.drawArrays(gl.POINTS, 0, array.length / 3);
+    gl.drawArrays(gl.POINTS, 0, 3);
 
     popMatrix();
 }
@@ -203,6 +214,12 @@ function ellipse(x, y, w, h) {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
+}
+
+// TODO
+var PIE = 'pie';
+
+function arc() {    
 }
 
 let meshText;

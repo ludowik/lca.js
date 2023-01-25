@@ -1,11 +1,11 @@
 class FlowFields extends Sketch {
-    init() {
-        this.left_x = round(width * -0.5);
-        this.right_x = round(width * 1.5);
-        this.top_y = round(height * -0.5);
-        this.bottom_y = round(height * 1.5);
+    setup() {
+        this.left_x = round(W * -0.5);
+        this.right_x = round(W * 1.5);
+        this.top_y = round(H * -0.5);
+        this.bottom_y = round(H * 1.5);
 
-        this.resolution = Math.max(1, round(width * 0.01));
+        this.resolution = Math.max(1, round(W * 0.01));
 
         this.num_columns = round((this.right_x - this.left_x) / this.resolution);
         this.num_rows = round((this.bottom_y - this.top_y) / this.resolution);
@@ -29,7 +29,7 @@ class FlowFields extends Sketch {
     initGrid() {
         let scaled_x, scaled_y, noise_val, angle;
 
-        noiseSeed(elapsedTime);
+        noiseSeed(ElapsedTime);
         for (var i = 0; i < this.grid.length; i++) {
             for (var j = 0; j < this.grid[i].length; j++) {
                 // Processing's noise() works best when the step between
@@ -70,5 +70,3 @@ class FlowFields extends Sketch {
         }
     }
 }
-
-declareSketch(FlowFields);

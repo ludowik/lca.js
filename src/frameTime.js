@@ -3,7 +3,7 @@ class FrameTime {
         this.beginTime = this.second();
         this.endTime = this.beginTime;
         this.deltaTime = 0;
-        this.elapsedTime = 0;
+        this.ElapsedTime = 0;
         this.fps = 0;
         this.delay = 0;
         this.frameCount = 0;
@@ -20,7 +20,7 @@ class FrameTime {
     end() {
         this.endTime = this.second();
         this.deltaTime = this.endTime - this.beginTime;
-        this.elapsedTime += this.deltaTime;
+        this.ElapsedTime += this.deltaTime;
 
         this.frameCount++;
 

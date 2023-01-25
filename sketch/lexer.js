@@ -1,5 +1,5 @@
 class Lexer extends Sketch {
-    init() {
+    setup() {
         this.tokens = [];
         fetch("sketches.js/lexer.js")
             .then(response => response.text())
@@ -41,11 +41,11 @@ class Lexer extends Sketch {
         return tokens;
     }
 
-    render() {
+    draw() {
         background(colors.white);
 
         fill(colors.black);
-        textSize(minSizeFont);
+        fontSize(minSizeFont);
 
         let x = 0, y = 0;
         for (const token of this.tokens) {
@@ -54,5 +54,3 @@ class Lexer extends Sketch {
         }
     }
 }
-
-declareSketch(Lexer);

@@ -1,9 +1,9 @@
 class PlayWithRect extends Sketch {
-    init() {
+    setup() {
         noLoop();
     }
 
-    render() {
+    draw() {
         background(colors.black);
 
         let cols = 12, rows = 20;
@@ -34,7 +34,7 @@ class PlayWithRect extends Sketch {
                 rect(0, 0, size, size);
 
                 fill(randomColor());
-                textSize(size);
+                fontSize(size);
                 text(engine.name[randomInt(engine.name.length)], 0, 0);
 
                 pop();
@@ -42,5 +42,3 @@ class PlayWithRect extends Sketch {
         }
     }
 }
-
-declareSketch(PlayWithRect);

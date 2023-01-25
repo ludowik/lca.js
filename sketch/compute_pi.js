@@ -47,8 +47,6 @@ class ComputePI extends Sketch {
     }
 }
 
-declareSketch(ComputePI);
-
 class EstimatePI {
     constructor() {
         this.title = 'PI';

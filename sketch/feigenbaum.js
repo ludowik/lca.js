@@ -1,5 +1,5 @@
 class Feigenbaum extends Sketch {
-    init() {
+    setup() {
         this.params = {
             y: 0.5,
             yMin: 0.0,
@@ -15,21 +15,21 @@ class Feigenbaum extends Sketch {
         this.start = true;
     }
 
-    render() {
+    draw() {
         if (this.start) {
             background(colors.white);
 
             stroke(colors.black);
-            strokeWeight(1);
+            strokeSize(1);
 
             this.base = minSize * 0.9;
-            line(0, this.base, width, this.base);
+            line(0, this.base, W, this.base);
 
             this.start = false;
         }
 
         stroke(colors.black);
-        strokeWeight(0.5);
+        strokeSize(0.5);
 
         noFill();
 
@@ -50,5 +50,3 @@ class Feigenbaum extends Sketch {
         }
     }
 }
-
-declareSketch(Feigenbaum);

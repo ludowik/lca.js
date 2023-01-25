@@ -38,23 +38,23 @@ class CC extends Sketch {
         imageMode(CENTER);
 
         if (width >= this.imgLogo.width)
-            image(this.imgLogo, xc, yc);
+            image(this.imgLogo, CX, CY);
         else
-            image(this.imgLogo, xc, yc, width, height);
+            image(this.imgLogo, CX, CY, width, height);
 
         function logo(img) {
             img.background(colors.white);
 
             img.stroke(colors.black);
-            img.strokeWeight(weight);
+            img.strokeSize(weight);
 
             img.noFill();
 
-            let xc = img.width / 2;
-            let yc = img.height / 2;
+            let CX = img.width / 2;
+            let CY = img.height / 2;
 
-            cc(img, xc - w, yc);
-            cc(img, xc + w, yc);
+            cc(img, CX - w, CY);
+            cc(img, CX + w, CY);
         }
 
         function cc(img, x, y) {
@@ -74,5 +74,3 @@ class CC extends Sketch {
         }
     }
 }
-
-declareSketch(CC);

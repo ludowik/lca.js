@@ -1,5 +1,5 @@
 class Cardioid extends Sketch {
-    init() {
+    setup() {
         this.n = 200;
         this.factor = 2;
 
@@ -10,12 +10,12 @@ class Cardioid extends Sketch {
         this.factor += 0.005;
     }
 
-    render() {
+    draw() {
         background(colors.black);
 
-        translate(xc, yc);
+        translate(CX, CY);
 
-        rotate(-elapsedTime);
+        rotate(-ElapsedTime);
 
         let diameter = minSize * 0.9;
         let radius = diameter / 2;
@@ -41,5 +41,3 @@ class Cardioid extends Sketch {
         }
     }
 }
-
-declareSketch(Cardioid);

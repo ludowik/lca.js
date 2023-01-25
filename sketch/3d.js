@@ -17,5 +17,3 @@ class Sketch3D extends Sketch {
         // box(250);
     }
 }
-
-declareSketch(Sketch3D);

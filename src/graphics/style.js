@@ -37,6 +37,13 @@ function noFill() {
     __fillColor = null;
 }
 
+// TODO
+function smooth() {
+}
+
+function noSmooth() {    
+}
+
 var CENTER = 'center';
 var CORNER = 'corner';
 

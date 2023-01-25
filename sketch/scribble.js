@@ -1,18 +1,18 @@
 class Scribble extends Sketch {
-    init(config) {
-        config.renderCount = 100;
+    setup() {
+        this.renderCount = 100;
     }
 
-    update(dt, elapsedTime) {
+    update(dt, ElapsedTime) {
     }
 
     render() {
-        let w = width / 2;
-        let v = renderCount / 1000;
+        let w = W / 2;
+        let v = this.renderCount / 1000;
 
         blendMode(BLEND);
 
-        translate(xc, yc);
+        translate(CX, CY);
         rotate(noise(v / 10) * TAU);
 
         let c = noise(v + 952.74);
@@ -40,7 +40,7 @@ class Scribble extends Sketch {
 
         noFill();
 
-        strokeWeight(0.2);
+        strokeSize(0.2);
         stroke(c, 0.5, 0.5, a);
 
         circle(
@@ -49,5 +49,3 @@ class Scribble extends Sketch {
             radius);
     }
 }
-
-declareSketch(Scribble);

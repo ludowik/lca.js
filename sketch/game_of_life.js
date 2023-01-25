@@ -175,5 +175,3 @@ class Gol extends Sketch {
         redraw();
     }
 }
-
-declareSketch(Gol);

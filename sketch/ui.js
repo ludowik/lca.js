@@ -1,5 +1,5 @@
 class UI extends Sketch {
-    init() {
+    setup() {
         this.params = {
             'rotate': true,
             'reset': () => { this.reset(); },
@@ -38,18 +38,16 @@ class UI extends Sketch {
         }
     }
 
-    render() {
+    draw() {
         background(colors.black);
 
-        translate(xc, yc);
+        translate(CX, CY);
         rotate(this.params.angle);
 
         stroke(this.params.color);
         line(0, 0, width, 0);
 
-        textSize(minSizeFont)
+        fontSize(minSizeFont)
         text(this.params.name, 0, 0);
     }
 }
-
-declareSketch(UI);

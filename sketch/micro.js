@@ -1,5 +1,5 @@
 class Micro extends Sketch {
-    init() {
+    setup() {
         engine.canvas.mousePressed(userStartAudio);
         if (!getInCatalog()) {
             this.mic = new p5.AudioIn();
@@ -17,7 +17,7 @@ class Micro extends Sketch {
     mouseMoved() {
     }
 
-    render() {
+    draw() {
         background(colors.black);
 
         let scanner = {
@@ -65,16 +65,13 @@ class Micro extends Sketch {
             level *= (width / 2);
             stroke(randomColor());
             vertex(
-                xc + cos(angle) * level,
-                yc + sin(angle) * level);
+                CX + cos(angle) * level,
+                CY + sin(angle) * level);
             angle += step;
         }
         endShape();
     }
 }
-
-declareSketch(Micro);
-
 
 // if > 0, ignores levels below this threshold
 var centerClip = 0;

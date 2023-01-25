@@ -43,9 +43,9 @@ class Carto extends Sketch {
             background(colors.black);
 
             if (engine.config.mode === WEBGL) {
-                translate(xc, yc);
+                translate(CX, CY);
             } else {
-                translate(xc, yc);
+                translate(CX, CY);
             }
             scale(this.zoom);
 
@@ -60,7 +60,7 @@ class Carto extends Sketch {
 
             stroke(colors.white);
 
-            strokeWeight(1 / this.zoom);
+            strokeSize(1 / this.zoom);
 
             let m;
             for (const feature of uga.features) {
@@ -108,5 +108,3 @@ class Carto extends Sketch {
         this.zoom += deltaTime * Math.sign(event.deltaY) * this.zoom;
     }
 }
-
-declareSketch(Carto);

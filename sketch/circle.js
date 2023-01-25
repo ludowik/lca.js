@@ -14,5 +14,3 @@ class CircleSketch extends Sketch {
         circle(W / 2, H / 2, 100 * abs(sin(ElapsedTime)));
     }
 }
-
-declareSketch(CircleSketch);

@@ -79,5 +79,3 @@ class Primitives extends Sketch {
 
     }
 }
-
-declareSketch(Primitives);

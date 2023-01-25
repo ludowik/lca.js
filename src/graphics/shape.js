@@ -1,4 +1,5 @@
 LINES = 'lines';
+TRIANGLE_STRIP = 'TRIANGLE_STRIP'
 
 let __shape;
 function beginShape() {

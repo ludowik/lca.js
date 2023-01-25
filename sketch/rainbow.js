@@ -1,8 +1,8 @@
 class Rainbow extends Sketch {
-    init() {
+    setup() {
     }
 
-    render() {
+    draw() {
         let w = minSize / 2;
         let h = minSize / 2;
 
@@ -59,5 +59,3 @@ class Rainbow extends Sketch {
         pop();
     }
 }
-
-declareSketch(Rainbow);

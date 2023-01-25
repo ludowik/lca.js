@@ -87,8 +87,6 @@ class CirclePacking extends Sketch {
     }
 }
 
-declareSketch(CirclePacking);
-
 class Circle {
     constructor(x, y, radius) {
         this.position = x && y ? createVector(x, y) : randomPoint();

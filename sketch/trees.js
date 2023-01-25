@@ -59,5 +59,3 @@ class Trees extends Sketch {
         endShape();
     }
 }
-
-declareSketch(Trees);

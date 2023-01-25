@@ -44,8 +44,6 @@ class Attraction extends Sketch {
     }
 }
 
-declareSketch(Attraction);
-
 class Comet {
     constructor(x, y) {
         this.position = x ? createVector(x, y) : randomPoint();

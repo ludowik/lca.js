@@ -1,7 +1,7 @@
 class Fourier extends Sketch {
-    init(config) {
-        this.w = config.w;
-        this.h = config.h;
+    setup() {
+        this.w = W;
+        this.h = H;
 
         this.size = minSize / 4;
 
@@ -17,7 +17,8 @@ class Fourier extends Sketch {
     }
 
     reset() {
-        this.img = createGraphics(this.w, this.h);
+        this.img = new FrameBuffer(this.w, this.h);
+        
         this.x = null;
         this.y = null;
 
@@ -55,7 +56,7 @@ class Fourier extends Sketch {
 
         let x = 0, y = 0, xd = 0, yd = 0;
         push(); {
-            translate(xc, yc / 2);
+            translate(CX, CY / 2);
             for (const item of this.items) {
                 translate(xd, yd);
                 circle(0, 0, 2 * item.radius);
@@ -69,37 +70,39 @@ class Fourier extends Sketch {
                 y += yd;
             }
             stroke(colors.green);
-            strokeWeight(10);
+            strokeSize(10);
             point(xd, yd);
         }
         pop();
 
         if (this.x) {
-            this.img.stroke(colors.red);
-            this.img.strokeWeight(3);
-            this.img.line(this.x, this.y, x + xc, y + yc / 2);
+            this.img.bindFramebuffer();
+            stroke(colors.red);
+            strokeSize(3);
+            line(this.x, this.y, x + CX, y + CY / 2);
+            engine.fb.bindFramebuffer();
         }
 
         this.points.push({
-            x: x + xc,
-            y: y + yc
+            x: x + CX,
+            y: y + CY
         });
 
-        this.x = x + xc;
-        this.y = y + yc / 2;
+        this.x = x + CX;
+        this.y = y + CY / 2;
 
-        image(this.img, 0, 0);
+        sprite(this.img, 0, 0);
 
         if (this.points.length > this.w) {
             this.points.shift();
         }
 
-        translate(xc / 5, yc);
+        translate(CX / 5, CY);
         scale(0.5);
 
         beginShape();
         stroke(colors.blue);
-        strokeWeight(5);
+        strokeSize(5);
         x = 0;
         for (const point of this.points) {
             vertex(x++, point.y);
@@ -107,5 +110,3 @@ class Fourier extends Sketch {
         endShape();
     }
 }
-
-declareSketch(Fourier);

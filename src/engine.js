@@ -68,6 +68,10 @@ class Engine {
             this.gui.useLocalStorage = true;
             this.gui.remember(this.params);
 
+            this.gui.updateDisplay = (name) => {
+                // TODO
+            };
+
             this.guiGlobals = this.gui.addFolder('engine');
             this.guiGlobals.open();
 
@@ -187,7 +191,7 @@ class Engine {
     beforeDraw() {
         let gl = getContext();
 
-        sketch.bindFramebuffer();
+        sketch.fb.bindFramebuffer();
 
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
@@ -213,7 +217,7 @@ class Engine {
     }
 
     afterDraw() {
-        sketch.unbindFrameBuffer();
+        sketch.fb.unbindFrameBuffer();
 
         let gl = getContext();
 
@@ -231,7 +235,7 @@ class Engine {
 
     frame(timestamp) {
         DeltaTime = this.frameTime.deltaTime;
-        ElapsedTime = this.frameTime.elapsedTime;
+        ElapsedTime = this.frameTime.ElapsedTime;
 
         this.update(DeltaTime);
 

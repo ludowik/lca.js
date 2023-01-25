@@ -38,6 +38,7 @@ var atan2 = Math.atan2;
 var abs = Math.abs;
 var ceil = Math.ceil;
 var floor = Math.floor;
+var round = Math.round;
 var min = Math.min;
 var max = Math.max;
 function clamp(a, _min, _max) {
@@ -89,4 +90,11 @@ function dist(x1, y1, x2, y2) {
     return sqrt(dx * dx + dy * dy);
 }
 
-var noise = random;
+// TODO
+function noise(x, y) {
+    return NoiseModule.perlin2(x, y);
+}
+
+function noiseSeed(seed) {
+    return NoiseModule.seed(seed);
+}

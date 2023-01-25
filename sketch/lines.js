@@ -82,5 +82,3 @@ class Lines extends Sketch {
         popMatrix();
     }
 }
-
-declareSketch(Lines);

@@ -1,11 +1,11 @@
 class UlamSpiral extends Sketch {
-    init() {
+    setup() {
         background(colors.white);
 
-        this.xp = xc;
-        this.yp = yc;
-        this.x = xc;
-        this.y = yc;
+        this.xp = CX;
+        this.yp = CY;
+        this.x = CX;
+        this.y = CY;
         this.value = 1;
         this.stepTotal = 0;
         this.stepMax = 1;
@@ -16,14 +16,14 @@ class UlamSpiral extends Sketch {
 
     draw() {
         if (prime(this.value)) {
-            // textSize(this.stepSize);
+            // fontSize(this.stepSize);
             // textAlign(CENTER, CENTER);
             // text(this.value, this.x, this.y);
             fill(colors.white);
             circle(this.x, this.y, this.stepSize / 4);
         }
 
-        strokeWeight(0.5);
+        strokeSize(0.5);
         line(this.x, this.y, this.xp, this.yp);
 
         this.xp = this.x;
@@ -65,5 +65,3 @@ class UlamSpiral extends Sketch {
         this.value++;
     }
 }
-
-declareSketch(UlamSpiral);

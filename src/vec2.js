@@ -54,6 +54,14 @@ class vec2 {
         return this;
     }
 
+    setHeading(angle) {
+        this.rotate(angle - this.heading());
+    }
+
+    heading() {
+        return this.angleBetween({ x: 1, y: 0 })
+    }
+
     angleBetween(v) {
         let alpha1 = atan2(this.y, this.x)
         let alpha2 = atan2(v.y, v.x)

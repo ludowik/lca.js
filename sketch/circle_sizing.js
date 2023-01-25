@@ -25,7 +25,7 @@ class CircleSizing extends Sketch {
 
         for (let x = 0; x <= 2 + n * W / H; ++x) {
             for (let y = 0; y <= n + 1; ++y) {
-                let nval = noise.simplex2(x, y);
+                let nval = noise(x, y);
                 let radius = w / 2 * sin(ElapsedTime + 100 * nval);
 
                 let val = 0.5 + cos(radians(ElapsedTime * 10 * nval)) / 2;
@@ -40,5 +40,3 @@ class CircleSizing extends Sketch {
         }
     }
 }
-
-declareSketch(CircleSizing);

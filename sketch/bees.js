@@ -50,5 +50,3 @@ class Bees extends Sketch {
         storeItem('bees:angle', this.angle);
     }
 }
-
-declareSketch(Bees);

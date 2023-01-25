@@ -1,9 +1,5 @@
 class Camera extends Sketch {
-    setup(config) {
-        config.mode = WEBGL;
-    }
-
-    init(config) {
+    setup() {
         this.grayscales = this.characters();
 
         pixelDensity(1);
@@ -159,7 +155,7 @@ class Camera extends Sketch {
         let img = createGraphics(size, size);
         img.fill(colors.white);
         img.textAlign(CENTER, CENTER);
-        img.textSize(size);
+        img.fontSize(size);
         let grayscales = [];
         let characters = " -=~odg0";
         for (const character of characters) {
@@ -196,5 +192,3 @@ class Camera extends Sketch {
         return grayscales;
     }
 }
-
-declareSketch(Camera);

@@ -1,8 +1,8 @@
 class LightningBall extends Sketch {
-    init() {
+    setup() {
         this.points = [];
         for (let index = 0; index <= TAU; index += TAU / 2) {
-            this.points.push(new Filament(xc, yc, index));
+            this.points.push(new Filament(CX, CY, index));
         }
         this.start = true;
 
@@ -17,7 +17,7 @@ class LightningBall extends Sketch {
             }
         }
         this.params.countActive = countActive;
-        this.gui.updateDisplay('countActive');
+        engine.gui.updateDisplay('countActive');
 
         if (countActive === 0 || countActive > 500) {
             this.reset();
@@ -31,7 +31,7 @@ class LightningBall extends Sketch {
         }
 
         stroke(colors.red);
-        circle(xc, yc, minSize);
+        circle(CX, CY, minSize);
 
         for (let index = 0; index < 20; index++) {
             this.drawLightning();
@@ -52,8 +52,8 @@ class LightningBall extends Sketch {
 }
 
 class Filament {
-    constructor(xc, yc, heading) {
-        this.position = createVector(xc, yc);
+    constructor(CX, CY, heading) {
+        this.position = createVector(CX, CY);
         if (heading) {
             this.heading = heading;
             this.speed = createVector(0, 1);
@@ -89,7 +89,7 @@ class Filament {
             }
         }
 
-        if (dist(xc, yc, this.position.x, this.position.y) >= minSize / 2) {
+        if (dist(CX, CY, this.position.x, this.position.y) >= minSize / 2) {
             this.position.normalize();
             this.speed.mult(-1);
         }
@@ -100,5 +100,3 @@ class Filament {
         point(this.position.x, this.position.y);
     }
 }
-
-declareSketch(LightningBall);

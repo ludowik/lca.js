@@ -1,9 +1,9 @@
 class Grains extends Sketch {
-    init() {
+    setup() {
         this.ratio = 5;
 
-        let w = floor(width / this.ratio);
-        let h = floor(width / this.ratio);
+        let w = floor(W / this.ratio);
+        let h = floor(W / this.ratio);
 
         this.img = createGraphics(w, h);
 
@@ -80,5 +80,3 @@ class Grains extends Sketch {
         }
     }
 }
-
-declareSketch(Grains);

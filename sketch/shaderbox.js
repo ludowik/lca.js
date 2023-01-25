@@ -105,5 +105,3 @@ class ShaderBox extends Sketch {
         shade(0, 0, W, H, this.shader);
     }
 }
-
-declareSketch(ShaderBox);
