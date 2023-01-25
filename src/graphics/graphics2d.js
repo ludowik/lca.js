@@ -52,7 +52,7 @@ function point(x, y, z = 0) {
         array = [0, 0, 0];
         meshPoint.initializeAttributes(shaders.point, array);
     } else {
-        meshLine.useAttributes();
+        meshPoint.useAttributes();
     }
 
     let ul = shaders.point.uniformsLocation;
@@ -314,15 +314,18 @@ function text(txt, x, y) {
 }
 
 var meshSprite;
-function sprite(x, y, w, h, texture) {
+function sprite(texture, x, y, w, h) {
     let gl = getContext();
+
+    w = w || texture.w;
+    h = h || texture.h;
 
     pushMatrix();
 
     translate(x, y);
     scale(w, h);
 
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.bindTexture(gl.TEXTURE_2D, texture.targetTexture);
     gl.activeTexture(gl.TEXTURE0);
 
     let array = [
@@ -381,4 +384,10 @@ function shade(x, y, w, h, shader) {
     gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();
+}
+
+function renderThis(f) {
+    push();
+    f();
+    pop();
 }

@@ -98,7 +98,7 @@ class Camera extends Sketch {
         );
     }
 
-    render() {
+    daw() {
         background(colors.black);
         noStroke();
         fill(colors.white);

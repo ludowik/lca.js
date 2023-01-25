@@ -6,7 +6,7 @@ class Scribble extends Sketch {
     update(dt, ElapsedTime) {
     }
 
-    render() {
+    daw() {
         let w = W / 2;
         let v = this.renderCount / 1000;
 

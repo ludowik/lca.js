@@ -13,7 +13,7 @@ class Carto extends Sketch {
         this.zoom = 1;
     }
 
-    render() {
+    daw() {
         // resetMatrix();
         if (engine.config.mode === WEBGL) {
             // ortho(0, width, -height, 0, 0, 1);

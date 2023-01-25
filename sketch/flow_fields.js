@@ -47,7 +47,7 @@ class FlowFields extends Sketch {
         }
     }
 
-    render() {
+    draw() {
         background(colors.white);
         
         colorMode(HSB, 1);

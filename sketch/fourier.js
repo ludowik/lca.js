@@ -37,14 +37,14 @@ class Fourier extends Sketch {
     update(dt) {
     }
 
-    render(dt) {
+    draw() {
         let nframes = 10;
         for (let i of range(nframes)) {
-            renderThis(() => this.draw(dt / nframes));
+            renderThis(() => this.render(DeltaTime / nframes));
         }
     }
 
-    draw(dt) {
+    render(dt) {
         background(colors.white);
         noFill();
 
@@ -80,7 +80,7 @@ class Fourier extends Sketch {
             stroke(colors.red);
             strokeSize(3);
             line(this.x, this.y, x + CX, y + CY / 2);
-            engine.fb.bindFramebuffer();
+            sketch.fb.bindFramebuffer();
         }
 
         this.points.push({

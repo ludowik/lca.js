@@ -24,7 +24,7 @@ class CC extends Sketch {
         save(this.imgLogo, 'apple-touch-icon.png');
     }
 
-    render() {
+    daw() {
         background(colors.gray);
 
         let w = this.params.w;

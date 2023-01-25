@@ -24,7 +24,7 @@ class LightningBall extends Sketch {
         }
     }
 
-    render() {
+    daw() {
         if (this.start) {
             background(colors.black);
             this.start = false;

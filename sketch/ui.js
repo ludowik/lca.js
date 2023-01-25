@@ -34,7 +34,7 @@ class UI extends Sketch {
                 this.params.angle = 0;
             }
 
-            this.gui.updateDisplay('angle');
+            engine.gui.updateDisplay('angle');
         }
     }
 
@@ -45,7 +45,7 @@ class UI extends Sketch {
         rotate(this.params.angle);
 
         stroke(this.params.color);
-        line(0, 0, width, 0);
+        line(0, 0, W, 0);
 
         fontSize(minSizeFont)
         text(this.params.name, 0, 0);

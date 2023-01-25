@@ -74,8 +74,10 @@ let sketchFiles = [
 ];
 
 var sketches = [];
-function declareSketch(sketch) {
-    sketches.push(sketch.name);
+function declareSketch(sketch, name) {
+    if (sketch !== SketchLua) {
+        sketches.push(name || sketch.name);
+    }
 }
 
 function include(path, files) {

@@ -26,8 +26,9 @@ class FrameBuffer {
         const type = gl.UNSIGNED_BYTE;
         const data = null;
         gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-            this.targetTextureWidth, this.targetTextureHeight, border,
-            format, type, data);
+            this.targetTextureWidth,
+            this.targetTextureHeight,
+            border, format, type, data);
 
         // set the filtering so we don't need mips
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -57,8 +58,7 @@ class FrameBuffer {
 
         // attach the texture as the first color attachment
         const attachmentPoint = gl.COLOR_ATTACHMENT0;
-        gl.framebufferTexture2D(
-            gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, this.targetTexture, level);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, this.targetTexture, level);
 
         gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.depthBuffer);
     }

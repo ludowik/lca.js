@@ -16,7 +16,7 @@ class Entity {
     }
 
     update(dt) {
-        if (this.step) {
+        if (this.step instanceof Function) {
             return this.step(dt);
         }
     }

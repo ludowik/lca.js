@@ -45,7 +45,7 @@ class Grains extends Sketch {
         }
     }
 
-    render() {
+    daw() {
         scale(this.ratio);
 
         this.img.background(colors.black);

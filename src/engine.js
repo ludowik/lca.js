@@ -99,6 +99,7 @@ class Engine {
                         if (value instanceof Array) {
                             //this.guiFolder.add(sketch.params, param);
 
+                        } else if (value instanceof Color) {
                         } else {
                             this.guiFolder.add(value, 'value',
                                 value.min || 1,
@@ -230,7 +231,7 @@ class Engine {
         stroke(colors.white);
         fill(colors.white);
 
-        sprite(0, 0, W, H, sketch.targetTexture);
+        sprite(sketch.fb, 0, 0, W, H);
     }
 
     frame(timestamp) {
