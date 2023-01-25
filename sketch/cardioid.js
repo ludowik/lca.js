@@ -22,7 +22,7 @@ class Cardioid extends Sketch {
 
         noFill();
         stroke(colors.white);
-        circle(0, 0, diameter);
+        circle(0, 0, radius);
 
         let da = TAU / this.n;
 

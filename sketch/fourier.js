@@ -34,9 +34,6 @@ class Fourier extends Sketch {
         }
     }
 
-    update(dt) {
-    }
-
     draw() {
         let nframes = 10;
         for (let i of range(nframes)) {

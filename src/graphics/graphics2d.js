@@ -205,7 +205,7 @@ function ellipse(x, y, w, h) {
     let clr = __strokeColor || colors.white;
     gl.uniform4f(meshEllipse.shader.uniformsLocation.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
-    clr = __fillColor || colors.white;
+    clr = __fillColor || colors.transparent;
     gl.uniform4f(meshEllipse.shader.uniformsLocation.fillColor, clr.r, clr.g, clr.b, clr.a);
 
     gl.uniform2f(meshEllipse.shader.uniformsLocation.size, w, h);

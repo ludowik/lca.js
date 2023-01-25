@@ -1,5 +1,5 @@
 LINES = 'lines';
-TRIANGLE_STRIP = 'TRIANGLE_STRIP'
+TRIANGLE_STRIP = 'TRIANGLE_STRIP';
 
 let __shape;
 function beginShape() {
@@ -11,5 +11,12 @@ function vertex(x, y, z = 0) {
 }
 
 function endShape() {
-    points(__shape);
+    strokeSize(20);
+
+    for (let i = 0; i < __shape.length; i += 3) {
+        line(
+            __shape[i], __shape[i + 1],
+            __shape[i + 3], __shape[i + 4]);
+    }
+    //    points(__shape);
 }

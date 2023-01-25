@@ -7,6 +7,10 @@ class Color {
             this.g = g;
             this.b = b;
             this.a = a || 1;
+
+            if (this.r > 1) {
+                this.r /= 255;
+            }
         }
     }
 
@@ -50,6 +54,7 @@ function colorMode() {
 }
 
 var colors = {
+    transparent: color(0, 0, 0, 0),
     black: color(0, 0, 0),
     white: color(1, 1, 1),
 
