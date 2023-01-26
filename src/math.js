@@ -92,7 +92,7 @@ function dist(x1, y1, x2, y2) {
 
 // TODO
 function noise(x, y) {
-    return NoiseModule.perlin2(x, y);
+    return NoiseModule.simplex2(x, y);
 }
 
 function noiseSeed(seed) {

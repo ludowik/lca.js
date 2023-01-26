@@ -1,21 +1,25 @@
 import os
 import re
 
-with open('files', 'wt') as f:
+with open('src/loadFiles.js', 'wt') as f:
     sketchFiles = f'let sketchFiles = [\n'
-    sketchDeclaration = f'\n'
+    sketchDeclarations = f'let sketchDeclarations = [\n'
 
     for root, dirs, files in os.walk("./sketch"):
         for file in files:
-            if file.endswith(".js"):
-                sketchFiles += f'  "{file}",\n'
-                with open(os.path.join(root, file), 'rt') as src:
-                    sketchs = re.findall('class (\w*) extends Sketch', src.read())
-                    for sketch in sketchs:
-                        sketchDeclaration += f'declareSketch({sketch});\n'
+            if not file.endswith(".js"):
+                continue
+
+            sketchFiles += f'   "{root + "/" + file}",\n'.replace('\\', '/')
+            with open(os.path.join(root, file), 'rt') as src:
+                sketchs = re.findall('class (\w*) extends Sketch', src.read())
+                for sketch in sketchs:
+                    sketchDeclarations += f'    "{sketch}",\n'
+
 
     sketchFiles += f'];\n'
+    sketchDeclarations += f'];\n'
 
     f.write(sketchFiles)
-    f.write(sketchDeclaration)
+    f.write(sketchDeclarations)
     

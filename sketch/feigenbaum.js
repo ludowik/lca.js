@@ -38,15 +38,19 @@ class Feigenbaum extends Sketch {
         let rStep = 0.001;
         let iMax = 150;
 
+        let data = [];
+
         let ratio = minSize / (rMax - rMin);
         for (let r = rMin; r <= rMax; r += rStep) {
             this.y = this.params.y;
             for (let index = 0; index < iMax; index++) {
                 this.y = r * this.y * (1 - this.y);
                 if (index > iMax * 0.75) {
-                    point((r - rMin) * ratio, this.base - this.y * minSize * 0.8);
+                    data.push((r - rMin) * ratio, this.base - this.y * minSize * 0.8, 0);
                 }
             }
         }
+
+        points(data);
     }
 }

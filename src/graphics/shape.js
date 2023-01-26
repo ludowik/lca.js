@@ -10,8 +10,12 @@ function vertex(x, y, z = 0) {
     __shape.push(x, y, z);
 }
 
+// TODO
+function bezierVertex() {
+}
+
 function endShape() {
-    strokeSize(20);
+    strokeSize(2);
 
     for (let i = 0; i < __shape.length; i += 3) {
         line(

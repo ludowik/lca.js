@@ -1,10 +1,10 @@
-class Camera extends Sketch {
+class Camera /*extends Sketch*/ {
     setup() {
         this.grayscales = this.characters();
 
         pixelDensity(1);
 
-        if (!getInCatalog()) {
+        if (!sketch instanceof Camera) {
             this.myCapture = createCapture(VIDEO);
             this.myCapture.hide();
         } else {
@@ -22,8 +22,15 @@ class Camera extends Sketch {
     }
 
     shader() {
-        this.shader = createShader(
-            `#ifdef GL_ES
+        this.vertexShaderText = `        
+            void main() {
+                gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.);
+                vTexCoord = aTexCoord;
+            }
+        `;
+
+        this.fragmentShaderText = `
+            #ifdef GL_ES
             precision mediump float;
             #endif
 
@@ -95,10 +102,11 @@ class Camera extends Sketch {
                 // Send the color to the screen
                 gl_FragColor = color;
             }`
-        );
+
+        this.shader = new Shader(getContext(), 'camera', this.vertexShaderText, this.fragmentShaderText);
     }
 
-    daw() {
+    draw() {
         background(colors.black);
         noStroke();
         fill(colors.white);
@@ -153,9 +161,13 @@ class Camera extends Sketch {
     characters() {
         let size = 64;
         let img = createGraphics(size, size);
-        img.fill(colors.white);
-        img.textAlign(CENTER, CENTER);
-        img.fontSize(size);
+
+        setContext(img);
+
+        fill(colors.white);
+        textAlign(CENTER, CENTER);
+        fontSize(size);
+
         let grayscales = [];
         let characters = " -=~odg0";
         for (const character of characters) {
@@ -165,8 +177,8 @@ class Camera extends Sketch {
             };
             grayscales.push(info);
 
-            img.background(colors.black);
-            img.text(info.character, size / 2, size / 2);
+            background(colors.black);
+            text(info.character, size / 2, size / 2);
             for (let x = 0; x < size; x++) {
                 for (let y = 0; y < size; y++) {
                     let clr = img.get(x, y);
@@ -188,6 +200,8 @@ class Camera extends Sketch {
             str += info.character;
         }
         log(str);
+
+        setContext();
 
         return grayscales;
     }

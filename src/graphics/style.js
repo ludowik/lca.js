@@ -63,7 +63,16 @@ function ellipseMode(mode) {
     return __ellipseMode;
 }
 
-function fontName() { }
+var __spriteMode
+function spriteMode(mode) {
+    if (mode) __spriteMode = mode;
+    return __spriteMode;
+
+}
+
+// TODO
+function fontName() {    
+}
 
 var __fontSize = 16;
 function fontSize(size) {

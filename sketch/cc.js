@@ -1,5 +1,5 @@
 class CC extends Sketch {
-    init() {
+    setup() {
         let logoSize = 192;
 
         this.params = {
@@ -24,7 +24,7 @@ class CC extends Sketch {
         save(this.imgLogo, 'apple-touch-icon.png');
     }
 
-    daw() {
+    draw() {
         background(colors.gray);
 
         let w = this.params.w;
@@ -35,42 +35,46 @@ class CC extends Sketch {
 
         logo(this.imgLogo);
 
-        imageMode(CENTER);
+        spriteMode(CENTER);
 
-        if (width >= this.imgLogo.width)
-            image(this.imgLogo, CX, CY);
+        if (W >= this.imgLogo.width)
+            sprite(this.imgLogo, CX, CY);
         else
-            image(this.imgLogo, CX, CY, width, height);
+            sprite(this.imgLogo, CX, CY, W, H);
 
         function logo(img) {
-            img.background(colors.white);
+            setContext(img);
 
-            img.stroke(colors.black);
-            img.strokeSize(weight);
+            background(colors.white);
 
-            img.noFill();
+            stroke(colors.black);
+            strokeSize(weight);
+
+            noFill();
 
             let CX = img.width / 2;
             let CY = img.height / 2;
 
             cc(img, CX - w, CY);
             cc(img, CX + w, CY);
+
+            setContext();
         }
 
         function cc(img, x, y) {
-            img.push(); {
-                img.translate(x, y);
-                img.beginShape(); {
-                    img.vertex(+l / 2, -l);
+            push(); {
+                translate(x, y);
+                beginShape(); {
+                    vertex(+l / 2, -l);
 
-                    img.bezierVertex(
+                    bezierVertex(
                         -w, -h,
                         -w, +h,
                         +l / 2, +l);
                 }
-                img.endShape();
+                endShape();
             }
-            img.pop();
+            pop();
         }
     }
 }

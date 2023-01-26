@@ -3,12 +3,18 @@ class FrameBuffer {
         this.w = w || W;
         this.h = h || H;
 
+        this.width = this.w;
+        this.height = this.h;
+
         this.createTexture();
         this.createRenderbuffer();
         this.createFramebuffer();
     }
 
-    // TODO : compose FrameBuffer
+    pixelDensity() {
+        // TODO
+    }
+
     createTexture() {
         let gl = getContext();
 
@@ -72,8 +78,21 @@ class FrameBuffer {
         let gl = getContext();
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
+
+    get(x, y) {
+        // TODO
+        return colors.white;
+    }
+
+    set(x, y) {
+        // TODO
+    }
 }
 
 function createGraphics(w, h) {
+    return new FrameBuffer(w, h);
+}
+
+function createCapture() {
     return new FrameBuffer(w, h);
 }

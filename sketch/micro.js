@@ -1,4 +1,4 @@
-class Micro extends Sketch {
+class Micro /*extends Sketch*/ {
     setup() {
         engine.canvas.mousePressed(userStartAudio);
         if (!getInCatalog()) {

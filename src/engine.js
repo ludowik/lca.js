@@ -281,11 +281,17 @@ class Engine {
     }
 }
 
+// TODO
 function getContext() {
     return engine.gl;
 }
 
-function setContext() {
+function setContext(context) {
+    if (context) {
+        context.bindFramebuffer();
+    } else {
+        sketch.fb.bindFramebuffer();
+    }
 }
 
 function reload() {

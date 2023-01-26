@@ -6,6 +6,10 @@ class Graphics {
     }
 }
 
+function pixelDensity() {
+    // TODO
+}
+
 function background(clr) {
     let gl = getContext();
 

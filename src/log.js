@@ -24,3 +24,5 @@ console.error = function (...args) {
 console.warn = function (...args) {
     overload(__warn, args);
 }
+
+var log = console.log;
