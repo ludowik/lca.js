@@ -193,4 +193,6 @@ var colors = {
     red: color(1, 0, 0),
     green: color(0, 1, 0),
     blue: color(0, 0, 1),
+
+    gray: color(.5, .5, .5),
 };

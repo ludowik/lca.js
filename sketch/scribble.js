@@ -3,10 +3,11 @@ class Scribble extends Sketch {
         this.renderCount = 100;
     }
 
-    update(dt, ElapsedTime) {
+    update() {
+        this.renderCount+=10;
     }
 
-    daw() {
+    draw() {
         let w = W / 2;
         let v = this.renderCount / 1000;
 

@@ -12,7 +12,7 @@ class Rainbow extends Sketch {
 
         // line
         for (let hue = 0; hue < w; hue++) {
-            stroke(hue, 1, 1);
+            stroke(hue / w, 1, 1);
             line(hue, 0, hue, h);
         }
 

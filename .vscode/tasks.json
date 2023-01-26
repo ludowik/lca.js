@@ -6,11 +6,11 @@
         {
             "label": "Generate Sketches List",
             "type": "shell",
-            "command": "python ./explore.py",
+            "command": "python3 ./explore.py",
             "windows": {
                 "command": "python .\\explore.py"
             },
             "group": "build",
         }
     ]
-}   
+}

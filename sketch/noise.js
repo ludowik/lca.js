@@ -40,7 +40,7 @@ class Noise extends Sketch {
                     0.5
                 );
 
-                circle(i * size, j * size, size * 2);
+                circle(i * size, j * size, size);
                 // rect(i * size, j * size, size, size);
             }
         }

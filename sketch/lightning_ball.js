@@ -20,18 +20,18 @@ class LightningBall extends Sketch {
         engine.gui.updateDisplay('countActive');
 
         if (countActive === 0 || countActive > 500) {
-            this.reset();
+            this.setup();
         }
     }
 
-    daw() {
+    draw() {
         if (this.start) {
             background(colors.black);
             this.start = false;
         }
 
         stroke(colors.red);
-        circle(CX, CY, minSize);
+        circle(CX, CY, minSize / 2);
 
         for (let index = 0; index < 20; index++) {
             this.drawLightning();
@@ -70,11 +70,11 @@ class Filament {
         this.position.x += this.speed.x;
         this.position.y += this.speed.y;
 
-        this.lenght -= this.speed.mag();
+        this.lenght -= this.speed.len();
 
-        if (get(this.position.x, this.position.y)[0] > 100) {
-            this.active = false;
-        }
+        // if (get(this.position.x, this.position.y)[0] > 100) {
+        //     this.active = false;
+        // }
     }
 
     alive(points) {
@@ -97,6 +97,7 @@ class Filament {
 
     draw() {
         stroke(colors.white);
+        strokeSize(2);
         point(this.position.x, this.position.y);
     }
 }

@@ -200,6 +200,7 @@ class Engine {
             gl.disable(gl.DEPTH_TEST);
 
             gl.enable(gl.BLEND);
+            gl.blendEquation(gl.FUNC_ADD);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         } else {
             gl.enable(gl.DEPTH_TEST);
@@ -209,6 +210,8 @@ class Engine {
         }
 
         resetMatrix();
+        resetStyles();
+
         ortho();
 
         if (getOrigin() == TOP_LEFT) {
@@ -226,6 +229,8 @@ class Engine {
         gl.blendFunc(gl.ONE, gl.ZERO);
 
         resetMatrix();
+        resetStyles();
+
         ortho();
 
         stroke(colors.white);

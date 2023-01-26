@@ -24,11 +24,11 @@ var cos = Math.cos;
 
 Math.radians = function (degrees) {
     return degrees * Math.PI / 180;
-}
+};
 
 Math.degrees = function (radians) {
     return radians * 180 / Math.PI;
-}
+};
 
 var radians = Math.radians;
 var degrees = Math.degrees;
@@ -42,7 +42,7 @@ var round = Math.round;
 var min = Math.min;
 var max = Math.max;
 function clamp(a, _min, _max) {
-    return min(max(a, _min), _max)
+    return min(max(a, _min), _max);
 }
 
 var sqrt = Math.sqrt;
@@ -92,7 +92,7 @@ function dist(x1, y1, x2, y2) {
 
 // TODO
 function noise(x, y) {
-    return NoiseModule.simplex2(x, y);
+    return (NoiseModule.simplex2(x, y || 0) + 1) / 2;
 }
 
 function noiseSeed(seed) {

@@ -1,6 +1,6 @@
 class UlamSpiral extends Sketch {
     setup() {
-        background(colors.white);
+        background(colors.black);
 
         this.xp = CX;
         this.yp = CY;
@@ -19,11 +19,12 @@ class UlamSpiral extends Sketch {
             // fontSize(this.stepSize);
             // textAlign(CENTER, CENTER);
             // text(this.value, this.x, this.y);
-            fill(colors.white);
-            circle(this.x, this.y, this.stepSize / 4);
+            fill(colors.red);
+            circle(this.x, this.y, this.stepSize / 2);
         }
 
-        strokeSize(0.5);
+        stroke(colors.white);
+        strokeSize(2);
         line(this.x, this.y, this.xp, this.yp);
 
         this.xp = this.x;

@@ -10,7 +10,7 @@ with open('src/loadFiles.js', 'wt') as f:
             if not file.endswith(".js"):
                 continue
 
-            sketchFiles += f'   "{root + "/" + file}",\n'.replace('\\', '/')
+            sketchFiles += f'   "{root + "/" + file}",\n'.replace('\\', '/').replace('./', '')
             with open(os.path.join(root, file), 'rt') as src:
                 sketchs = re.findall('class (\w*) extends Sketch', src.read())
                 for sketch in sketchs:

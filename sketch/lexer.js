@@ -47,6 +47,8 @@ class Lexer extends Sketch {
         fill(colors.black);
         fontSize(minSizeFont);
 
+        textMode(CORNER);
+
         let x = 0, y = 0;
         for (const token of this.tokens) {
             text(token, x, y);

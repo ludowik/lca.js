@@ -1,3 +1,12 @@
+function resetStyles() {
+    colorMode(RGB);
+    
+    strokeSize(1);
+    stroke(colors.white);
+
+    fill(colors.black);
+}
+
 var __strokeSize = 1;
 function strokeSize(size) {
     if (size) __strokeSize = size;
@@ -6,7 +15,7 @@ function strokeSize(size) {
 
 var __strokeColor;
 function stroke(clr) {
-    if (clr) {
+    if (clr != undefined) {
         if (clr instanceof Color) {
             __strokeColor = clr;
         } else {
@@ -23,7 +32,7 @@ function noStroke() {
 
 var __fillColor;
 function fill(clr) {    
-    if (clr) {
+    if (clr != undefined) {
         if (clr instanceof Color) {
             __fillColor = clr;
         } else {

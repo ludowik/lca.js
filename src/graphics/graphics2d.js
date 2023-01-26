@@ -16,7 +16,7 @@ function background(clr) {
     clr = clr || colors.black;
 
     gl.clearColor(clr.r, clr.g, clr.b, clr.a);
-    gl.clearDepth(1.0);
+    gl.clearDepth(10.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
 
@@ -27,6 +27,7 @@ function blendMode(mode) {
 
     // TODO
     gl.enable(gl.BLEND);
+    gl.blendEquation(gl.FUNC_ADD);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 }
 
