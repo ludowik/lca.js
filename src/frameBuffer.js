@@ -6,6 +6,9 @@ class FrameBuffer {
         this.width = this.w;
         this.height = this.h;
 
+        this.pixels = new Uint8Array(this.w * this.h * 4);
+        this.pixelColor = color();
+
         this.createTexture();
         this.createRenderbuffer();
         this.createFramebuffer();
@@ -50,7 +53,9 @@ class FrameBuffer {
         gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthBuffer);
 
         // make a depth buffer and the same size as the targetTexture
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.targetTextureWidth, this.targetTextureHeight);
+        gl.renderbufferStorage(gl.RENDERBUFFER,
+            gl.DEPTH_COMPONENT16,
+            this.targetTextureWidth, this.targetTextureHeight);
     }
 
     createFramebuffer() {
@@ -71,7 +76,7 @@ class FrameBuffer {
 
     bindFramebuffer() {
         let gl = getContext();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb);        
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb);
     }
 
     unbindFrameBuffer() {
@@ -79,9 +84,18 @@ class FrameBuffer {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
+    readPixels() {
+        let gl = getContext();
+        if (sketch.fb.status !== 'ok') {
+            gl.readPixels(0, 0, this.w, this.h, gl.RGBA, gl.UNSIGNED_BYTE, this.pixels);
+            sketch.fb.status = 'ok';
+        }
+    }
+
     get(x, y) {
-        // TODO
-        return colors.white;
+        this.readPixels();
+        this.pixelColor.set(this.pixels[0], this.pixels[1], this.pixels[2], this.pixels[3]);
+        return this.pixelColor;
     }
 
     set(x, y) {
@@ -95,4 +109,8 @@ function createGraphics(w, h) {
 
 function createCapture() {
     return new FrameBuffer(w, h);
+}
+
+function getPixel(x, y) {
+    return sketch.fb.get(x, y);
 }

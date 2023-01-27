@@ -66,7 +66,7 @@ function point(x, y, z = 0) {
     let clr = __strokeColor || colors.white;
     gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.drawArrays(gl.POINTS, 0, 3);
+    drawArrays(gl.POINTS, 0, 3);
 
     popMatrix();
 }
@@ -88,7 +88,7 @@ function points(array) {
     let clr = __strokeColor || colors.white;
     gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
+    drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
 }
 
 let meshLine;
@@ -124,7 +124,7 @@ function line(x1, y1, x2, y2) {
     let clr = __strokeColor || colors.white;
     gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }
@@ -169,7 +169,7 @@ function rect(x, y, w, h) {
     gl.uniform2f(ul.size, w, h);
     gl.uniform1f(ul.strokeSize, __strokeSize);
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }
@@ -216,7 +216,7 @@ function ellipse(x, y, w, h) {
     gl.uniform2f(meshEllipse.shader.uniformsLocation.size, w, h);
     gl.uniform1f(meshEllipse.shader.uniformsLocation.strokeSize, __strokeSize);
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }
@@ -224,7 +224,7 @@ function ellipse(x, y, w, h) {
 // TODO
 var PIE = 'pie';
 
-function arc() {    
+function arc() {
 }
 
 let meshText;
@@ -313,7 +313,7 @@ function text(txt, x, y) {
     let clr = __fillColor || colors.white;
     gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();
 }
@@ -356,7 +356,7 @@ function sprite(texture, x, y, w, h) {
     let clr = colors.white;
     gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
 
-    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();
 }
@@ -386,7 +386,7 @@ function shade(x, y, w, h, shader) {
         meshShade.updateAttributes(shader, array, array);
     }
 
-    gl.drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
     popMatrix();
 }
@@ -395,4 +395,17 @@ function renderThis(f) {
     push();
     f();
     pop();
+}
+
+// TODO
+function drawArrays() {
+    let gl = getContext();
+    gl.drawArrays.apply(gl, arguments);
+    sketch.fb.status = 'updated';
+}
+
+function drawArraysInstanced() {
+    let gl = getContext();
+    gl.drawArraysInstanced.apply(gl, arguments);
+    sketch.fb.status = 'updated';
 }

@@ -18,10 +18,19 @@ class Engine {
         this.frameTime = new FrameTime();
 
         this.params = {};
-        this.params.sketches = sketches;
-        this.params.sketchName = this.params.sketches[this.params.sketches.length - 1];
+        this.paramsOfParams = {};
+
+        this.params.sketchName = sketches[sketches.length - 1];
+        this.paramsOfParams.sketchName = {
+            list: sketches,
+            onchange: (controller) => {
+                setSketch(this.params.sketchName);
+            },
+        };
+
         this.params.topLeft = true;
         this.params.autotest = false;
+        this.params.smooth = false;
 
         this.initGui();
     }
@@ -75,11 +84,7 @@ class Engine {
             this.guiGlobals = this.gui.addFolder('engine');
             this.guiGlobals.open();
 
-            this.guiGlobals.add(this.params, 'autotest');
-            this.guiGlobals.add(this.params, 'topLeft');
-            this.guiSketchSelecter = this.guiGlobals.add(this.params, 'sketchName', this.params.sketches).onChange((controller) => {
-                setSketch(this.params.sketchName);
-            });
+            this.addGui(this.guiGlobals, this.params, this.paramsOfParams);
         }
 
         if (!sketch) return;
@@ -92,30 +97,44 @@ class Engine {
             this.guiFolder = this.gui.addFolder(this.params.sketchName);
             this.guiFolder.open();
 
-            for (let param in sketch.params) {
-                let value = sketch.params[param];
-                switch (typeof (value)) {
-                    case 'object': {
-                        if (value instanceof Array) {
-                            //this.guiFolder.add(sketch.params, param);
-
-                        } else if (value instanceof Color) {
-                        } else {
-                            this.guiFolder.add(value, 'value',
-                                value.min || 1,
-                                value.max || 100,
-                                value.step || 1);
-                        }
-                        break;
-                    }
-                    default: {
-                        this.guiFolder.add(sketch.params, param, 1, 100);
-                        break;
-                    }
-                }
-            }
+            this.addGui(this.guiFolder, sketch.params, []);
         } else {
             this.guiFolder = null;
+        }
+    }
+
+    addGui(folder, params, paramsOfParams) {
+        for (let paramName in params) {
+            let param = params[paramName];
+            switch (typeof (param)) {
+                case 'object': {
+                    if (param instanceof Array) {
+                        //folder.add(params, param);
+
+                    } else if (param instanceof Color) {
+                        folder.addColor(params, paramName);
+
+                    } else {
+                        folder.add(param, 'value',
+                            param.min || 1,
+                            param.max || 100,
+                            param.step || 1);
+                    }
+                    break;
+                }
+                default: {
+                    if (paramsOfParams[paramName]) {
+                        let controler = folder.add(params, paramName,
+                            paramsOfParams[paramName].list);
+                        if (paramsOfParams[paramName].onchange)
+                            controler.onChange(paramsOfParams[paramName].onchange);
+
+                    } else {
+                        folder.add(params, paramName, 1, 100);
+                    }
+                    break;
+                }
+            }
         }
     }
 
@@ -167,7 +186,8 @@ class Engine {
         this.resizeCanvas(this.canvas);
 
         let gl = this.canvas.getContext("webgl2", {
-            preserveDrawingBuffer: true
+            preserveDrawingBuffer: true,
+            antialias: true,
         });
 
         if (gl && gl instanceof WebGL2RenderingContext) {
@@ -207,6 +227,17 @@ class Engine {
             gl.depthFunc(gl.LEQUAL);
 
             gl.disable(gl.BLEND);
+        }
+
+        if (this.params.smooth) {
+            gl.enable(gl.LINE_SMOOTH);
+            gl.enable(gl.POLYGON_SMOOTH);
+
+            gl.hint(gl.LINE_SMOOTH_HINT, gl.NICEST);
+            gl.hint(gl.POLYGON_SMOOTH_HINT, gl.NICEST);
+        } else {
+            gl.disable(gl.LINE_SMOOTH);
+            gl.disable(gl.POLYGON_SMOOTH);
         }
 
         resetMatrix();
@@ -293,9 +324,15 @@ function getContext() {
 
 function setContext(context) {
     if (context) {
+        pushMatrix();
+        pushStyles();
+        resetMatrix();
+        resetStyles();
         context.bindFramebuffer();
     } else {
         sketch.fb.bindFramebuffer();
+        popMatrix();
+        popStyles();
     }
 }
 

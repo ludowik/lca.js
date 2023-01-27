@@ -7,6 +7,14 @@ function resetStyles() {
     fill(colors.black);
 }
 
+function pushStyles() {
+    // TODO
+}
+
+function popStyles() {
+    // TODO
+}
+
 var __strokeSize = 1;
 function strokeSize(size) {
     if (size) __strokeSize = size;

@@ -1,18 +1,18 @@
 class PlayWithRect extends Sketch {
     setup() {
-        noLoop();
+        //noLoop();
     }
 
     draw() {
         background(colors.black);
 
         let cols = 12, rows = 20;
-        let size = height / (rows + 2);
+        let size = H / (rows + 2);
         let x = 0, y = 0;
 
         translate(
-            (width - cols * size) / 2,
-            (height - rows * size) / 2);
+            (W - cols * size) / 2,
+            (H - rows * size) / 2);
 
         rectMode(CENTER);
         textAlign(CENTER, CENTER);
@@ -30,12 +30,14 @@ class PlayWithRect extends Sketch {
                 let angle = random(-PI / 2, PI / 2) * ((j / rows) ** 2);
                 rotate(angle);
 
-                fill(randomColor());
+                fill(Color.random());
                 rect(0, 0, size, size);
 
-                fill(randomColor());
+                fill(Color.random());
                 fontSize(size);
-                text(engine.name[randomInt(engine.name.length)], 0, 0);
+
+                let name = 'Hello world !'
+                text(name[randomInt(name.length)], 0, 0);
 
                 pop();
             }

@@ -43,11 +43,11 @@ class CC extends Sketch {
             sprite(this.imgLogo, CX, CY, W, H);
 
         function logo(img) {
-            setContext(img);
+            //setContext(img);
 
-            background(colors.white);
+            background(colors.gray);
 
-            stroke(colors.black);
+            stroke(colors.white);
             strokeSize(weight);
 
             noFill();
@@ -58,12 +58,13 @@ class CC extends Sketch {
             cc(img, CX - w, CY);
             cc(img, CX + w, CY);
 
-            setContext();
+            //setContext();
         }
 
         function cc(img, x, y) {
             push(); {
                 translate(x, y);
+
                 beginShape(); {
                     vertex(+l / 2, -l);
 

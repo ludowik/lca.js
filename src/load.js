@@ -34,7 +34,7 @@ function include(path, files) {
     for (src of files) {
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = path + '/' + src + '?' + Date.now();
+        script.src = (path ? path + '/' : '') + src + '?' + Date.now();
         script.async = false;
         document.head.appendChild(script);
     }
@@ -44,7 +44,7 @@ function include(path, files) {
 
 include('src/graphics/shaders', shaderFiles);
 include('src', scriptFiles);
-include('', sketchFiles);
+include(null, sketchFiles);
 
 var sketches = [];
 function declareSketch(sketch, name) {

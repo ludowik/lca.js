@@ -1,5 +1,9 @@
 class Color {
     constructor(r, g, b, a) {
+        this.set(r, g, b, a);
+    }
+
+    set(r, g, b, a) {
         if (typeof r === 'string') {
             hexToRgb(r, this);
         } else {

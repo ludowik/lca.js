@@ -45,6 +45,13 @@ class LightningBall extends Sketch {
             }
 
             filament.update();
+        }
+
+        for (const filament of this.points) {
+            if (!filament.active) {
+                continue;
+            }
+
             filament.draw();
             filament.alive(this.points);
         }
@@ -72,9 +79,9 @@ class Filament {
 
         this.lenght -= this.speed.len();
 
-        // if (get(this.position.x, this.position.y)[0] > 100) {
-        //     this.active = false;
-        // }
+        if (getPixel(this.position.x, this.position.y).r > 0.2) {
+            this.active = false;
+        }
     }
 
     alive(points) {
