@@ -397,7 +397,7 @@ function setSketch(name) {
     engine.guiSketchSelecter?.updateDisplay();
 
     if (!sketchesRef[name]) {
-        sketchesRef[name] = eval('new ' + name + '()');
+        sketchesRef[name] = eval('new ' + name);
         sketch = sketchesRef[name];
         engine.beforeDraw();
         sketch.setup();

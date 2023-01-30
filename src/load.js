@@ -12,6 +12,7 @@ let scriptFiles = [
     'graphics/shader.js',
     'graphics/mesh.js',
     'frameBuffer.js',
+    'scene.js',
     'sketch.js',
     'frameTime.js',
     'range.js',
@@ -48,8 +49,10 @@ include(null, sketchFiles);
 
 var sketches = [];
 function declareSketch(sketch, name) {
-    if (sketch !== SketchLua) {
-        sketches.push(name || sketch.name);
+    if (sketch === SketchLua) {
+        sketches.push(sketch.name + '("' + name + '")');
+    } else {
+        sketches.push(sketch.name + '()');
     }
 }
 

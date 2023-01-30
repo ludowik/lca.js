@@ -1,1 +1,1 @@
-declareSketch(SketchLua, 'collatz');
+declareSketch(SketchLua, 'sketch_lua/collatz.lua');
