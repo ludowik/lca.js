@@ -26,7 +26,7 @@ function setupLua()
     random = math.random
 
     Color = {
-        random = js.global.color(0, 0, 0, 1)
+        random = js.global.color(0, 0, 0, 1).random
     }
     color = js.global.color
 end
