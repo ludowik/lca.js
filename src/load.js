@@ -1,6 +1,7 @@
 let scriptFiles = [
     'log.js',
     'math.js',
+    'random.js',
     'perlin.js',
     'transform.js',
     'vec2.js',
@@ -18,6 +19,7 @@ let scriptFiles = [
     'range.js',
     'grid.js',
     'data.js',
+    'parameter.js',
     'engine.js',
 ];
 
@@ -62,6 +64,10 @@ window.onload = () => {
     for (let sketch of sketchDeclarations) {
         declareSketch(eval(sketch));
     }
+
+    declareSketch(SketchLua, 'sketch_lua/main.lua');
+    declareSketch(SketchLua, 'sketch_lua/creative_coding/phyllotaxis.lua');
+    declareSketch(SketchLua, 'sketch_lua/creative_coding/collatz.lua');    
 
     run();
 };

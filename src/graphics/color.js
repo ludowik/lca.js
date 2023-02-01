@@ -5,7 +5,7 @@ class Color {
 
     set(r, g, b, a) {
         if (typeof r === 'string') {
-            hexToRgb(r, this);
+            hex2rgb(r, this);
         } else {
             this.r = r;
             this.g = g;
@@ -33,7 +33,7 @@ class Color {
 }
 
 // https://css-tricks.com/converting-color-spaces-in-javascript/
-function hexToRgb(h, clr) {
+function hex2rgb(h, clr) {
     let r = 0, g = 0, b = 0;
 
     // 3 digits
@@ -110,93 +110,95 @@ function hsb2rgb(hue, sat, val, alpha) {
     return new Color(r, g, b, alpha);
 }
 
-/*
-function Color.hsl2rgb(hue, sat, lgt, alpha)
-    assert(hue)
-    if hue > 1 then
-        hue = hue / 255
-    end
+function hsl2rgb(hue, sat, lgt, alpha) {
+    if (hue > 1) {
+        hue = hue / 255;
+    }
 
-    sat = sat or 0.5
-    lgt = lgt or 0.5
-    alpha = alpha or 1
+    sat = sat || 0.5;
+    lgt = lgt || 0.5;
+    alpha = alpha || 1;
 
-    if sat <= 0 then
-        return lgt, lgt, lgt, alpha
-    end
+    if (sat <= 0) {
+        return new Color(lgt, lgt, lgt, alpha);
+    }
 
-    hue = hue * 6 -- We will split hue into 6 sectors    
+    hue = hue * 6; // We will split hue into 6 sectors    
 
-    local c = (1-math.abs(2*lgt-1))*sat
-    local x = (1-math.abs(hue%2-1))*c
+    let c = (1 - Math.abs(2 * lgt - 1)) * sat;
+    let x = (1 - Math.abs(hue % 2 - 1)) * c;
 
-    local m,r,g,b = (lgt-.5*c), 0,0,0
+    let m = (lgt - .5 * c);
+    let r = 0;
+    let g = 0;
+    let b = 0;
 
-    if     hue < 1 then r,g,b = c,x,0
-    elseif hue < 2 then r,g,b = x,c,0
-    elseif hue < 3 then r,g,b = 0,c,x
-    elseif hue < 4 then r,g,b = 0,x,c
-    elseif hue < 5 then r,g,b = x,0,c
-    else              r,g,b = c,0,x
-    end
+    if      (hue < 1) r, g, b = c, x, 0;
+    else if (hue < 2) r, g, b = x, c, 0;
+    else if (hue < 3) r, g, b = 0, c, x;
+    else if (hue < 4) r, g, b = 0, x, c;
+    else if (hue < 5) r, g, b = x, 0, c;
+    else r, g, b = c, 0, x;
 
-    return r+m, g+m, b+m, alpha
-end
+    return new Color(r + m, g + m, b + m, alpha);
+}
 
-function Color.rgb2hsl(...)
-    local clr = Color(...)
-    local r, g, b, a = clr.r, clr.g, clr.b, clr.a
+/*function Color.rgb2hsl(...)
+    let clr = Color(...)
+    let r, g, b, a = clr.r, clr.g, clr.b, clr.a
 
-    local max, min = math.max(r, g, b), math.min(r, g, b)
-    local h = (max + min)*.5
-    local s, l = h, h
+    let max, min = math.max(r, g, b), math.min(r, g, b)
+    let h = (max + min) * .5
+    let s, l = h, h
 
     if max == min then
-        h, s = 0, 0
+    h, s = 0, 0
     else
-        local d = max - min
-        s = (l > 0.5) and d / (2 - max - min) or d / (max + min)
+    let d = max - min
+    s = (l > 0.5) and d / (2 - max - min) or d / (max + min)
 
-        if max == r then
-            h = (g - b) / d + (g < b and 6 or 0)
+    if max == r then
+    h = (g - b) / d + (g < b and 6 or 0)
         elseif max == g then
-            h = (b - r) / d + 2
+    h = (b - r) / d + 2
         elseif max == b then
-            h = (r - g) / d + 4
-        end
+    h = (r - g) / d + 4
+    end
 
-        h = h / 6
+    h = h / 6
     end
 
     return h, s, l, a
-end
+    end
 */
 
-//var HSL = 'hsl';
-var HSB = 'hsb';
-var RGB = 'rgb';
+    //var HSL = 'hsl';
+    var HSB = 'hsb';
+    var RGB = 'rgb';
 
-let __colorMode = RGB;
-function colorMode(mode) {
-    if (mode) __colorMode = mode;
-    return __colorMode;
-}
-
-function color(r, g, b, a) {
-    if (__colorMode == HSB) {
-        return hsb2rgb(r, g, b, a);
+    let __colorMode = RGB;
+    function colorMode(mode) {
+        if (mode) __colorMode = mode;
+        return __colorMode;
     }
-    return new Color(r, g, b, a);
-}
 
-var colors = {
-    transparent: color(0, 0, 0, 0),
-    black: color(0, 0, 0),
-    white: color(1, 1, 1),
+    function color(r, g, b, a) {
+        if (__colorMode == HSB) {
+            return hsb2rgb(r, g, b, a);
+        }
+        return new Color(r, g, b, a);
+    }
 
-    red: color(1, 0, 0),
-    green: color(0, 1, 0),
-    blue: color(0, 0, 1),
+    var colors = {
+        transparent: color(0, 0, 0, 0),
+        black: color(0, 0, 0),
+        white: color(1, 1, 1),
 
-    gray: color(.5, .5, .5),
-};
+        red: color(1, 0, 0),
+        green: color(0, 1, 0),
+        blue: color(0, 0, 1),
+
+        gray: color(.5, .5, .5),
+    };
+
+    globalThis.Color = Color

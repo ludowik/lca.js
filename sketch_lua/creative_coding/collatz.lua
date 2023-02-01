@@ -9,7 +9,7 @@ function setup()
 
     len = min(W, H) / 15
 
-    clr = Color.random()
+    clr = randomColor()
     clr.a = 0.1
 
     parameter.number('rotation', 0, TAU, rotation, function (value)
