@@ -6,9 +6,9 @@
         {
             "label": "Generate Sketches List",
             "type": "shell",
-            "command": "python3 ./explore.py",
+            "command": "python3 ./lca_js/build/explore.py",
             "windows": {
-                "command": "python .\\explore.py"
+                "command": "python .\\lca_js\\build\\explore.py"
             },
             "group": "build",
         }
