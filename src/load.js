@@ -12,7 +12,10 @@ let scriptFiles = [
     'graphics/shader.js',
     'graphics/mesh.js',
     'frameBuffer.js',
-    'scene.js',
+    'scene/entity.js',
+    'scene/ui.js',
+    'scene/node.js',
+    'scene/scene.js',
     'sketch.js',
     'frameTime.js',
     'range.js',
@@ -44,9 +47,9 @@ function include(path, files) {
     return files.lenght;
 }
 
-include('lca_js/src/graphics/shaders/', shaderFiles);
-include('lca_js/src/', scriptFiles);
-include('lca_js/lib/', ['perlin.js']);
+include('src/graphics/shaders/', shaderFiles);
+include('src/', scriptFiles);
+include('lib/', ['perlin.js']);
 
 include('', sketchFiles);
 

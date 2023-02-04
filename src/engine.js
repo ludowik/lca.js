@@ -1,4 +1,4 @@
-var engine, sketch;
+var engine, sketch, parameter;
 
 var W = 0, H = 0;
 var CX, CY;
@@ -20,7 +20,7 @@ class Engine {
         this.params = {};
         this.paramsOfParams = {};
 
-        this.params.sketchName = sketches[sketches.length - 1];
+        this.params.sketchName = sketches[2];
         this.paramsOfParams.sketchName = {
             list: sketches,
             onchange: (controller) => {
@@ -32,7 +32,9 @@ class Engine {
         this.params.autotest = false;
         this.params.smooth = false;
 
-        this.initGui();
+        parameter = new Parameter();
+        parameter.action('reload', reload);
+        parameter.watch(this.frameTime, 'fps');
     }
 
     load() {
@@ -139,12 +141,10 @@ class Engine {
     }
 
     mouseEvent(evt) {
-        // evt.preventDefault();
+        evt.preventDefault();
 
         mouse.x = evt.clientX;
         mouse.y = evt.clientY;
-
-        // console.log(evt.type);
 
         switch (evt.type) {
             case 'mousedown': {
@@ -159,6 +159,7 @@ class Engine {
                     x: mouse.x,
                     y: mouse.y,
                 };
+                parameter.mouseReleased();
                 sketch.mouseReleased();
                 break;
             }
@@ -207,6 +208,9 @@ class Engine {
             canvas.height = window.innerHeight;
             canvas.width = window.innerHeight * 9 / 16;
         }
+
+        canvas.style.width = canvas.width + 'px';
+        canvas.style.height = canvas.height + 'px';
     }
 
     beforeDraw() {
@@ -240,29 +244,30 @@ class Engine {
             gl.disable(gl.POLYGON_SMOOTH);
         }
 
+        this.resetGraphics(true);
+    }
+
+    resetGraphics(origin) {
         resetMatrix();
         resetStyles();
 
         ortho();
 
-        if (getOrigin() == TOP_LEFT) {
+        if (origin && getOrigin() == TOP_LEFT) {
             translate(0, H);
             scale(1, -1);
         }
     }
 
     afterDraw() {
+        this.resetGraphics(true);
+        parameter.draw();
+        this.resetGraphics(false);
+
         sketch.fb.unbindFrameBuffer();
-
         let gl = getContext();
-
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.ONE, gl.ZERO);
-
-        resetMatrix();
-        resetStyles();
-
-        ortho();
 
         stroke(colors.white);
         fill(colors.white);
@@ -414,6 +419,8 @@ function setSketch(name) {
         sketch = sketchesRef[name];
         sketch.resume();
     }
+
+    console.clear();
 
     engine.initGui();
 }

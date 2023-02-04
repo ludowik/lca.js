@@ -1,4 +1,4 @@
-class UI extends Sketch {
+class TestUI extends Sketch {
     setup() {
         this.params = {
             'rotate': true,

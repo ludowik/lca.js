@@ -1,12 +1,12 @@
 import os
 import re
 
-with open('./lca_js/src/loadFiles.js', 'wt') as f:
+with open('./src/loadFiles.js', 'wt') as f:
     sketchFilesJS = f'let sketchFiles = [\n'
     sketchFilesLua = f'let sketchFilesLua = [\n'
     sketchDeclarations = f'let sketchDeclarations = [\n'
 
-    for root, dirs, files in os.walk("./lca_js/sketch"):
+    for root, dirs, files in os.walk("./sketch"):
         for file in files:
             if not file.endswith(".js"):
                 continue
@@ -18,12 +18,12 @@ with open('./lca_js/src/loadFiles.js', 'wt') as f:
                     sketchDeclarations += f'    "{sketch}",\n'
 
 
-    for root, dirs, files in os.walk("./lca_lua/apps/creative_coding"):
+    for root, dirs, files in os.walk("../lca/apps/creative_coding"):
         for file in files:
             if not file.endswith(".lua"):
                 continue
 
-            sketchFilesLua += f'   "{root + "/" + file}",\n'.replace('\\', '/').replace('./', '')
+            sketchFilesLua += f'   "{root + "/" + file}",\n'.replace('\\', '/')
 
 
     sketchFilesJS += f'];\n\n'

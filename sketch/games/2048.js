@@ -6,14 +6,6 @@ class Button extends Entity {
         this.size = createVector(w, h);
     }
 
-    contains(x, y) {
-        if (x > this.position.x && x < this.position.x + this.size.x &&
-            y > this.position.y && y < this.position.y + this.size.y) {
-            return true;
-        }
-        return false;
-    }
-
     draw() {
         fill(colors.white);
         rectMode(CORNER);

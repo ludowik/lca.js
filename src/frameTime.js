@@ -32,7 +32,8 @@ class FrameTime {
             this.frameCount = 0;
 
             this.fpsUI = document.getElementById("fps");
-            this.fpsUI.innerHTML = this.fps;
+            if (this.fpsUI)
+                this.fpsUI.innerHTML = this.fps;
         }
     }
 

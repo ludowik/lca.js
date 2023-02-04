@@ -76,6 +76,7 @@ class Comet {
     }
 
     draw() {
+        strokeSize(2);
         circle(this.position.x, this.position.y, 10);
     }
 }

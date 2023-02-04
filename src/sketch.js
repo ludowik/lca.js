@@ -47,7 +47,7 @@ class SketchLua extends Sketch {
         this.lualib.luaL_openlibs(this.L);
         this.lauxlib.luaL_requiref(this.L, fengari.to_luastring("js"), fengari.interop.luaopen_js, 1);
 
-        this.dofile('lca_js/src/lua/init.lua');
+        this.dofile('src/lua/init.lua');
         this.dofile(this.script);
 
         this.dostring('setup_proc()');
