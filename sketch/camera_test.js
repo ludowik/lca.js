@@ -2,24 +2,26 @@ async function getMedia(constraints) {
     try {
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
-        const domElement = document.createElement('video');
-        
+        const video = document.createElement('video');
+
         // required to work in iOS 11 & up:
-        domElement.setAttribute('playsinline', '');
+        video.setAttribute('playsinline', '');
 
         try {
-            if ('srcObject' in domElement) {
-                domElement.srcObject = stream;
+            if ('srcObject' in video) {
+                video.srcObject = stream;
             } else {
-                domElement.src = window.URL.createObjectURL(stream);
+                video.src = window.URL.createObjectURL(stream);
             }
         } catch (err) {
-            domElement.src = stream;
+            video.src = stream;
         }
 
-        document.body.appendChild(domElement);
+        //document.body.appendChild(video);
 
-        return stream;
+        video.play();
+
+        return video;
     } catch (err) {
         /* handle the error */
     }
@@ -27,14 +29,18 @@ async function getMedia(constraints) {
 
 class WebCam extends Sketch {
     async setup() {
-        this.stream = await getMedia({
+        this.video = await getMedia({
             video: true,
             audio: false,
         });
+
+        this.img = new FrameBuffer(100, 100);
     }
 
     draw() {
-        if (this.stream)
-            sprite(this.stream);
+        if (this.video) {
+            this.img.updateTexture(this.video);
+            sprite(this.img);
+        }
     }
 }

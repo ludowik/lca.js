@@ -25,24 +25,48 @@ class FrameBuffer {
         this.targetTextureHeight = this.h;
 
         this.targetTexture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.targetTexture);
 
         // define size and format of level 0
         const level = 0;
         const internalFormat = gl.RGBA;
         const border = 0;
-        const format = gl.RGBA;
-        const type = gl.UNSIGNED_BYTE;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
         const data = null;
-        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+        gl.bindTexture(gl.TEXTURE_2D, this.targetTexture);
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            level,
+            internalFormat,
             this.targetTextureWidth,
             this.targetTextureHeight,
-            border, format, type, data);
+            border,
+            srcFormat,
+            srcType,
+            data);
 
         // set the filtering so we don't need mips
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    }
+
+    updateTexture(video) {
+        let gl = getContext();
+
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
+        gl.bindTexture(gl.TEXTURE_2D, this.targetTexture);
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            level,
+            internalFormat,
+            srcFormat,
+            srcType,
+            video
+        );
     }
 
     createRenderbuffer() {

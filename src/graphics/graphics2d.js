@@ -344,7 +344,8 @@ function sprite(texture, x, y, w, h) {
 
     pushMatrix();
 
-    translate(x, y);
+    if (x)
+        translate(x, y);
     scale(w, h);
 
     gl.bindTexture(gl.TEXTURE_2D, texture.targetTexture);
