@@ -234,11 +234,7 @@ function arc() {
 }
 
 let meshText;
-function text(txt, x, y) {
-    let gl = getContext();
-
-    pushMatrix();
-
+function textSize(txt) {
     if (!meshText) {
         const canvas = document.createElement("canvas");
         meshText = {
@@ -248,17 +244,32 @@ function text(txt, x, y) {
     }
 
     const context = meshText.context;
-
-    const fontColor = 'white';
-    const fontRef = fontSize() + 'px monospace';
-
-    context.fillStyle = fontColor;
-    context.font = fontRef;
+    context.font = fontSize() + 'px monospace';
     const metrics = context.measureText(txt);
 
+    return {
+        w: metrics.width,
+        h: metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent + 1,
+        fontBoundingBoxAscent: metrics.fontBoundingBoxAscent,
+        fontBoundingBoxDescent: metrics.fontBoundingBoxDescent,
+    };
+}
+
+function text(txt, x, y) {
+    let gl = getContext();
+
+    pushMatrix();
+
+    let metrics = textSize(txt);
+
+    const context = meshText.context;
+
+    const fontRef = fontSize() + 'px monospace';
+    const fontColor = 'white';    
+
     let w, h;
-    w = metrics.width;
-    h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent + 1;
+    w = metrics.w;
+    h = metrics.h;
 
     context.canvas.width = w;
     context.canvas.height = h;

@@ -8,14 +8,18 @@ class UI extends Entity {
     }
 
     draw() {
-        fill(colors.red);
+        let size = textSize(this.label);
+
+        blendMode(BLEND);
+
+        fill(colors.black);
         rectMode(CORNER);
         rect(this.position.x, this.position.y, this.size.x, this.size.y);
 
         fontSize(22);
-        fill(colors.green);
+        fill(colors.white);
         textMode(CORNER);
-        text(this.label, this.position.x, this.position.y);
+        text(this.label, this.position.x + this.size.x - size.w, this.position.y);
     }
 
     mouseReleased(mouse) {
