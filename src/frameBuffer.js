@@ -1,24 +1,12 @@
-class FrameBuffer {
-    constructor(w, h) {
+class Texture {
+    constructor(w, h, data) {
         this.w = w || W;
         this.h = h || H;
 
-        this.width = this.w;
-        this.height = this.h;
-
-        this.pixels = new Uint8Array(this.w * this.h * 4);
-        this.pixelColor = color();
-
-        this.createTexture();
-        this.createRenderbuffer();
-        this.createFramebuffer();
+        this.createTexture(data);
     }
 
-    pixelDensity() {
-        // TODO
-    }
-
-    createTexture() {
+    createTexture(data) {
         let gl = getContext();
 
         this.targetTextureWidth = this.w;
@@ -32,25 +20,35 @@ class FrameBuffer {
         const border = 0;
         const srcFormat = gl.RGBA;
         const srcType = gl.UNSIGNED_BYTE;
-        const data = null;
+
         gl.bindTexture(gl.TEXTURE_2D, this.targetTexture);
-        gl.texImage2D(
-            gl.TEXTURE_2D,
-            level,
-            internalFormat,
-            this.targetTextureWidth,
-            this.targetTextureHeight,
-            border,
-            srcFormat,
-            srcType,
-            data);
+        if (data) {
+            gl.texImage2D(gl.TEXTURE_2D,
+                level,
+                internalFormat,
+                srcFormat,
+                srcType,
+                data);
+        } else {
+            gl.texImage2D(gl.TEXTURE_2D,
+                level,
+                internalFormat,
+                this.targetTextureWidth,
+                this.targetTextureHeight,
+                border,
+                srcFormat,
+                srcType,
+                data);
+        }
 
         // set the filtering so we don't need mips
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     }
 
+    // TODO a renommer en captureVideo par exemple
     updateTexture(video) {
         let gl = getContext();
 
@@ -58,15 +56,35 @@ class FrameBuffer {
         const internalFormat = gl.RGBA;
         const srcFormat = gl.RGBA;
         const srcType = gl.UNSIGNED_BYTE;
+
         gl.bindTexture(gl.TEXTURE_2D, this.targetTexture);
-        gl.texImage2D(
-            gl.TEXTURE_2D,
+        gl.texImage2D(gl.TEXTURE_2D,
             level,
             internalFormat,
             srcFormat,
             srcType,
             video
         );
+    }
+}
+
+class FrameBuffer extends Texture {
+    constructor(w, h, data) {
+        super(w, h, data);
+
+        this.width = this.w;
+        this.height = this.h;
+
+        this.pixels = new Uint8Array(this.w * this.h * 4);
+        this.pixelColor = color();
+
+        //this.createTexture(data);
+        this.createRenderbuffer();
+        this.createFramebuffer();
+    }
+
+    pixelDensity() {
+        // TODO
     }
 
     createRenderbuffer() {

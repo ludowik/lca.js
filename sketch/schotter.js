@@ -24,22 +24,22 @@ class PlayWithRect extends Sketch {
                 x = i * size + random(-size / 2, size / 2) * ((j / rows) ** 2);
                 y = j * size + random(-size / 2, size / 2) * ((j / rows) ** 2);
 
-                push();
-                translate(x, y);
+                pushProps(); {
+                    translate(x, y);
 
-                let angle = random(-PI / 2, PI / 2) * ((j / rows) ** 2);
-                rotate(angle);
+                    let angle = random(-PI / 2, PI / 2) * ((j / rows) ** 2);
+                    rotate(angle);
 
-                fill(Color.random());
-                rect(0, 0, size, size);
+                    fill(Color.random());
+                    rect(0, 0, size, size);
 
-                fill(Color.random());
-                fontSize(size);
+                    fill(Color.random());
+                    fontSize(size);
 
-                let name = 'Hello world !'
-                text(name[randomInt(name.length)], 0, 0);
-
-                pop();
+                    let name = 'Hello world !'
+                    text(name[randomInt(name.length)], 0, 0);
+                }
+                popProps();
             }
         }
     }

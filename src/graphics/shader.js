@@ -89,6 +89,60 @@ class Shader {
         }
     }
 
+    sendUniforms(uniforms) {
+        let gl = getContext();
+
+        for (let uniform in uniforms) {
+            let ul = this.uniformsLocation[uniform];
+            if (!ul) {
+                // console.log('unknown uniform ' + uniform);
+                continue;
+            }
+
+            let value = uniforms[uniform];
+            let type = typeof value;
+            switch (type) {
+                case 'boolean': {
+                    gl.uniform1i(this.uniformsLocation[uniform], value ? 1 : 0);
+                    break;
+                }
+                case 'number': {
+                    gl.uniform1f(this.uniformsLocation[uniform], value);
+                    break;
+                }
+                case 'object': {
+                    if (value instanceof vec2) {
+                        gl.uniform2f(this.uniformsLocation[uniform], value.x, value.y);
+
+                    } else if (value instanceof Color) {
+                        gl.uniform4f(this.uniformsLocation[uniform], value.r, value.g, value.b, value.a);
+
+                    } else if (value instanceof Array) {
+                        switch (value.length) {
+                            case 1:
+                                gl.uniform1f(this.uniformsLocation[uniform], value[0]);
+                                break;
+                            case 2:
+                                gl.uniform2f(this.uniformsLocation[uniform], value[0], value[1]);
+                                break;
+                            case 3:
+                                gl.uniform3f(this.uniformsLocation[uniform], value[0], value[1], value[2]);
+                                break;
+                            case 4:
+                                gl.uniform4f(this.uniformsLocation[uniform], value[0], value[1], value[2], value[3]);
+                                break;
+                        }
+                    }
+                    break;
+                }
+                default: {
+                    console.log('unknown type ' + type);
+                    break;
+                }
+            }
+        }
+    }
+
     use() {
         let gl = getContext();
         gl.useProgram(this.program);

@@ -34,7 +34,7 @@ class Bees extends Sketch {
                 let d = dist(x, z, 0, 0) / 2 + this.angle;
                 let h = floor(map(sin(d), -1, 1, hmin, hmax));
 
-                push(); {
+                pushProps(); {
                     translate(x * w, 0, z * w);
 
                     stroke(1 - (h - hmin) / (hmax - hmin), 0.5, 0.5);
@@ -42,7 +42,7 @@ class Bees extends Sketch {
 
                     box(w, h, w);
                 }
-                pop();
+                popProps();
             }
         }
 

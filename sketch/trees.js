@@ -10,36 +10,35 @@ class Trees extends Sketch {
             return;
         }
 
-        push();
+        pushProps(); {
+            translate(x, y);
+            rotate(a);
 
-        translate(x, y);
-        rotate(a);
+            strokeSize(level);
+            if (l > 10) {
+                stroke(155 / 255, 103 / 255, 60 / 255, 1);//, level / 10);
+            } else {
+                stroke(0, 1, 0, 1);//level / 10);
+            }
 
-        strokeSize(level);
-        if (l > 10) {
-            stroke(155 / 255, 103 / 255, 60 / 255, 1);//, level / 10);
-        } else {
-            stroke(0, 1, 0, 1);//level / 10);
+            vertex(ax, ay);
+            aa += a;
+            ax += sin(-aa) * l;
+            ay += cos(-aa) * l;
+            vertex(ax, ay);
+
+            line(0, 0, 0, l);
+
+            level--;
+
+            this.line(ax, ay, aa, 0, l, -PI / random(4, 8), l * random(0.3, 0.8), level);
+            this.line(ax, ay, aa, 0, l, +PI / random(4, 8), l * random(0.3, 0.8), level);
+
+            for (const i of range(this.params.branches.value)) {
+                this.line(ax, ay, aa, 0, l, random(-PI / 4, PI / 4), l * random(0.5, 0.8), level);
+            }
         }
-
-        vertex(ax, ay);
-        aa += a;
-        ax += sin(-aa) * l;
-        ay += cos(-aa) * l;
-        vertex(ax, ay);
-
-        line(0, 0, 0, l);
-
-        level--;
-
-        this.line(ax, ay, aa, 0, l, -PI / random(4, 8), l * random(0.3, 0.8), level);
-        this.line(ax, ay, aa, 0, l, +PI / random(4, 8), l * random(0.3, 0.8), level);
-
-        for (const i of range(this.params.branches.value)) {
-            this.line(ax, ay, aa, 0, l, random(-PI / 4, PI / 4), l * random(0.5, 0.8), level);
-        }
-
-        pop();
+        popProps();
         this.count++;
     }
 

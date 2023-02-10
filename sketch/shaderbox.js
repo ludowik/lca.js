@@ -54,40 +54,7 @@ class ShaderBox extends Sketch {
         this.params.h = 10;
     }
 
-    sendUniforms(uniforms) {
-        let gl = getContext();
-
-        for (let uniform in uniforms) {
-            let ul = this.shader.uniformsLocation[uniform];
-            if (!ul) {
-                // console.log('unknown uniform ' + uniform);
-                continue;
-            }
-
-            let value = uniforms[uniform];
-            let type = typeof value;
-            switch (type) {
-                case 'boolean': {
-                    gl.uniform1i(this.shader.uniformsLocation[uniform], value ? 1 : 0);
-                    break;
-                }
-                case 'number': {
-                    gl.uniform1f(this.shader.uniformsLocation[uniform], value);
-                    break;
-                }
-                case 'object': {
-                    if (value instanceof vec2) {
-                        gl.uniform2f(this.shader.uniformsLocation[uniform], value.x, value.y);
-                    }
-                    break;
-                }
-                default: {
-                    console.log('unknown type ' + type);
-                    break;
-                }
-            }
-        }
-    }
+    
 
     draw() {
         background();
@@ -100,7 +67,7 @@ class ShaderBox extends Sketch {
         };
 
         this.shader.use();
-        this.sendUniforms(this.uniforms);
+        this.shader.sendUniforms(this.uniforms);
 
         shade(0, 0, W, H, this.shader);
     }

@@ -30,7 +30,7 @@ class Cell {
     }
 
     draw(cell, x, y, size, marge) {
-        push(); {
+        pushProps(); {
             translate(x * size + size / 2, y * size + size / 2);
 
             if (this.translate) {
@@ -60,7 +60,7 @@ class Cell {
             fill(clr[0]);
             text(cell.value, 0, 0);
         }
-        pop();
+        popProps();
     }
 
     color(cell) {
