@@ -3,6 +3,8 @@ class Line extends Sketch {
         background();
         
         strokeSize(20);
-        line(100, 100, mouse.x, mouse.y);
+        stroke(colors.red);
+
+        line(W/2, H/2, mouse.x, mouse.y);
     }
 }

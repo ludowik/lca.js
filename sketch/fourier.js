@@ -52,7 +52,7 @@ class Fourier extends Sketch {
         }
 
         let x = 0, y = 0, xd = 0, yd = 0;
-        push(); {
+        pushProps(); {
             translate(CX, CY / 2);
             for (const item of this.items) {
                 translate(xd, yd);
@@ -70,7 +70,7 @@ class Fourier extends Sketch {
             strokeSize(10);
             point(xd, yd);
         }
-        pop();
+        popProps();
 
         if (this.x) {
             this.img.bindFramebuffer();

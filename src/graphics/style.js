@@ -1,57 +1,64 @@
+var __styles = {};
+
 function resetStyles() {
     colorMode(RGB);
+
+    rectMode(CORNER);
+    circleMode(CENTER);
+    ellipseMode(CENTER);
+    spriteMode(CORNER);
+    textMode(CORNER);
     
     strokeSize(1);
     stroke(colors.white);
 
     fill(colors.black);
+
+    fontSize(16);
 }
 
 function pushStyles() {
-    // TODO
+    pushItem('styles', {...__styles});
 }
 
 function popStyles() {
-    // TODO
+    __styles = popItem('styles');
 }
 
-var __strokeSize = 1;
 function strokeSize(size) {
-    if (size) __strokeSize = size;
-    return __strokeSize;
+    if (size) __styles.__strokeSize = size;
+    return __styles.__strokeSize;
 }
 
-var __strokeColor;
 function stroke(clr) {
     if (clr != undefined) {
         if (clr instanceof Color) {
-            __strokeColor = clr;
+            __styles.__strokeColor = clr;
         } else {
-            __strokeColor = color.apply(null, arguments);
+            __styles.__strokeColor = color.apply(null, arguments);
         }
     }
-    return __strokeColor;
+    return __styles.__strokeColor;
 }
 
 function noStroke() {
-    __strokeColor = null;
-    __strokeSize = 0;
+    __styles.__strokeColor = null;
+    __styles.__strokeSize = 0;
 }
 
-var __fillColor;
 function fill(clr) {    
     if (clr != undefined) {
         if (clr instanceof Color) {
-            __fillColor = clr;
+            __styles.fillColor = clr;
         } else {
-            __fillColor = color.apply(null, arguments);
+            __styles.fillColor = color.apply(null, arguments);
         }
     }
-    return __fillColor;
+    return __styles.fillColor;
 }
 
 function noFill() {
-    __fillColor = null;
+    __styles.fillColor = null;
 }
 
 // TODO
@@ -64,26 +71,23 @@ function noSmooth() {
 var CENTER = 'center';
 var CORNER = 'corner';
 
-var __rectMode = CORNER;
 function rectMode(mode) {
-    if (mode) __rectMode = mode;
-    return __rectMode;
+    if (mode) __styles.rectMode = mode;
+    return __styles.rectMode;
 }
 
 function circleMode(mode) {
     return ellipseMode(mode);
 }
 
-var __ellipseMode = CENTER;
 function ellipseMode(mode) {
-    if (mode) __ellipseMode = mode;
-    return __ellipseMode;
+    if (mode) __styles.ellipseMode = mode;
+    return __styles.ellipseMode;
 }
 
-var __spriteMode
 function spriteMode(mode) {
-    if (mode) __spriteMode = mode;
-    return __spriteMode;
+    if (mode) __styles.spriteMode = mode;
+    return __styles.spriteMode;
 
 }
 
@@ -91,18 +95,14 @@ function spriteMode(mode) {
 function fontName() {    
 }
 
-var __fontSize = 16;
 function fontSize(size) {
-    if (size) {
-        __fontSize = size;
-    }
-    return __fontSize;
+    if (size) __styles.fontSize = size;
+    return __styles.fontSize;
 }
 
-var __textMode = CENTER;
 function textMode(mode) {
-    if (mode) __textMode = mode;
-    return __textMode;
+    if (mode) __styles.textMode = mode;
+    return __styles.textMode;
 }
 
 var LEFT = 'left';

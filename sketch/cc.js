@@ -62,7 +62,7 @@ class CC extends Sketch {
         }
 
         function cc(img, x, y) {
-            push(); {
+            pushProps(); {
                 translate(x, y);
 
                 beginShape(); {
@@ -75,7 +75,7 @@ class CC extends Sketch {
                 }
                 endShape();
             }
-            pop();
+            popProps();
         }
     }
 }

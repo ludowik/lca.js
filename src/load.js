@@ -1,5 +1,6 @@
 let scriptFiles = [
     'log.js',
+    'stack.js',
     'math.js',
     'random.js',
     'transform.js',

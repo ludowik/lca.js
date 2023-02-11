@@ -42,7 +42,7 @@ class Grid {
     }
 
     render(f) {
-        push(); {
+        pushProps(); {
             let size = W / (this.w + 1);
             translate(
                 CX - size * this.w / 2,
@@ -50,7 +50,7 @@ class Grid {
 
             this.forEach(f || this.renderCell, size);
         }
-        pop();
+        popProps();
     }
 
     renderCell(cell, x, y, size) {

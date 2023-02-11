@@ -51,6 +51,10 @@ class Engine {
 
         this.graphics = new Graphics(this.gl);
 
+        this.addEventListeners();
+    }
+
+    addEventListeners() {
         this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("mousedown", (evt) => { this.mouseEvent(evt); });
@@ -126,8 +130,11 @@ class Engine {
                 }
                 default: {
                     if (paramsOfParams[paramName]) {
-                        let controler = folder.add(params, paramName,
+                        let controler = folder.add(
+                            params,
+                            paramName,
                             paramsOfParams[paramName].list);
+
                         if (paramsOfParams[paramName].onchange)
                             controler.onChange(paramsOfParams[paramName].onchange);
 
@@ -427,6 +434,8 @@ function setSketch(name) {
 
 function run() {
     engine = new Engine();
+    engine.initGui();
+    
     setSketch(engine.params.sketchName);
 
     engine.requestRender(true);

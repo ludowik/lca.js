@@ -29,6 +29,7 @@ function blendMode(mode) {
         gl.enable(gl.BLEND);
         gl.blendEquation(gl.FUNC_ADD);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
     } else if (mode === ADDITIVE) {
         gl.enable(gl.BLEND);
         gl.blendEquation(gl.FUNC_ADD);
@@ -37,16 +38,14 @@ function blendMode(mode) {
     }
 }
 
-function push() {
+function pushProps() {
     pushMatrix();
-    // TODO
-    //pushStyles();
+    pushStyles();
 }
 
-function pop() {
+function popProps() {
     popMatrix();
-    // TODO
-    //popStyles();
+    popStyles();
 }
 
 var meshPoint;
@@ -66,11 +65,11 @@ function point(x, y, z = 0) {
         meshPoint.useAttributes();
     }
 
-    let ul = shaders.point.uniformsLocation;
-    gl.uniform1f(ul.strokeSize, __strokeSize);
-
-    let clr = __strokeColor || colors.white;
-    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
+    let uniforms = {
+        strokeSize: __styles.__strokeSize,
+        strokeColor: __styles.__strokeColor || colors.white,
+    }
+    meshPoint.shader.sendUniforms(uniforms);
 
     drawArrays(gl.POINTS, 0, 3);
 
@@ -88,11 +87,11 @@ function points(array) {
         meshPoints.updateAttributes(shaders.point, array);
     }
 
-    let ul = shaders.point.uniformsLocation;
-    gl.uniform1f(ul.strokeSize, __strokeSize);
-
-    let clr = __strokeColor || colors.white;
-    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
+    let uniforms = {
+        strokeSize: __styles.__strokeSize,
+        strokeColor: __styles.__strokeColor || colors.white,
+    }
+    meshPoints.shader.sendUniforms(uniforms);
 
     drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
 }
@@ -122,13 +121,12 @@ function line(x1, y1, x2, y2) {
         meshLine.useAttributes();
     }
 
-    let ul = meshLine.shader.uniformsLocation;
-
-    gl.uniform2f(ul.lineSize, x2 - x1, y2 - y1);
-    gl.uniform1f(ul.strokeSize, __strokeSize);
-
-    let clr = __strokeColor || colors.white;
-    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
+    let uniforms = {
+        lineSize: [x2 - x1, y2 - y1],
+        strokeSize: __styles.__strokeSize,
+        strokeColor: __styles.__strokeColor || colors.white,
+    }
+    meshLine.shader.sendUniforms(uniforms);
 
     drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -141,7 +139,7 @@ function rect(x, y, w, h) {
 
     pushMatrix();
 
-    if (__rectMode === CORNER)
+    if (__styles.rectMode === CORNER)
         translate(x, y);
     else
         translate(x - w / 2, y - h / 2);
@@ -164,16 +162,13 @@ function rect(x, y, w, h) {
         meshRect.useAttributes();
     }
 
-    let ul = meshRect.shader.uniformsLocation;
-
-    let clr = __strokeColor || colors.white;
-    gl.uniform4f(ul.strokeColor, clr.r, clr.g, clr.b, clr.a);
-
-    clr = __fillColor || colors.white;
-    gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
-
-    gl.uniform2f(ul.size, w, h);
-    gl.uniform1f(ul.strokeSize, __strokeSize);
+    let uniforms = {
+        size: [w, h],
+        strokeSize: __styles.__strokeSize,
+        strokeColor: __styles.__strokeColor || colors.white,
+        fillColor: __styles.fillColor || colors.white,
+    }
+    meshRect.shader.sendUniforms(uniforms);
 
     drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -190,7 +185,7 @@ function ellipse(x, y, w, h) {
 
     pushMatrix();
 
-    if (__ellipseMode === CORNER)
+    if (__styles.ellipseMode === CORNER)
         translate(x, y);
     else
         translate(x - w / 2, y - h / 2);
@@ -213,14 +208,13 @@ function ellipse(x, y, w, h) {
         meshEllipse.useAttributes();
     }
 
-    let clr = __strokeColor || colors.white;
-    gl.uniform4f(meshEllipse.shader.uniformsLocation.strokeColor, clr.r, clr.g, clr.b, clr.a);
-
-    clr = __fillColor || colors.transparent;
-    gl.uniform4f(meshEllipse.shader.uniformsLocation.fillColor, clr.r, clr.g, clr.b, clr.a);
-
-    gl.uniform2f(meshEllipse.shader.uniformsLocation.size, w, h);
-    gl.uniform1f(meshEllipse.shader.uniformsLocation.strokeSize, __strokeSize);
+    let uniforms = {
+        size: [w, h],
+        strokeSize: __styles.__strokeSize,
+        strokeColor: __styles.__strokeColor || colors.white,
+        fillColor: __styles.fillColor || colors.transparent,
+    }
+    meshEllipse.shader.sendUniforms(uniforms);
 
     drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -234,11 +228,7 @@ function arc() {
 }
 
 let meshText;
-function text(txt, x, y) {
-    let gl = getContext();
-
-    pushMatrix();
-
+function textSize(txt) {
     if (!meshText) {
         const canvas = document.createElement("canvas");
         meshText = {
@@ -248,41 +238,48 @@ function text(txt, x, y) {
     }
 
     const context = meshText.context;
-
-    const fontColor = 'white';
     const fontRef = fontSize() + 'px monospace';
-
-    context.fillStyle = fontColor;
     context.font = fontRef;
     const metrics = context.measureText(txt);
 
-    let w, h;
-    w = metrics.width;
-    h = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent + 1;
+    return {
+        w: metrics.width,
+        h: metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent + 1,
+        fontBoundingBoxAscent: metrics.fontBoundingBoxAscent,
+        fontBoundingBoxDescent: metrics.fontBoundingBoxDescent,
+    };
+}
+
+function text(txt, x, y) {
+    let gl = getContext();
+
+    pushMatrix();
+
+    let metrics = textSize(txt);
+
+    let w = metrics.w;
+    let h = metrics.h;
+
+    const context = meshText.context;
 
     context.canvas.width = w;
     context.canvas.height = h;
 
     context.clearRect(0, 0, w, h);
 
+    const fontRef = fontSize() + 'px monospace';
+    const fontColor = 'white';
+
     context.fillStyle = fontColor;
     context.strokeStyle = fontColor;
     context.font = fontRef;
     context.fillText(txt, 0, h - 1);
 
-    var textTex = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, textTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, context.canvas);
-    gl.generateMipmap(gl.TEXTURE_2D);
-
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    let img = new Texture(null, null, context.canvas);
 
     gl.activeTexture(gl.TEXTURE0);
 
-    if (__textMode === CORNER) {
+    if (__styles.textMode === CORNER) {
         translate(x, y);
     } else {
         translate(x - w / 2, y - h / 2);
@@ -305,7 +302,7 @@ function text(txt, x, y) {
         0, 1, 0
     ];
 
-    shaders.texture.texture = textTex;
+    shaders.texture.texture = img.targetTexture;
 
     if (!meshText.mesh) {
         meshText.mesh = new Mesh();
@@ -314,10 +311,10 @@ function text(txt, x, y) {
         meshText.mesh.updateAttributes(shaders.texture, array, array);
     }
 
-    let ul = shaders.texture.uniformsLocation;
-
-    let clr = __fillColor || colors.white;
-    gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
+    let uniforms = {
+        fillColor: __styles.fillColor || colors.white,
+    }
+    meshText.mesh.shader.sendUniforms(uniforms);
 
     drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
@@ -333,7 +330,9 @@ function sprite(texture, x, y, w, h) {
 
     pushMatrix();
 
-    translate(x, y);
+    if (x) {
+        translate(x, y);
+    }
     scale(w, h);
 
     gl.bindTexture(gl.TEXTURE_2D, texture.targetTexture);
@@ -357,10 +356,10 @@ function sprite(texture, x, y, w, h) {
         meshSprite.updateAttributes(shaders.texture, array, array);
     }
 
-    let ul = shaders.texture.uniformsLocation;
-
-    let clr = colors.white;
-    gl.uniform4f(ul.fillColor, clr.r, clr.g, clr.b, clr.a);
+    let uniforms = { // TODO - sprite color
+        fillColor: colors.white,
+    }
+    meshSprite.shader.sendUniforms(uniforms);
 
     drawArrays(gl.TRIANGLES, 0, array.length / 3);
 
@@ -398,9 +397,10 @@ function shade(x, y, w, h, shader) {
 }
 
 function renderThis(f) {
-    push();
-    f();
-    pop();
+    pushProps(); {
+        f();
+    }
+    popProps();
 }
 
 // TODO
