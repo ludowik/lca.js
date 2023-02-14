@@ -1,8 +1,6 @@
 class Spirale extends Sketch {
     setup() {
         colorMode(HSB, 1);
-
-        perspective(PI / 3.0, W / H, 0.1, 5000);
         
         // TODO
         //normalMaterial();
@@ -43,6 +41,19 @@ class Spirale extends Sketch {
 
     draw() {
         background(0);
+
+        perspective()
+        ortho()
+        //translate(CX, CY)
+        //scale(2/W, 2/H)
+
+        fill(colors.white)
+        translate(0, 0, 100)
+        rect(-100, -100, 200, 200)
+
+        translate(0, 0, -200)
+        rect(-100, -100, 200, 200)
+        
 
         let angle = 0;
 

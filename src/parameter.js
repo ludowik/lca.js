@@ -29,7 +29,7 @@ class Parameter extends Scene {
         } else {
             let previous = this.items[this.items.length - 1];
             parameter.position.x = previous.position.x;
-            parameter.position.y = previous.position.y + previous.size.y;
+            parameter.position.y = previous.position.y + previous.size.y + 10;
         }
         super.push(parameter);
     }

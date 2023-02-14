@@ -15,7 +15,7 @@ class UI extends Entity {
 
         fill(colors.black);
         rectMode(CORNER);
-        rect(this.position.x, this.position.y, this.size.x, this.size.y);
+        rect(this.position.x + this.size.x - size.w, this.position.y, size.w, this.size.y);
 
         fill(colors.white);
         textMode(CORNER);

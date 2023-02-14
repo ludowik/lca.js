@@ -4,65 +4,60 @@ class Mesh {
 
         this.shader = shader;
         this.buffers = {
-            aPosition: {name: 'aPosition', data: array},
-            aTexCoord: {name: 'aTexCoord', data: texCoord},
+            vertices: { name: 'aPosition', data: array },
+            texCoord: { name: 'aTexCoord', data: texCoord },
         }
 
         this.shader.use();
 
-        this.buffers.aPosition.buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.aPosition.buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.buffers.aPosition.data), gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(shader.attribsLocation.aPosition);
-        gl.vertexAttribPointer(shader.attribsLocation.aPosition, 3, gl.FLOAT, false, 0, 0);        
-        
-        if (texCoord) {
-            this.buffers.aTexCoord.buffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.aTexCoord.buffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.buffers.aTexCoord.data), gl.STATIC_DRAW);
-            gl.enableVertexAttribArray(shader.attribsLocation.aTexCoord);
-            gl.vertexAttribPointer(shader.attribsLocation.aTexCoord, 3, gl.FLOAT, false, 0, 0);            
-        }
+        this.initializeBuffer(this.buffers.vertices);
+        this.initializeBuffer(this.buffers.texCoord);
     }
 
-    updateAttributes(shader, array, texCoord) {
+    updateAttributes(array, texCoord) {
         let gl = getContext();
 
-        this.shader = shader;
-        this.buffers = {
-            aPosition: {name: 'aPosition', data: array},
-            aTexCoord: {name: 'aTexCoord', data: texCoord},
-        }
+        this.buffers.vertices.data = array;
+        this.buffers.texCoord.data = texCoord;
 
         this.shader.use();
 
-        this.buffers.aPosition.buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.aPosition.buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.buffers.aPosition.data), gl.STATIC_DRAW);
-        gl.vertexAttribPointer(this.shader.attribsLocation.aPosition, 3, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(this.shader.attribsLocation.aPosition);
-        
-        if (this.buffers.aTexCoord.data) {
-            this.buffers.aTexCoord.buffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.aTexCoord.buffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.buffers.aTexCoord.data), gl.STATIC_DRAW);
-            gl.vertexAttribPointer(this.shader.attribsLocation.aTexCoord, 3, gl.FLOAT, false, 0, 0);
-            gl.enableVertexAttribArray(this.shader.attribsLocation.aTexCoord);            
-        }
+        this.updateBuffer(this.buffers.vertices);
+        this.updateBuffer(this.buffers.texCoord);
     }
 
     useAttributes() {
         let gl = getContext();
+
         this.shader.use();
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.aPosition.buffer);
-        gl.vertexAttribPointer(this.shader.attribsLocation.aPosition, 3, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(this.shader.attribsLocation.aPosition);
+        this.useBuffer(this.buffers.vertices);
+        this.useBuffer(this.buffers.texCoord);
+    }
 
-        if (this.buffers.aTexCoord.data) {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.aTexCoord.buffer);
-            gl.vertexAttribPointer(this.shader.attribsLocation.aTexCoord, 3, gl.FLOAT, false, 0, 0);
-            gl.enableVertexAttribArray(this.shader.attribsLocation.aTexCoord);            
+    initializeBuffer(buffer) {
+        this.updateBuffer(buffer, true);
+    }
+
+    updateBuffer(buffer, loadBuffer = true) {
+        if (buffer.data === undefined) return;
+        let gl = getContext();
+
+        if (buffer.buffer === undefined) {
+            buffer.buffer = gl.createBuffer();
         }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buffer);
+
+        if (loadBuffer) {
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(buffer.data), gl.STATIC_DRAW);
+        }
+
+        gl.vertexAttribPointer(this.shader.attribsLocation[buffer.name], 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(this.shader.attribsLocation[buffer.name]);
+    }
+
+    useBuffer(buffer) {
+        this.updateBuffer(buffer, false);
     }
 }

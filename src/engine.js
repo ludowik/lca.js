@@ -13,14 +13,15 @@ var UP_ARROW = 'ArrowUp';
 
 class Engine {
     constructor() {
-        this.load();
+        this.initGraphics();
+        this.initEventListeners();
 
         this.frameTime = new FrameTime();
 
         this.params = {};
         this.paramsOfParams = {};
 
-        this.params.sketchName = sketches[2];
+        this.params.sketchName = getItem('sketchName') || sketches[2];
         this.paramsOfParams.sketchName = {
             list: sketches,
             onchange: (controller) => {
@@ -30,14 +31,20 @@ class Engine {
 
         this.params.topLeft = true;
         this.params.autotest = false;
-        this.params.smooth = false;
+
+        this.initGui();
 
         parameter = new Parameter();
-        parameter.action('reload', reload);
         parameter.watch(this.frameTime, 'fps');
+        parameter.watch(this.params, 'sketchName');
+        parameter.action('reload', reload);
+        parameter.action('=>', () => engine.nextSketch());
+        parameter.action('<=', () => engine.previousSketch());
+        parameter.action('auto', () => this.params.autotest = !this.params.autotest);
+        parameter.action('topLeft', () => this.params.topLeft = !this.params.topLeft);
     }
 
-    load() {
+    initGraphics() {
         this.gl = this.initWebGLContext();
 
         W = this.gl.drawingBufferWidth;
@@ -50,11 +57,9 @@ class Engine {
         minSizeFont = minSize / 24;
 
         this.graphics = new Graphics(this.gl);
-
-        this.addEventListeners();
     }
 
-    addEventListeners() {
+    initEventListeners() {
         this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
         this.canvas.addEventListener("mousedown", (evt) => { this.mouseEvent(evt); });
@@ -80,12 +85,8 @@ class Engine {
             this.gui.domElement.id = 'gui';
             this.gui.domElement.style = 'position: absolute; left: ' + (W - 250) + 'px;';
 
-            this.gui.useLocalStorage = true;
-            this.gui.remember(this.params);
-
-            this.gui.updateDisplay = (name) => {
-                // TODO
-            };
+            // this.gui.useLocalStorage = true;
+            // this.gui.remember(this.params);
 
             this.guiGlobals = this.gui.addFolder('engine');
             this.guiGlobals.open();
@@ -112,16 +113,17 @@ class Engine {
     addGui(folder, params, paramsOfParams) {
         for (let paramName in params) {
             let param = params[paramName];
+            let controller;
             switch (typeof (param)) {
                 case 'object': {
                     if (param instanceof Array) {
                         //folder.add(params, param);
 
                     } else if (param instanceof Color) {
-                        folder.addColor(params, paramName);
+                        controller = folder.addColor(params, paramName);
 
                     } else {
-                        folder.add(param, 'value',
+                        controller = folder.add(param, 'value',
                             param.min || 1,
                             param.max || 100,
                             param.step || 1);
@@ -130,19 +132,23 @@ class Engine {
                 }
                 default: {
                     if (paramsOfParams[paramName]) {
-                        let controler = folder.add(
+                        controller = folder.add(
                             params,
                             paramName,
                             paramsOfParams[paramName].list);
 
                         if (paramsOfParams[paramName].onchange)
-                            controler.onChange(paramsOfParams[paramName].onchange);
+                            controller.onChange(paramsOfParams[paramName].onchange);
 
                     } else {
-                        folder.add(params, paramName, 1, 100);
+                        controller = folder.add(params, paramName, 1, 100);
                     }
                     break;
                 }
+            }
+
+            if (controller) {
+                controller.listen();
             }
         }
     }
@@ -240,16 +246,11 @@ class Engine {
             gl.disable(gl.BLEND);
         }
 
-        if (this.params.smooth) {
-            gl.enable(gl.LINE_SMOOTH);
-            gl.enable(gl.POLYGON_SMOOTH);
+        gl.enable(gl.LINE_SMOOTH);
+        gl.enable(gl.POLYGON_SMOOTH);
 
-            gl.hint(gl.LINE_SMOOTH_HINT, gl.NICEST);
-            gl.hint(gl.POLYGON_SMOOTH_HINT, gl.NICEST);
-        } else {
-            gl.disable(gl.LINE_SMOOTH);
-            gl.disable(gl.POLYGON_SMOOTH);
-        }
+        gl.hint(gl.LINE_SMOOTH_HINT, gl.NICEST);
+        gl.hint(gl.POLYGON_SMOOTH_HINT, gl.NICEST);
 
         this.resetGraphics(true);
     }
@@ -304,6 +305,12 @@ class Engine {
     nextSketch() {
         let nextIndex = sketches.indexOf(this.params.sketchName) + 1;
         let nextItem = sketches[nextIndex] || sketches[0];
+        setSketch(nextItem);
+    }
+
+    previousSketch() {
+        let nextIndex = sketches.indexOf(this.params.sketchName) - 1;
+        let nextItem = sketches[nextIndex] || sketches[sketches.length - 1];
         setSketch(nextItem);
     }
 
@@ -414,7 +421,7 @@ function setSketch(name) {
     }
 
     engine.params.sketchName = name;
-    engine.guiSketchSelecter?.updateDisplay();
+    storeItem('sketchName', engine.params.sketchName);
 
     if (!sketchesRef[name]) {
         sketchesRef[name] = eval('new ' + name);
@@ -434,8 +441,7 @@ function setSketch(name) {
 
 function run() {
     engine = new Engine();
-    engine.initGui();
-    
+
     setSketch(engine.params.sketchName);
 
     engine.requestRender(true);

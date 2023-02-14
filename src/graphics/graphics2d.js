@@ -84,7 +84,7 @@ function points(array) {
         meshPoints = new Mesh();
         meshPoints.initializeAttributes(shaders.point, array);
     } else {
-        meshPoints.updateAttributes(shaders.point, array);
+        meshPoints.updateAttributes(array);
     }
 
     let uniforms = {
@@ -307,7 +307,7 @@ function text(txt, x, y) {
         meshText.mesh = new Mesh();
         meshText.mesh.initializeAttributes(shaders.texture, array, array);
     } else {
-        meshText.mesh.updateAttributes(shaders.texture, array, array);
+        meshText.mesh.updateAttributes(array, array);
     }
 
     let uniforms = {
@@ -351,7 +351,7 @@ function sprite(texture, x, y, w, h) {
         meshSprite = new Mesh();
         meshSprite.initializeAttributes(shaders.texture, array, array);
     } else {
-        meshSprite.updateAttributes(shaders.texture, array, array);
+        meshSprite.updateAttributes(array, array);
     }
 
     let uniforms = { // TODO - sprite color
@@ -385,7 +385,7 @@ function shade(x, y, w, h, shader) {
         meshShade = new Mesh();
         meshShade.initializeAttributes(shader, array, array);
     } else {
-        meshShade.updateAttributes(shader, array, array);
+        meshShade.updateAttributes(array, array);
     }
 
     drawArrays(gl.TRIANGLES, 0, array.length / 3);

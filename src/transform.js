@@ -12,7 +12,7 @@ function ortho(left, right, top, bottom, near = -1000, far = 1000) {
     glMatrix.mat4.ortho(__projectionMatrix, left, right, top, bottom, near, far);
 }
 
-function perspective(fovy = 45, aspect, near = -1000, far = 1000) {
+function perspective(fovy = Math.PI/4., aspect, near = 0.1, far = 1000) {
     aspect = aspect || (W / H);
 
     glMatrix.mat4.perspective(__projectionMatrix, fovy, aspect, near, far);
