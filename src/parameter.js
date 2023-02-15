@@ -19,7 +19,7 @@ class Bind {
 class Parameter extends Scene {
     constructor() {
         super();
-        this.position = createVector(W, H / 2);
+        this.position = createVector(W - 100, H / 2);
     }
 
     push(parameter) {
@@ -34,20 +34,37 @@ class Parameter extends Scene {
         super.push(parameter);
     }
 
+    folder(name) {
+        let ui = new UI(name, (ui) => {
+            ui.open = !ui.open;
+        })
+        ui.open = true;
+        ui.folder = this.currentFolder;
+        this.push(ui);
+
+        this.currentFolder = ui;
+    }
+
     watch(object, name) {
-        this.push(new UI(new Bind(object, name)));
+        let ui = new UI(new Bind(object, name));
+        ui.folder = this.currentFolder;
+        this.push(ui);
     }
 
-    number(name, min, max, value) {
-        globalThis[name] = ifundef(globalThis[name], ifundef(value, min));
+    number(object, name, min, max, value) {
+        // TODO
+        object[name] = ifundef(object[name], ifundef(value, min));
     }
 
-    integer(name, min, max, value) {
-        globalThis[name] = ifundef(globalThis[name], ifundef(value, min));
+    integer(object, name, min, max, value) {
+        // TODO
+        object[name] = ifundef(object[name], ifundef(value, min));
     }
 
     action(label, callback) {
-        this.push(new UI(label, callback));
+        let ui = new UI(label, callback);
+        ui.folder = this.currentFolder;
+        this.push(ui);
     }
 
     link() { }

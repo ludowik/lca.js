@@ -8,6 +8,10 @@ class UI extends Entity {
     }
 
     draw() {
+        this.drawLabel();
+    }
+
+    drawLabel() {
         fontSize(22);
         let size = textSize(this.label);
 
@@ -24,7 +28,7 @@ class UI extends Entity {
 
     mouseReleased(mouse) {
         if (this.callback) {
-            this.callback();
+            this.callback(this);
         }
     }
 }

@@ -35,13 +35,18 @@ class Engine {
         this.initGui();
 
         parameter = new Parameter();
-        parameter.watch(this.frameTime, 'fps');
-        parameter.watch(this.params, 'sketchName');
+
+        parameter.folder('navigation');
         parameter.action('reload', reload);
         parameter.action('=>', () => engine.nextSketch());
         parameter.action('<=', () => engine.previousSketch());
         parameter.action('auto', () => this.params.autotest = !this.params.autotest);
         parameter.action('topLeft', () => this.params.topLeft = !this.params.topLeft);
+
+        parameter.folder('sketch');
+        parameter.watch(this.frameTime, 'fps');
+        parameter.watch(this.params, 'sketchName');
+
     }
 
     initGraphics() {
@@ -60,17 +65,7 @@ class Engine {
     }
 
     initEventListeners() {
-        this.canvas.addEventListener("click", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("dblclick", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("mousedown", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("mousemove", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("mouseup", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("mouseenter", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("mouseover", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("mouseleave", (evt) => { this.mouseEvent(evt); });
-        this.canvas.addEventListener("wheel", (evt) => { this.mouseEvent(evt); }, { passive: false });
-
-        document.addEventListener('keydown', (evt) => { this.keyboardEvent(evt); });
+        mapEvents(this, this.canvas);
     }
 
     initGui() {
@@ -153,12 +148,25 @@ class Engine {
         }
     }
 
+    touchEvent(evt) {
+        evt.preventDefault();
+
+        if (evt.changedTouches.length > 0) {
+            mouse.x = evt.changedTouches[0].clientX;
+            mouse.y = evt.changedTouches[0].clientY;
+        }
+
+        evt.returnValue = false;
+    }
+
     mouseEvent(evt) {
         evt.preventDefault();
 
         mouse.x = evt.clientX;
         mouse.y = evt.clientY;
 
+        // evt.type => A string with the name of the event.
+        // It is case-sensitive and browsers set it to dblclick, mousedown, mouseenter, mouseleave, mousemove, mouseout, mouseover, or mouseup
         switch (evt.type) {
             case 'mousedown': {
                 mouse.start = {
@@ -177,7 +185,6 @@ class Engine {
                 break;
             }
             case 'wheel': {
-                console.log(evt.deltaX);
                 break;
             }
         }
@@ -239,6 +246,7 @@ class Engine {
             gl.enable(gl.BLEND);
             gl.blendEquation(gl.FUNC_ADD);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
         } else {
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL);

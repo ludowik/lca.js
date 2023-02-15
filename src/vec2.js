@@ -4,6 +4,14 @@ class vec2 {
         this.y = y;
     }
 
+    set(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    get w() { return this.x; }
+    get h() { return this.y; }
+
     clone() {
         return createVector(this.x, this.y);
     }
