@@ -6,5 +6,8 @@ class Line extends Sketch {
         stroke(colors.red);
 
         line(W/2, H/2, mouse.x, mouse.y);
+
+        rectMode(CENTER);
+        
     }
 }

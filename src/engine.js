@@ -118,7 +118,17 @@ class Engine {
                         //folder.add(params, param);
 
                     } else if (param instanceof Color) {
-                        folder.addColor(params, paramName);
+                        const __param = {};
+                        __param[key] = {
+                            r: param.r * 255,
+                            g: param.g * 255,
+                            b: param.b * 255
+                        };
+                        folder.addColor(__param, key).onChange(() => {
+                            param.r = __param[key].r / 255;
+                            param.g = __param[key].g / 255;
+                            param.b = __param[key].b / 255;
+                        });
 
                     } else {
                         folder.add(param, 'value',
