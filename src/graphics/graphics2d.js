@@ -51,7 +51,6 @@ function popProps() {
 var meshPoint;
 function point(x, y, z = 0) {
     let gl = getContext();
-
     pushMatrix();
 
     scale(x, y, z);
@@ -79,12 +78,13 @@ function point(x, y, z = 0) {
 let meshPoints;
 function points(array) {
     let gl = getContext();
+    pushMatrix();
 
     if (!meshPoints) {
         meshPoints = new Mesh();
         meshPoints.initializeAttributes(shaders.point, array);
     } else {
-        meshPoints.updateAttributes(shaders.point, array);
+        meshPoints.updateAttributes(array);
     }
 
     let uniforms = {
@@ -94,12 +94,13 @@ function points(array) {
     meshPoints.shader.sendUniforms(uniforms);
 
     drawArraysInstanced(gl.POINTS, 0, array.length / 3, 3);
+
+    popMatrix();
 }
 
 let meshLine;
 function line(x1, y1, x2, y2) {
     let gl = getContext();
-
     pushMatrix();
 
     translate(x1, y1);
@@ -122,6 +123,7 @@ function line(x1, y1, x2, y2) {
     }
 
     let uniforms = {
+        origin: getOrigin() == TOP_LEFT ? -1 : 1,
         lineSize: [x2 - x1, y2 - y1],
         strokeSize: __styles.__strokeSize,
         strokeColor: __styles.__strokeColor || colors.white,
@@ -136,7 +138,6 @@ function line(x1, y1, x2, y2) {
 let meshRect;
 function rect(x, y, w, h) {
     let gl = getContext();
-
     pushMatrix();
 
     if (__styles.rectMode === CORNER)
@@ -182,7 +183,6 @@ function circle(x, y, radius) {
 let meshEllipse;
 function ellipse(x, y, w, h) {
     let gl = getContext();
-
     pushMatrix();
 
     if (__styles.ellipseMode === CORNER)
@@ -252,7 +252,6 @@ function textSize(txt) {
 
 function text(txt, x, y) {
     let gl = getContext();
-
     pushMatrix();
 
     let metrics = textSize(txt);
@@ -299,7 +298,7 @@ function text(txt, x, y) {
         1, 1, 0,
         0, 0, 0,
         1, 1, 0,
-        0, 1, 0
+        0, 1, 0,
     ];
 
     shaders.texture.texture = img.targetTexture;
@@ -308,7 +307,7 @@ function text(txt, x, y) {
         meshText.mesh = new Mesh();
         meshText.mesh.initializeAttributes(shaders.texture, array, array);
     } else {
-        meshText.mesh.updateAttributes(shaders.texture, array, array);
+        meshText.mesh.updateAttributes(array, array);
     }
 
     let uniforms = {
@@ -324,11 +323,10 @@ function text(txt, x, y) {
 var meshSprite;
 function sprite(texture, x, y, w, h) {
     let gl = getContext();
+    pushMatrix();
 
     w = w || texture.w;
     h = h || texture.h;
-
-    pushMatrix();
 
     if (x) {
         translate(x, y);
@@ -344,7 +342,7 @@ function sprite(texture, x, y, w, h) {
         1, 1, 0,
         0, 0, 0,
         1, 1, 0,
-        0, 1, 0
+        0, 1, 0,
     ];
 
     shaders.texture.texture = texture;
@@ -353,7 +351,7 @@ function sprite(texture, x, y, w, h) {
         meshSprite = new Mesh();
         meshSprite.initializeAttributes(shaders.texture, array, array);
     } else {
-        meshSprite.updateAttributes(shaders.texture, array, array);
+        meshSprite.updateAttributes(array, array);
     }
 
     let uniforms = { // TODO - sprite color
@@ -369,7 +367,6 @@ function sprite(texture, x, y, w, h) {
 var meshShade;
 function shade(x, y, w, h, shader) {
     let gl = getContext();
-
     pushMatrix();
 
     translate(x, y);
@@ -388,7 +385,7 @@ function shade(x, y, w, h, shader) {
         meshShade = new Mesh();
         meshShade.initializeAttributes(shader, array, array);
     } else {
-        meshShade.updateAttributes(shader, array, array);
+        meshShade.updateAttributes(array, array);
     }
 
     drawArrays(gl.TRIANGLES, 0, array.length / 3);

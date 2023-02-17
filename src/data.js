@@ -1,7 +1,7 @@
-function getItem() {
-    // TODO
+function storeItem(key, value) {
+    window.localStorage.setItem(key, value);
 }
 
-function storeItem() {
-    // TODO
+function getItem(key) {
+    return window.localStorage.getItem(key);
 }

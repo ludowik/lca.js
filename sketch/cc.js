@@ -11,7 +11,7 @@ class CC extends Sketch {
 
             l: 40,
 
-            weight: 30,
+            weight: 15,
 
             save: () => this.save()
         };

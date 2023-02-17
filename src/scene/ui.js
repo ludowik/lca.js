@@ -4,19 +4,23 @@ class UI extends Entity {
         this.label = label;
         this.callback = callback;
         this.size = createVector(100, 22);
-        this.position = createVector(W-this.size.x, H/2);        
+        this.position = createVector(W - this.size.x, H / 2);
     }
 
     draw() {
+        this.drawLabel();
+    }
+
+    drawLabel() {
+        fontSize(22);
+        let size = textSize(this.label);
+
         blendMode(BLEND);
 
         fill(colors.black);
         rectMode(CORNER);
-        rect(this.position.x, this.position.y, this.size.x, this.size.y);
+        rect(this.position.x + this.size.x - size.w, this.position.y, size.w, this.size.y);
 
-        fontSize(22);
-        let size = textSize(this.label);
-        
         fill(colors.white);
         textMode(CORNER);
         text(this.label, this.position.x + this.size.x - size.w, this.position.y);
@@ -24,7 +28,7 @@ class UI extends Entity {
 
     mouseReleased(mouse) {
         if (this.callback) {
-            this.callback();
+            this.callback(this);
         }
     }
 }

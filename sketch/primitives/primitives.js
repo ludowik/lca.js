@@ -20,16 +20,18 @@ class Primitives extends Sketch {
 
         let top = 100;
 
+        seed(12);
+
         function render(x, y, setup, draw) {
             setup();
             pushMatrix();
             translate(x, y);
             let dx = 0;
-            for (const i of range(25)) {
-                strokeSize(i);
-                stroke(colors.white);
+            for (const i of range(20)) {
+                strokeSize(i/2);
+                stroke(Color.random());
                 draw(i, dx, 0);
-                dx += i * 3;
+                dx += i * 4;
             }
             top += 50;
             popMatrix();
@@ -66,12 +68,12 @@ class Primitives extends Sketch {
         render(0, top,
             () => { },
             (i, x, y) => {
+                strokeSize(3);
                 points(this.points);
             });
 
         render(0, top,
             () => {
-                strokeSize(12);
             },
             (i, x, y) => {
                 line(x - i, y - i, x + i, y + i);

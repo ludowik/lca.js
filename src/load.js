@@ -24,6 +24,7 @@ let scriptFiles = [
     'data.js',
     'parameter.js',
     'engine.js',
+    'events.js',
 ];
 
 let shaderFiles = [
