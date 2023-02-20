@@ -4,7 +4,7 @@ class UI extends Entity {
         this.label = label;
         this.callback = callback;
         this.size = createVector(100, 22);
-        this.position = createVector(W-this.size.x, H/2);        
+        this.position = createVector(W - this.size.x, H / 2);
     }
 
     draw() {
