@@ -20,13 +20,20 @@ class Node extends UI {
         this.drawLabel(this);
 
         x = x || this.position.x;
-        y = y || this.position.y + this.size.h;
+
+        if (getOrigin() == TOP_LEFT)
+            y = y || this.position.y + this.size.h;
+        else
+            y = y || this.position.y - this.size.h;
 
         for (const item of this.items) {
             if (item.folder && !item.folder.open) continue;
             item.position.set(x, y);
             item.draw(x, y);
-            y += item.size.h + this.margeIn;
+            if (getOrigin() == TOP_LEFT)
+                y += item.size.h + this.margeIn;
+            else
+                y -= item.size.h + this.margeIn;
         }
     }
 

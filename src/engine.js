@@ -160,6 +160,10 @@ class Engine {
     }
 
     mouseEvent(evt) {
+        // TODO 
+        // down/pressed => setFocus(computeFocus) + mouseEvent sur le focus
+        // ... => mouseEvent vers le focus
+        // up/released => setFocus(null) + mouseUp vers le dernier focus
         evt.preventDefault();
 
         mouse.x = evt.clientX;
@@ -278,6 +282,7 @@ class Engine {
     afterDraw() {
         this.resetGraphics(true);
         parameter.draw();
+        
         this.resetGraphics(false);
 
         sketch.fb.unbindFrameBuffer();
