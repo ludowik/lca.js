@@ -166,6 +166,27 @@ class Engine {
             mouse.y = evt.changedTouches[0].clientY;
         }
 
+        // evt.type => A string with the name of the event.
+        // It is case-sensitive and browsers set it to touchstart, touchmove, touchend, touchcancel
+        switch (evt.type) {
+            case 'touchstart': {
+                mouse.start = {
+                    x: mouse.x,
+                    y: mouse.y,
+                };
+                break;
+            }
+            case 'touchend': {
+                mouse.stop = {
+                    x: mouse.x,
+                    y: mouse.y,
+                };
+                parameter.mouseReleased();
+                sketch.mouseReleased();
+                break;
+            }
+        }
+
         evt.returnValue = false;
     }
 
@@ -174,6 +195,7 @@ class Engine {
         // down/pressed => setFocus(computeFocus) + mouseEvent sur le focus
         // ... => mouseEvent vers le focus
         // up/released => setFocus(null) + mouseUp vers le dernier focus
+
         evt.preventDefault();
 
         mouse.x = evt.clientX;
@@ -199,6 +221,7 @@ class Engine {
                 break;
             }
             case 'wheel': {
+                // TODO
                 break;
             }
         }
