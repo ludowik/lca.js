@@ -10,11 +10,14 @@ class Rainbow extends Sketch {
 
         background(colors.gray);
 
-        // line
-        for (let hue = 0; hue < w; hue++) {
-            stroke(hue / w, 1, 1);
-            line(hue, 0, hue, h);
+        // lines
+        pushProps(); {
+            for (let hue = 0; hue < w; hue++) {
+                stroke(hue / w);
+                line(hue, 0, hue, h);
+            }
         }
+        popProps();
 
         // circle
         pushProps(); {
@@ -23,7 +26,7 @@ class Rainbow extends Sketch {
             translate(w + w / 2, h / 2);
             rotate(-PI / 2);
             for (let hue = 0; hue < w; hue++) {
-                fill(hue, 1, 1);
+                fill(hue / w, 1, 1);
                 arc(0, 0, h, h,
                     TAU * hue / w,
                     TAU * (hue + 1) / w, PIE, 1);
@@ -36,14 +39,14 @@ class Rainbow extends Sketch {
             translate(0, h);
             for (let hue = 0; hue < w; hue++) {
                 for (let saturation = 0; saturation < w; saturation++) {
-                    stroke(hue, saturation / w, 1);
+                    stroke(hue / w, saturation / w, 1);
                     point(hue, saturation);
                 }
             }
         }
         popProps();
 
-        // anneau
+        // ring
         pushProps(); {
             noStroke();
             noSmooth();
@@ -52,7 +55,7 @@ class Rainbow extends Sketch {
             let d = 256 / 12;
             for (let r = w; r > 0; r -= d * 2) {
                 for (let hue = 0; hue < w; hue += d) {
-                    fill(hue, r / w, r / w);
+                    fill(hue / w, r / w, r / w);
                     arc(0, 0, r, r,
                         TAU * hue / w,
                         TAU * (hue + d) / w, PIE, 1);

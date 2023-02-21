@@ -52,12 +52,12 @@ class Parameter extends Scene {
     }
 
     number(object, name, min, max, value) {
-        // TODO
+        // TODO : implement number UI with slider
         object[name] = ifundef(object[name], ifundef(value, min));
     }
 
     integer(object, name, min, max, value) {
-        // TODO
+        // TODO : implement integer UI with slider
         object[name] = ifundef(object[name], ifundef(value, min));
     }
 

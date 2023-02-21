@@ -166,9 +166,34 @@ class Engine {
             mouse.y = evt.changedTouches[0].clientY;
         }
 
+        this.mouseAndTouchEvent(evt, mouse);
+
+        evt.returnValue = false;
+    }
+
+    mouseEvent(evt) {
+        evt.preventDefault();
+
+        mouse.x = evt.clientX;
+        mouse.y = evt.clientY;
+
+        this.mouseAndTouchEvent(evt, mouse);
+
+        evt.returnValue = false;
+    }
+
+    mouseAndTouchEvent(evt, mouse) {
+        // TODO : dispatch event
+        // down/pressed => setFocus(computeFocus) + mouseEvent sur le focus
+        // ... => mouseEvent vers le focus
+        // up/released => setFocus(null) + mouseUp vers le dernier focus
+
         // evt.type => A string with the name of the event.
-        // It is case-sensitive and browsers set it to touchstart, touchmove, touchend, touchcancel
+        // It is case-sensitive and browsers set it to
+        //     - dblclick, mousedown, mouseenter, mouseleave, mousemove, mouseout, mouseover, or mouseup
+        //     - touchstart, touchmove, touchend, touchcancel
         switch (evt.type) {
+            case 'mousedown':
             case 'touchstart': {
                 mouse.start = {
                     x: mouse.x,
@@ -176,57 +201,22 @@ class Engine {
                 };
                 break;
             }
+            case 'mouseup':
             case 'touchend': {
                 mouse.stop = {
                     x: mouse.x,
                     y: mouse.y,
                 };
-                parameter.mouseReleased();
-                sketch.mouseReleased();
-                break;
-            }
-        }
-
-        evt.returnValue = false;
-    }
-
-    mouseEvent(evt) {
-        // TODO 
-        // down/pressed => setFocus(computeFocus) + mouseEvent sur le focus
-        // ... => mouseEvent vers le focus
-        // up/released => setFocus(null) + mouseUp vers le dernier focus
-
-        evt.preventDefault();
-
-        mouse.x = evt.clientX;
-        mouse.y = evt.clientY;
-
-        // evt.type => A string with the name of the event.
-        // It is case-sensitive and browsers set it to dblclick, mousedown, mouseenter, mouseleave, mousemove, mouseout, mouseover, or mouseup
-        switch (evt.type) {
-            case 'mousedown': {
-                mouse.start = {
-                    x: mouse.x,
-                    y: mouse.y,
-                };
-                break;
-            }
-            case 'mouseup': {
-                mouse.stop = {
-                    x: mouse.x,
-                    y: mouse.y,
-                };
-                parameter.mouseReleased();
-                sketch.mouseReleased();
+                if (!parameter.mouseReleased()); {
+                    sketch.mouseReleased();
+                }
                 break;
             }
             case 'wheel': {
-                // TODO
+                // TODO : implement wheel event response
                 break;
             }
         }
-
-        evt.returnValue = false;
     }
 
     keyboardEvent(evt) {
@@ -315,7 +305,7 @@ class Engine {
     afterDraw() {
         this.resetGraphics(true);
         parameter.draw();
-        
+
         this.resetGraphics(false);
 
         sketch.fb.unbindFrameBuffer();
@@ -382,7 +372,7 @@ class Engine {
     }
 }
 
-// TODO
+// TODO : no consistency with setContext
 function getContext() {
     return engine.gl;
 }
@@ -445,7 +435,7 @@ function setOrigin(origin) {
 }
 
 function supportedOrientations() {
-    // TODO
+    // TODO : prevent to switch between portrait and landscape mode
 }
 
 function loop() {

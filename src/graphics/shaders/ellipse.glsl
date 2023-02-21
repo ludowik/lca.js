@@ -7,8 +7,23 @@ var ellipse_vertexShaderText = `
 
 var ellipse_fragmentShaderText = `
     uniform vec2 size;
+
+    uniform float angleStart;
+    uniform float angleStop;
+    
+    float angleBetween(vec2 v1, vec2 v2) {
+        float alpha1 = atan(v1.y, v1.x);
+        float alpha2 = atan(v2.y, v2.x);
+
+        return alpha2 - alpha1;
+    }
+
     void main() {
         vec2 fragmentPosition = 2.0 * vTexCoord.xy - 1.0;
+
+        float angle = angleBetween(fragmentPosition, vec2(1., 0.));
+        if (angle < angleStart) discard;
+        if (angle > angleStop) discard;
         
         float distance = length(fragmentPosition);
 

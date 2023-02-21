@@ -2,9 +2,7 @@ class Spirale extends Sketch {
     setup() {
         colorMode(HSB, 1);
         
-        // TODO
-        //normalMaterial();
-
+        // TODO : implement a camera
         //this.cam = createEasyCam();
 
         //let state = getItem('cam_state');
@@ -35,7 +33,7 @@ class Spirale extends Sketch {
             this.elapsedTime += dt;
         }
 
-        // TODO
+        // TODO : implement a camera
         //storeItem('cam_state', this.cam.getState());
     }
 

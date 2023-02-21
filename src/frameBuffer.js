@@ -48,7 +48,7 @@ class Texture {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     }
 
-    // TODO a renommer en captureVideo par exemple
+    // TODO : to rename (maybe captureVideo)
     updateTexture(video) {
         let gl = getContext();
 
@@ -83,8 +83,8 @@ class FrameBuffer extends Texture {
         this.createFramebuffer();
     }
 
+    // TODO : manage pixel density on ios
     pixelDensity() {
-        // TODO
     }
 
     createRenderbuffer() {
@@ -140,8 +140,13 @@ class FrameBuffer extends Texture {
         return this.pixelColor;
     }
 
-    set(x, y) {
-        // TODO
+    set(x, y, r, g, b, a) {
+        // TODO : param may be a color instance
+        this.readPixels();
+        this.pixels[0] = r;
+        this.pixels[1] = g;
+        this.pixels[2] = b;
+        this.pixels[3] = a;        
     }
 }
 

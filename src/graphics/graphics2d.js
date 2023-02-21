@@ -7,7 +7,7 @@ class Graphics {
 }
 
 function pixelDensity() {
-    // TODO
+    // TODO : manage pixel density on ios
 }
 
 function background(clr) {
@@ -181,7 +181,7 @@ function circle(x, y, radius) {
 }
 
 let meshEllipse;
-function ellipse(x, y, w, h) {
+function ellipse(x, y, w, h, start, stop) {
     let gl = getContext();
     pushMatrix();
 
@@ -213,6 +213,8 @@ function ellipse(x, y, w, h) {
         strokeSize: __styles.__strokeSize,
         strokeColor: __styles.__strokeColor || colors.white,
         fillColor: __styles.fillColor || colors.transparent,
+        angleStart: 0,
+        angleStop: TAU,
     }
     meshEllipse.shader.sendUniforms(uniforms);
 
@@ -224,7 +226,47 @@ function ellipse(x, y, w, h) {
 // TODO
 var PIE = 'pie';
 
-function arc() {
+let meshArc;
+function arc(x, y, w, h, angleStart, angleStop) {
+    let gl = getContext();
+    pushMatrix();
+
+    if (__styles.ellipseMode === CORNER)
+        translate(x, y);
+    else
+        translate(x - w / 2, y - h / 2);
+
+    scale(w, h);
+
+    if (!meshEllipse) {
+        meshEllipse = new Mesh();
+        let array = [
+            0, 0, 0,
+            1, 0, 0,
+            1, 1, 0,
+            0, 0, 0,
+            1, 1, 0,
+            0, 1, 0
+        ];
+
+        meshEllipse.initializeAttributes(shaders.ellipse, array, array);
+    } else {
+        meshEllipse.useAttributes();
+    }
+
+    let uniforms = {
+        size: [w, h],
+        strokeSize: __styles.__strokeSize,
+        strokeColor: __styles.__strokeColor || colors.white,
+        fillColor: __styles.fillColor || colors.transparent,
+        angleStart: angleStart,
+        angleStop: angleStop,
+    }
+    meshEllipse.shader.sendUniforms(uniforms);
+
+    drawArrays(gl.TRIANGLES, 0, 6);
+
+    popMatrix();
 }
 
 let meshText;

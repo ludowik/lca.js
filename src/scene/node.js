@@ -42,6 +42,7 @@ class Node extends UI {
             if (item.folder && !item.folder.open) continue;
             if (item.contains(mouse.x, mouse.y)) {
                 item.mouseReleased(mouse);
+                return true;
             }
         }
     }
