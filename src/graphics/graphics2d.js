@@ -292,32 +292,49 @@ function textSize(txt) {
     };
 }
 
+let cacheTexture = {};
+
 function text(txt, x, y) {
     let gl = getContext();
     pushMatrix();
 
-    let metrics = textSize(txt);
+    let metrics, w, h, img;
+    if (cacheTexture[txt] === undefined) {
+        metrics = textSize(txt);
 
-    let w = metrics.w;
-    let h = metrics.h;
+        w = metrics.w;
+        h = metrics.h;
 
-    const context = meshText.context;
+        const context = meshText.context;
 
-    context.canvas.width = w;
-    context.canvas.height = h;
+        context.canvas.width = w;
+        context.canvas.height = h;
 
-    context.clearRect(0, 0, w, h);
+        context.clearRect(0, 0, w, h);
 
-    const fontRef = fontSize() + 'px monospace';
-    const fontColor = 'white';
+        const fontRef = fontSize() + 'px monospace';
+        const fontColor = 'white';
 
-    context.fillStyle = fontColor;
-    context.strokeStyle = fontColor;
-    context.font = fontRef;
-    context.fillText(txt, 0, h - 1);
+        context.fillStyle = fontColor;
+        context.strokeStyle = fontColor;
+        context.font = fontRef;
+        context.fillText(txt, 0, h - 1);
 
-    let img = new Texture(null, null, context.canvas);
+        img = new Texture(w, h, context.canvas);
+        cacheTexture[txt] = {
+            metrics: metrics,
+            img: img,
+        }
+    } else {
+        metrics = cacheTexture[txt].metrics;
 
+        w = metrics.w;
+        h = metrics.h;
+
+        img = cacheTexture[txt].img;
+    }
+
+    gl.bindTexture(gl.TEXTURE_2D, img.targetTexture);
     gl.activeTexture(gl.TEXTURE0);
 
     if (__styles.textMode === CORNER) {
@@ -334,22 +351,22 @@ function text(txt, x, y) {
         scale(w, -h);
     }
 
-    let array = [
-        0, 0, 0,
-        1, 0, 0,
-        1, 1, 0,
-        0, 0, 0,
-        1, 1, 0,
-        0, 1, 0,
-    ];
-
     shaders.texture.texture = img.targetTexture;
 
     if (!meshText.mesh) {
+        let array = [
+            0, 0, 0,
+            1, 0, 0,
+            1, 1, 0,
+            0, 0, 0,
+            1, 1, 0,
+            0, 1, 0,
+        ];
+
         meshText.mesh = new Mesh();
         meshText.mesh.initializeAttributes(shaders.texture, array, array);
     } else {
-        meshText.mesh.updateAttributes(array, array);
+        meshText.mesh.useAttributes();
     }
 
     let uniforms = {
@@ -357,7 +374,7 @@ function text(txt, x, y) {
     }
     meshText.mesh.shader.sendUniforms(uniforms);
 
-    drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }

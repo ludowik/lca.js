@@ -10,11 +10,17 @@ var ellipse_fragmentShaderText = `
 
     uniform float angleStart;
     uniform float angleStop;
+
+    #define PI 3.1415926535897932384626433832795
+    #define TAU 2.*PI
     
     float angleBetween(vec2 v1, vec2 v2) {
         float alpha1 = atan(v1.y, v1.x);
         float alpha2 = atan(v2.y, v2.x);
 
+        if (alpha2 - alpha1 < 0.){ 
+            return TAU + alpha2 - alpha1;
+        }
         return alpha2 - alpha1;
     }
 
