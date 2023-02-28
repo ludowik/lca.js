@@ -147,8 +147,8 @@ function rect(x, y, w, h) {
 
     scale(w, h);
 
-    if (!meshRect) {
-        meshRect = new Mesh();
+    if (!meshBox) {
+        meshBox = new Mesh();
         let array = [
             0, 0, 0,
             1, 0, 0,
@@ -158,9 +158,9 @@ function rect(x, y, w, h) {
             0, 1, 0
         ];
 
-        meshRect.initializeAttributes(shaders.rect, array);
+        meshBox.initializeAttributes(shaders.rect, array);
     } else {
-        meshRect.useAttributes();
+        meshBox.useAttributes();
     }
 
     let uniforms = {
@@ -169,7 +169,7 @@ function rect(x, y, w, h) {
         strokeColor: __styles.__strokeColor || colors.white,
         fillColor: __styles.fillColor || colors.white,
     }
-    meshRect.shader.sendUniforms(uniforms);
+    meshBox.shader.sendUniforms(uniforms);
 
     drawArrays(gl.TRIANGLES, 0, 6);
 

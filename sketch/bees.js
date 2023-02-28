@@ -1,6 +1,6 @@
 class Bees extends Sketch {
     setup() {
-        this.angle = getItem('bees:angle') || 0;
+        this.angle = 0; // getItem('bees:angle') || 0;
 
         this.params = {
             'n': 16,

@@ -31,6 +31,7 @@ class Engine {
 
         this.params.topLeft = true;
         this.params.autotest = false;
+        this.params.devicePixelRatio = window.devicePixelRatio || 1;
 
         this.initGui();
 
@@ -46,7 +47,7 @@ class Engine {
         parameter.folder('sketch');
         parameter.watch(this.frameTime, 'fps');
         parameter.watch(this.params, 'sketchName');
-
+        parameter.watch(this.params, 'devicePixelRatio');
     }
 
     initGraphics() {
