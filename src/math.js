@@ -16,6 +16,7 @@ var radians = Math.radians;
 var degrees = Math.degrees;
 
 var tan = Math.tan;
+var atan = Math.atan;
 var atan2 = Math.atan2;
 var abs = Math.abs;
 var ceil = Math.ceil;
@@ -79,7 +80,7 @@ function noise(x, y, z) {
     if (y !== undefined) {
         return (NoiseModule.simplex2(x, y) + 1) / 2;
     }
-    return (NoiseModule.simplex1(x) + 1) / 2;
+    return (NoiseModule.simplex2(x, x) + 1) / 2;
 }
 
 function noiseSeed(seed) {

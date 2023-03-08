@@ -29,7 +29,6 @@ class Engine {
             },
         };
 
-        this.params.topLeft = true;
         this.params.autotest = false;
         this.params.devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -42,7 +41,6 @@ class Engine {
         parameter.action('=>', () => engine.nextSketch());
         parameter.action('<=', () => engine.previousSketch());
         parameter.action('auto', () => this.params.autotest = !this.params.autotest);
-        parameter.action('topLeft', () => this.params.topLeft = !this.params.topLeft);
 
         parameter.folder('sketch');
         parameter.watch(this.frameTime, 'fps');
@@ -268,18 +266,24 @@ class Engine {
 
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
-        if (true) {
+        if (sketch.mode3D === undefined) {
             gl.disable(gl.DEPTH_TEST);
 
             gl.enable(gl.BLEND);
             gl.blendEquation(gl.FUNC_ADD);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+            gl.disable(gl.CULL_FACE);
+
         } else {
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL);
 
             gl.disable(gl.BLEND);
+
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(gl.BACK);
+            gl.frontFace(gl.CCW);
         }
 
         gl.enable(gl.LINE_SMOOTH);
@@ -288,36 +292,44 @@ class Engine {
         gl.hint(gl.LINE_SMOOTH_HINT, gl.NICEST);
         gl.hint(gl.POLYGON_SMOOTH_HINT, gl.NICEST);
 
-        this.resetGraphics(true);
+        this.resetGraphics();
     }
 
     resetGraphics(origin) {
+        this.graphics.origin = origin || getOrigin();
+
         resetMatrix();
         resetStyles();
 
         ortho();
-
-        if (origin && getOrigin() == TOP_LEFT) {
-            translate(0, H);
-            scale(1, -1);
-        }
     }
 
     afterDraw() {
-        this.resetGraphics(true);
-        parameter.draw();
+        let gl = getContext();
+        gl.disable(gl.CULL_FACE);        
 
-        this.resetGraphics(false);
+        this.resetGraphics();
 
         sketch.fb.unbindFrameBuffer();
-        let gl = getContext();
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.ONE, gl.ZERO);
 
         stroke(colors.white);
         fill(colors.white);
 
-        sprite(sketch.fb, 0, 0, W, H);
+        if (origin && getOrigin() === TOP_LEFT) {
+            translate(0, H);
+            scale(1, -1);
+            sprite(sketch.fb, 0, 0, W, H);
+        } else {
+            sprite(sketch.fb, 0, 0, W, H);
+        }
+
+        this.resetGraphics(TOP_LEFT);
+        translate(0, H);
+        scale(1, -1);
+
+        parameter.draw();
     }
 
     frame(timestamp) {
@@ -427,12 +439,13 @@ function frameRate() {
 
 var TOP_LEFT = 'top_left';
 var BOTTOM_LEFT = 'bottom_left';
+
 function getOrigin() {
-    return engine.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
+    return sketch.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
 }
 
 function setOrigin(origin) {
-    engine.params.topLeft = origin;
+    sketch.params.topLeft = (origin === TOP_LEFT ? true : false);
 }
 
 function supportedOrientations() {

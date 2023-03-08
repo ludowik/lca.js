@@ -12,9 +12,20 @@ function ortho(left, right, top, bottom, near = -1000, far = 1000) {
     glMatrix.mat4.ortho(__projectionMatrix, left, right, top, bottom, near, far);
 }
 
-function perspective(fovy = Math.PI/4., aspect, near = 0.1, far = 1000) {
-    aspect = aspect || (W / H);
+function isometric() {
+    ortho();
 
+    translate(W / 2, H / 2);
+
+    let alpha = atan(1 / sqrt(2));
+    let beta = PI / 4;
+
+    rotate(alpha, [1, 0, 0]);
+    rotate(beta, [0, 1, 0]);
+}
+
+function perspective(fovy = Math.PI / 4., aspect, near = 0.1, far = 1000) {
+    aspect = aspect || (W / H);
     glMatrix.mat4.perspective(__projectionMatrix, fovy, aspect, near, far);
 }
 
@@ -23,10 +34,10 @@ function viewMatrix() {
     return __viewMatrix;
 }
 
-function camera(xe, ye, ze, CX = 0, CY = 0, zc = 0) {
+function camera(xe, ye, ze, xc = 0, yc = 0, zc = 0, xu = 0, yu = 1, zu = 0) {
     var eye = glMatrix.vec3.set(glMatrix.vec3.create(), xe, ye, ze);
-    var center = glMatrix.vec3.set(glMatrix.vec3.create(), CX, CY, zc);
-    var up = glMatrix.vec3.set(glMatrix.vec3.create(), 0, 1, 0);
+    var center = glMatrix.vec3.set(glMatrix.vec3.create(), xc, yc, zc);
+    var up = glMatrix.vec3.set(glMatrix.vec3.create(), xu, yu, zu);
     glMatrix.mat4.lookAt(__viewMatrix, eye, center, up);
 }
 
@@ -40,13 +51,13 @@ function translate(x, y, z = 0) {
     glMatrix.mat4.translate(__modelMatrix, __modelMatrix, origin);
 }
 
-function rotate(angle) {
-    var axis = glMatrix.vec3.set(glMatrix.vec3.create(), 0, 0, 1);
+function rotate(angle, axis) {
+    axis = axis || glMatrix.vec3.set(glMatrix.vec3.create(), 0, 0, 1);
     glMatrix.mat4.rotate(__modelMatrix, __modelMatrix, angle, axis);
 }
 
-function scale(x, y, z = 1) {
-    var factor = glMatrix.vec3.set(glMatrix.vec3.create(), x, y, z);
+function scale(w, h, d = 1) {
+    var factor = glMatrix.vec3.set(glMatrix.vec3.create(), w, h, d);
     glMatrix.mat4.scale(__modelMatrix, __modelMatrix, factor);
 }
 

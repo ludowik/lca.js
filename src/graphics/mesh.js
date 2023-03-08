@@ -1,29 +1,33 @@
 class Mesh {
-    initializeAttributes(shader, array, texCoord) {
+    initializeAttributes(shader, vertices, texCoords, colors) {
         let gl = getContext();
 
         this.shader = shader;
         this.buffers = {
-            vertices: { name: 'aPosition', data: array },
-            texCoord: { name: 'aTexCoord', data: texCoord },
+            vertices: { name: 'aPosition', data: vertices, size: 3 },
+            texCoords: { name: 'aTexCoord', data: texCoords, size: 3 },
+            colors: { name: 'aColor', data: colors, size: 4 },
         }
 
         this.shader.use();
 
         this.initializeBuffer(this.buffers.vertices);
-        this.initializeBuffer(this.buffers.texCoord);
+        this.initializeBuffer(this.buffers.texCoords);
+        this.initializeBuffer(this.buffers.colors);
     }
 
-    updateAttributes(array, texCoord) {
+    updateAttributes(vertices, texCoords, colors) {
         let gl = getContext();
 
-        this.buffers.vertices.data = array;
-        this.buffers.texCoord.data = texCoord;
+        this.buffers.vertices.data = vertices;
+        this.buffers.texCoords.data = texCoords;
+        this.buffers.colors.data = colors;
 
         this.shader.use();
 
         this.updateBuffer(this.buffers.vertices);
-        this.updateBuffer(this.buffers.texCoord);
+        this.updateBuffer(this.buffers.texCoords);
+        this.updateBuffer(this.buffers.colors);
     }
 
     useAttributes() {
@@ -32,7 +36,8 @@ class Mesh {
         this.shader.use();
 
         this.useBuffer(this.buffers.vertices);
-        this.useBuffer(this.buffers.texCoord);
+        this.useBuffer(this.buffers.texCoords);
+        this.useBuffer(this.buffers.colors);
     }
 
     initializeBuffer(buffer) {
@@ -53,7 +58,7 @@ class Mesh {
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(buffer.data), gl.STATIC_DRAW);
         }
 
-        gl.vertexAttribPointer(this.shader.attribsLocation[buffer.name], 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.shader.attribsLocation[buffer.name], buffer.size, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(this.shader.attribsLocation[buffer.name]);
     }
 

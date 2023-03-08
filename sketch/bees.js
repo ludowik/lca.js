@@ -9,14 +9,14 @@ class Bees extends Sketch {
 
             'da': 8
         };
+
+        this.mode3D = true;
     }
 
     draw() {
         background(0);
 
-        ortho(-minSize, minSize, -minSize, minSize, -2000, 2000);
-
-        camera(-minSize, -minSize, minSize, 0, 0, 0, 0, 1, 0);
+        isometric();
 
         ambientLight(0.5);
         directionalLight(colors.white, 250, 250, 250);

@@ -123,7 +123,7 @@ function line(x1, y1, x2, y2) {
     }
 
     let uniforms = {
-        origin: getOrigin() == TOP_LEFT ? -1 : 1,
+        origin: engine.graphics.origin === TOP_LEFT ? -1 : 1,
         lineSize: [x2 - x1, y2 - y1],
         strokeSize: __styles.__strokeSize,
         strokeColor: __styles.__strokeColor || colors.white,
@@ -147,8 +147,8 @@ function rect(x, y, w, h) {
 
     scale(w, h);
 
-    if (!meshBox) {
-        meshBox = new Mesh();
+    if (!meshRect) {
+        meshRect = new Mesh();
         let array = [
             0, 0, 0,
             1, 0, 0,
@@ -158,9 +158,9 @@ function rect(x, y, w, h) {
             0, 1, 0
         ];
 
-        meshBox.initializeAttributes(shaders.rect, array);
+        meshRect.initializeAttributes(shaders.rect, array);
     } else {
-        meshBox.useAttributes();
+        meshRect.useAttributes();
     }
 
     let uniforms = {
@@ -169,7 +169,7 @@ function rect(x, y, w, h) {
         strokeColor: __styles.__strokeColor || colors.white,
         fillColor: __styles.fillColor || colors.white,
     }
-    meshBox.shader.sendUniforms(uniforms);
+    meshRect.shader.sendUniforms(uniforms);
 
     drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -343,7 +343,7 @@ function text(txt, x, y) {
         translate(x - w / 2, y - h / 2);
     }
 
-    if (getOrigin() === TOP_LEFT) {
+    if (engine.graphics.origin === TOP_LEFT) {
         translate(0, -metrics.fontBoundingBoxDescent);
         scale(w, h);
     } else {

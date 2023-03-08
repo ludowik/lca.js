@@ -21,7 +21,7 @@ function mapEvents(engine, canvas) {
     canvas.addEventListener('touchmove', touchEvent);
 
     function keyboardEvent(evt) {
-        this.keyboardEvent(evt);
+        engine.keyboardEvent(evt);
     }
     document.addEventListener('keydown', keyboardEvent);
 }
