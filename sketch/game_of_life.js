@@ -10,12 +10,12 @@ class Gol extends Sketch {
         this.width = Math.floor(this.nw);
         this.height = Math.floor(this.nh);
 
-        this.params = {
+        this.params.addParams({
             'clear': () => this.reset(),
             'state': '2',
             'stateList': ['1', '2'],
             'stateOnChange': () => this.state(),
-        };
+        });
 
         this.state();
 

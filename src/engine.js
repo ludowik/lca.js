@@ -18,7 +18,7 @@ class Engine {
 
         this.frameTime = new FrameTime();
 
-        this.params = {};
+        this.params = new Params();
         this.paramsOfParams = {};
 
         this.params.sketchName = getItem('sketchName') || sketches[2];

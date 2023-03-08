@@ -1,12 +1,12 @@
 class Feigenbaum extends Sketch {
     setup() {
-        this.params = {
+        this.params.addParams({
             y: 0.5,
             yMin: 0.0,
             yMax: 1.0,
             yStep: 0.05,
             yOnChange: () => this.reset(),
-        };
+        });
 
         this.reset();
     }

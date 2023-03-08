@@ -8,7 +8,7 @@ class Spirale extends Sketch {
         //let state = getItem('cam_state');
         //this.cam.setState(state);
 
-        this.params = {
+        this.params.addParams({
             'update': true,
 
             'deltaAngle': Math.PI / 32,
@@ -23,7 +23,7 @@ class Spirale extends Sketch {
             'heightMax': 500,
 
             'noise': 100
-        };
+        });
 
         this.elapsedTime = 0;
     }
@@ -41,17 +41,13 @@ class Spirale extends Sketch {
         background(0);
 
         perspective()
-        ortho()
-        //translate(CX, CY)
-        //scale(2/W, 2/H)
-
+        
         fill(colors.white)
         translate(0, 0, 100)
         rect(-100, -100, 200, 200)
 
         translate(0, 0, -200)
-        rect(-100, -100, 200, 200)
-        
+        rect(-100, -100, 200, 200)        
 
         let angle = 0;
 

@@ -1,6 +1,6 @@
 class TestUI extends Sketch {
     setup() {
-        this.params = {
+        this.params.addParams({
             'rotate': true,
             'reset': () => { this.reset(); },
 
@@ -15,7 +15,7 @@ class TestUI extends Sketch {
             'name': 'ludo',
 
             'color': colors.green,
-        };
+        });
     }
 
     reset() {

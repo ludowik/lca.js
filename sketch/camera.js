@@ -11,12 +11,12 @@ class Camera /*extends Sketch*/ {
             this.render = Sketch.prototype.render;
         }
 
-        this.params = {
+        this.params.addParams({
             uPixelSize: 8,
             uPixelSizeMin: 1,
             uPixelSizeMax: 16,
             uPixelSizeStep: 1,
-        };
+        });
 
         this.shader();
     }

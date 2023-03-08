@@ -83,3 +83,16 @@ class Parameter extends Scene {
         }
     }
 }
+
+class Params {
+    constructor() {
+        return new Proxy(this, {})
+    }
+
+    addParams(params) {
+        for (let param in params) {
+            console.log(param)
+        }
+
+    }
+}

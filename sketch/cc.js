@@ -2,7 +2,7 @@ class CC extends Sketch {
     setup() {
         let logoSize = 192;
 
-        this.params = {
+        this.params.addParams({
             w: 40,
             wMax: logoSize,
 
@@ -14,7 +14,7 @@ class CC extends Sketch {
             weight: 15,
 
             save: () => this.save()
-        };
+        });
 
         this.imgLogo = createGraphics(logoSize, logoSize);
         this.imgLogo.pixelDensity(1);

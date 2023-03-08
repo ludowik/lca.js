@@ -2,13 +2,13 @@ class Bees extends Sketch {
     setup() {
         this.angle = 0; // getItem('bees:angle') || 0;
 
-        this.params = {
+        this.params.addParams({
             'n': 16,
             'nMin': 2,
             'nMax': 50,
 
             'da': 8
-        };
+        });
 
         this.mode3D = true;
     }
