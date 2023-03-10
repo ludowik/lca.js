@@ -86,12 +86,33 @@ class Parameter extends Scene {
 
 class Params {
     constructor() {
-        return new Proxy(this, {})
+        this.params = {};
+
+        return new Proxy(this, {
+            get(obj, key) {
+                if (typeof (obj[key]) === 'function') {
+                    return obj[key];
+                }
+                if (key === 'params') {
+                    return obj.params;
+                }
+                return obj.params[key]?.value;
+            },
+            set(obj, key, value) {
+                if (typeof (value) === 'table' && value in value) {
+                    obj.params[key] = value;
+                } else {
+                    obj.params[key] = obj.params[key] || {};
+                    obj.params[key].value = value;
+                }
+                return true;
+            }
+        })
     }
 
     addParams(params) {
         for (let param in params) {
-            console.log(param)
+            this[param] = params[param];
         }
 
     }

@@ -286,12 +286,6 @@ class Engine {
             gl.frontFace(gl.CCW);
         }
 
-        gl.enable(gl.LINE_SMOOTH);
-        gl.enable(gl.POLYGON_SMOOTH);
-
-        gl.hint(gl.LINE_SMOOTH_HINT, gl.NICEST);
-        gl.hint(gl.POLYGON_SMOOTH_HINT, gl.NICEST);
-
         this.resetGraphics();
     }
 

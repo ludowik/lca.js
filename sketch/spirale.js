@@ -1,7 +1,7 @@
 class Spirale extends Sketch {
     setup() {
         colorMode(HSB, 1);
-        
+
         // TODO : implement a camera
         //this.cam = createEasyCam();
 
@@ -11,10 +11,12 @@ class Spirale extends Sketch {
         this.params.addParams({
             'update': true,
 
-            'deltaAngle': Math.PI / 32,
-            'deltaAngleMin': 0,
-            'deltaAngleMax': Math.PI / 32,
-            'deltaAngleStep': Math.PI / 1024,
+            'deltaAngle': {
+                'value': Math.PI / 32,
+                'min': 0,
+                'max': Math.PI / 32,
+                'step': Math.PI / 1024
+            },
 
             'width': 100,
             'widthMax': 500,
@@ -41,13 +43,13 @@ class Spirale extends Sketch {
         background(0);
 
         perspective()
-        
+
         fill(colors.white)
         translate(0, 0, 100)
         rect(-100, -100, 200, 200)
 
         translate(0, 0, -200)
-        rect(-100, -100, 200, 200)        
+        rect(-100, -100, 200, 200)
 
         let angle = 0;
 
