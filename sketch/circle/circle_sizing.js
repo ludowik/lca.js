@@ -1,4 +1,4 @@
-class CircleSizing extends Sketch {    
+class CircleSizing extends Sketch {
     setup() {
         background(colors.black);
     }
@@ -32,7 +32,7 @@ class CircleSizing extends Sketch {
 
                 fill(color(1 - val, val ** 2, val, a));
 
-                strokeSize(sin(elapsedTime * nval) * radius);
+                strokeSize(abs(sin(elapsedTime * nval) * radius));
                 stroke(color(val, 0.5, 0.5, a));
 
                 circle(x * w, y * w, abs(radius));

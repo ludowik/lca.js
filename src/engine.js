@@ -46,7 +46,7 @@ class Engine {
         parameter.folder('sketch');
         parameter.watch(this.frameTime, 'fps');
         parameter.watch(this.params, 'sketchName');
-
+        parameter.action('pause', () => sketch.loop = !sketch.loop);
     }
 
     initGraphics() {
@@ -286,19 +286,21 @@ class Engine {
     }
 
     afterDraw() {
-        this.resetGraphics(true);
-        parameter.draw();
-        this.resetGraphics(false);
+        this.resetGraphics(false); {
+            sketch.fb.unbindFrameBuffer();
+            let gl = getContext();
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.ONE, gl.ZERO);
 
-        sketch.fb.unbindFrameBuffer();
-        let gl = getContext();
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.ONE, gl.ZERO);
+            stroke(colors.white);
+            fill(colors.white);
 
-        stroke(colors.white);
-        fill(colors.white);
+            sprite(sketch.fb, 0, 0, W, H);
+        }
 
-        sprite(sketch.fb, 0, 0, W, H);
+        this.resetGraphics(true); {
+            parameter.draw();
+        }
     }
 
     frame(timestamp) {
@@ -413,7 +415,7 @@ function getOrigin() {
 }
 
 function setOrigin(origin) {
-    engine.params.topLeft = origin;
+    engine.params.topLeft = origin == TOP_LEFT ? true : false;
 }
 
 function supportedOrientations() {
@@ -458,9 +460,12 @@ function setSketch(name) {
 }
 
 function run() {
+    window.onerror = function (event, source, lineno, colon, error) {
+        console.error(event);
+    };
+
     engine = new Engine();
+    engine.requestRender(true);
 
     setSketch(engine.params.sketchName);
-
-    engine.requestRender(true);
 }

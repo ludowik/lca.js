@@ -12,19 +12,23 @@ var ellipse_fragmentShaderText = `
         
         float distance = length(fragmentPosition);
 
-        if (distance <= 1. - (strokeSize / size.x)) {
+        float _strokeSize = 2. * strokeSize;
+
+        if (distance <= 1. - (_strokeSize / size.x)) {
             float alpha = smoothstep(
-                1. - (strokeSize / size.x),
-                1. - (strokeSize / size.x) - 1. / size.x,
+                1. - (_strokeSize / size.x),
+                1. - (_strokeSize / size.x) - 0.0001,
                 distance);
+            alpha = 1.;
 
             gl_FragColor = vec4(fillColor.xyz, fillColor.w * alpha);
 
         } else if (distance <= 1.) {
             float alpha = smoothstep(
                 1.,
-                1. - 1. / size.x,
+                1. - (_strokeSize / size.x),
                 distance);
+            alpha = 1.;
                 
             gl_FragColor = vec4(strokeColor.xyz, strokeColor.w * alpha);
 

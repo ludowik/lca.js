@@ -177,7 +177,8 @@ function rect(x, y, w, h) {
 }
 
 function circle(x, y, radius) {
-    ellipse(x, y, radius * 2, radius * 2);
+    let diameter = radius * 2;
+    ellipse(x, y, diameter, diameter);
 }
 
 let meshEllipse;

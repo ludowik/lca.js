@@ -22,6 +22,14 @@ class Parameter extends Scene {
         this.position = createVector(W - 100, H / 2);
     }
 
+    draw() {
+        if (getOrigin() == BOTTOM_LEFT) {
+            translate(0, H);
+            scale(1, -1);
+        }
+        super.draw();
+    }
+
     push(parameter) {
         if (this.items.length === 0) {
             parameter.position.x = W - 100;
@@ -37,7 +45,7 @@ class Parameter extends Scene {
     folder(name) {
         let ui = new UI(name, (ui) => {
             ui.open = !ui.open;
-        })
+        });
         ui.open = true;
         ui.folder = this.currentFolder;
         this.push(ui);

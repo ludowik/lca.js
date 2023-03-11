@@ -23,9 +23,9 @@ function viewMatrix() {
     return __viewMatrix;
 }
 
-function camera(xe, ye, ze, CX = 0, CY = 0, zc = 0) {
+function camera(xe, ye, ze, xc = 0, yc = 0, zc = 0) {
     var eye = glMatrix.vec3.set(glMatrix.vec3.create(), xe, ye, ze);
-    var center = glMatrix.vec3.set(glMatrix.vec3.create(), CX, CY, zc);
+    var center = glMatrix.vec3.set(glMatrix.vec3.create(), xc, yc, zc);
     var up = glMatrix.vec3.set(glMatrix.vec3.create(), 0, 1, 0);
     glMatrix.mat4.lookAt(__viewMatrix, eye, center, up);
 }
