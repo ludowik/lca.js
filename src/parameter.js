@@ -60,12 +60,12 @@ class Parameter extends Scene {
     }
 
     number(object, name, min, max, value) {
-        // TODO
+        // TODO : implement number UI with slider
         object[name] = ifundef(object[name], ifundef(value, min));
     }
 
     integer(object, name, min, max, value) {
-        // TODO
+        // TODO : implement integer UI with slider
         object[name] = ifundef(object[name], ifundef(value, min));
     }
 
@@ -76,4 +76,52 @@ class Parameter extends Scene {
     }
 
     link() { }
+
+    draw(x, y) {
+        this.drawLabel(this);
+
+        x = x || this.position.x;
+        y = y || this.position.y + this.size.h;
+
+        for (const item of this.items) {
+            if (item.folder && !item.folder.open) continue;
+            item.position.set(x, y);
+            item.draw(x, y);
+            y += item.size.h + this.margeIn;
+        }
+    }
+}
+
+class Params {
+    constructor() {
+        this.params = {};
+
+        return new Proxy(this, {
+            get(obj, key) {
+                if (typeof (obj[key]) === 'function') {
+                    return obj[key];
+                }
+                if (key === 'params') {
+                    return obj.params;
+                }
+                return obj.params[key]?.value;
+            },
+            set(obj, key, value) {
+                if (typeof (value) === 'table' && value in value) {
+                    obj.params[key] = value;
+                } else {
+                    obj.params[key] = obj.params[key] || {};
+                    obj.params[key].value = value;
+                }
+                return true;
+            }
+        })
+    }
+
+    addParams(params) {
+        for (let param in params) {
+            this[param] = params[param];
+        }
+
+    }
 }

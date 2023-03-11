@@ -115,7 +115,8 @@ class Game2048 extends Sketch {
     }
 
     load() {
-        let items = getItem('2048/grid');
+        // TODO
+        let items; // = getItem('2048/grid');
         if (!items) {
             return false;
         }

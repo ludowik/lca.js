@@ -18,7 +18,7 @@ class Engine {
 
         this.frameTime = new FrameTime();
 
-        this.params = {};
+        this.params = new Params();
         this.paramsOfParams = {};
 
         this.params.sketchName = getItem('sketchName') || sketches[2];
@@ -29,8 +29,8 @@ class Engine {
             },
         };
 
-        this.params.topLeft = true;
         this.params.autotest = false;
+        this.params.devicePixelRatio = window.devicePixelRatio || 1;
 
         this.initGui();
 
@@ -41,12 +41,12 @@ class Engine {
         parameter.action('=>', () => engine.nextSketch());
         parameter.action('<=', () => engine.previousSketch());
         parameter.action('auto', () => this.params.autotest = !this.params.autotest);
-        parameter.action('topLeft', () => this.params.topLeft = !this.params.topLeft);
 
         parameter.folder('sketch');
         parameter.watch(this.frameTime, 'fps');
         parameter.watch(this.params, 'sketchName');
         parameter.action('pause', () => sketch.loop = !sketch.loop);
+        parameter.watch(this.params, 'devicePixelRatio');
     }
 
     initGraphics() {
@@ -166,6 +166,8 @@ class Engine {
             mouse.y = evt.changedTouches[0].clientY;
         }
 
+        this.mouseAndTouchEvent(evt, mouse);
+
         evt.returnValue = false;
     }
 
@@ -175,31 +177,46 @@ class Engine {
         mouse.x = evt.clientX;
         mouse.y = evt.clientY;
 
+        this.mouseAndTouchEvent(evt, mouse);
+
+        evt.returnValue = false;
+    }
+
+    mouseAndTouchEvent(evt, mouse) {
+        // TODO : dispatch event
+        // down/pressed => setFocus(computeFocus) + mouseEvent sur le focus
+        // ... => mouseEvent vers le focus
+        // up/released => setFocus(null) + mouseUp vers le dernier focus
+
         // evt.type => A string with the name of the event.
-        // It is case-sensitive and browsers set it to dblclick, mousedown, mouseenter, mouseleave, mousemove, mouseout, mouseover, or mouseup
+        // It is case-sensitive and browsers set it to
+        //     - dblclick, mousedown, mouseenter, mouseleave, mousemove, mouseout, mouseover, or mouseup
+        //     - touchstart, touchmove, touchend, touchcancel
         switch (evt.type) {
-            case 'mousedown': {
+            case 'mousedown':
+            case 'touchstart': {
                 mouse.start = {
                     x: mouse.x,
                     y: mouse.y,
                 };
                 break;
             }
-            case 'mouseup': {
+            case 'mouseup':
+            case 'touchend': {
                 mouse.stop = {
                     x: mouse.x,
                     y: mouse.y,
                 };
-                parameter.mouseReleased();
-                sketch.mouseReleased();
+                if (!parameter.mouseReleased()); {
+                    sketch.mouseReleased();
+                }
                 break;
             }
             case 'wheel': {
+                // TODO : implement wheel event response
                 break;
             }
         }
-
-        evt.returnValue = false;
     }
 
     keyboardEvent(evt) {
@@ -250,113 +267,120 @@ class Engine {
 
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
-        if (true) {
+        if (sketch.mode3D === undefined) {
             gl.disable(gl.DEPTH_TEST);
 
             gl.enable(gl.BLEND);
             gl.blendEquation(gl.FUNC_ADD);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+            gl.disable(gl.CULL_FACE);
+
         } else {
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL);
 
             gl.disable(gl.BLEND);
+
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(gl.BACK);
+            gl.frontFace(gl.CCW);
         }
 
-        gl.enable(gl.LINE_SMOOTH);
-        gl.enable(gl.POLYGON_SMOOTH);
-
-        gl.hint(gl.LINE_SMOOTH_HINT, gl.NICEST);
-        gl.hint(gl.POLYGON_SMOOTH_HINT, gl.NICEST);
-
-        this.resetGraphics(true);
+        this.resetGraphics();
     }
 
     resetGraphics(origin) {
+        this.graphics.origin = origin || getOrigin();
+
         resetMatrix();
         resetStyles();
 
         ortho();
-
-        if (origin && getOrigin() == TOP_LEFT) {
-            translate(0, H);
-            scale(1, -1);
-        }
     }
 
     afterDraw() {
-        this.resetGraphics(false); {
-            sketch.fb.unbindFrameBuffer();
-            let gl = getContext();
-            gl.enable(gl.BLEND);
-            gl.blendFunc(gl.ONE, gl.ZERO);
+        let gl = getContext();
+        gl.disable(gl.CULL_FACE);
 
-            stroke(colors.white);
-            fill(colors.white);
+        this.resetGraphics();
 
-            sprite(sketch.fb, 0, 0, W, H);
-        }
+        sketch.fb.unbindFrameBuffer();
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ZERO);
 
-        this.resetGraphics(true); {
-            parameter.draw();
-        }
+        sprite(sketch.fb, 0, 0, W, H);
     }
 
-    frame(timestamp) {
-        DeltaTime = this.frameTime.deltaTime;
-        elapsedTime = this.frameTime.elapsedTime;
-
-        this.update(DeltaTime);
-
-        this.beforeDraw();
-        this.draw();
-        this.afterDraw();
-    }
-
-    update(dt) {
-        sketch.update(dt);
-    }
-
-    draw() {
-        sketch.draw();
-    }
-
-    nextSketch() {
-        let nextIndex = sketches.indexOf(this.params.sketchName) + 1;
-        let nextItem = sketches[nextIndex] || sketches[0];
-        setSketch(nextItem);
-    }
-
-    previousSketch() {
-        let nextIndex = sketches.indexOf(this.params.sketchName) - 1;
-        let nextItem = sketches[nextIndex] || sketches[sketches.length - 1];
-        setSketch(nextItem);
-    }
-
-    requestRender(forceRender) {
-        window.requestAnimationFrame(() => {
-            if (this.params.autotest) {
-                if (!sketch.nFrames) {
-                    sketch.nFrames = 10;
-                }
-                sketch.nFrames--;
-                if (sketch.nFrames === 0) {
-                    this.nextSketch();
-                }
-            }
-
-            if (sketch.loop || forceRender) {
-                this.frame();
-                this.frameTime.frame();
-            }
-
-            this.requestRender();
-        });
-    }
+    if(origin && getOrigin() === TOP_LEFT) {
+    translate(0, H);
+    scale(1, -1);
+    sprite(sketch.fb, 0, 0, W, H);
+} else {
+    sprite(sketch.fb, 0, 0, W, H);
 }
 
-// TODO
+this.resetGraphics(TOP_LEFT);
+translate(0, H);
+scale(1, -1);
+
+parameter.draw();
+    }
+
+frame(timestamp) {
+    DeltaTime = this.frameTime.deltaTime;
+    elapsedTime = this.frameTime.elapsedTime;
+
+    this.update(DeltaTime);
+
+    this.beforeDraw();
+    this.draw();
+    this.afterDraw();
+}
+
+update(dt) {
+    sketch.update(dt);
+}
+
+draw() {
+    sketch.draw();
+}
+
+nextSketch() {
+    let nextIndex = sketches.indexOf(this.params.sketchName) + 1;
+    let nextItem = sketches[nextIndex] || sketches[0];
+    setSketch(nextItem);
+}
+
+previousSketch() {
+    let nextIndex = sketches.indexOf(this.params.sketchName) - 1;
+    let nextItem = sketches[nextIndex] || sketches[sketches.length - 1];
+    setSketch(nextItem);
+}
+
+requestRender(forceRender) {
+    window.requestAnimationFrame(() => {
+        if (this.params.autotest) {
+            if (!sketch.nFrames) {
+                sketch.nFrames = 10;
+            }
+            sketch.nFrames--;
+            if (sketch.nFrames === 0) {
+                this.nextSketch();
+            }
+        }
+
+        if (sketch.loop || forceRender) {
+            this.frame();
+            this.frameTime.frame();
+        }
+
+        this.requestRender();
+    });
+}
+}
+
+// TODO : no consistency with setContext
 function getContext() {
     return engine.gl;
 }
@@ -410,16 +434,17 @@ function frameRate() {
 
 var TOP_LEFT = 'top_left';
 var BOTTOM_LEFT = 'bottom_left';
+
 function getOrigin() {
-    return engine.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
+    return sketch.params.topLeft ? TOP_LEFT : BOTTOM_LEFT;
 }
 
 function setOrigin(origin) {
-    engine.params.topLeft = origin == TOP_LEFT ? true : false;
+    sketch.params.topLeft = (origin === TOP_LEFT ? true : false);
 }
 
 function supportedOrientations() {
-    // TODO
+    // TODO : prevent to switch between portrait and landscape mode
 }
 
 function loop() {

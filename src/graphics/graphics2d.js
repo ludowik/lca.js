@@ -7,7 +7,7 @@ class Graphics {
 }
 
 function pixelDensity() {
-    // TODO
+    // TODO : manage pixel density on ios
 }
 
 function background(clr) {
@@ -123,7 +123,7 @@ function line(x1, y1, x2, y2) {
     }
 
     let uniforms = {
-        origin: getOrigin() == TOP_LEFT ? -1 : 1,
+        origin: engine.graphics.origin === TOP_LEFT ? -1 : 1,
         lineSize: [x2 - x1, y2 - y1],
         strokeSize: __styles.__strokeSize,
         strokeColor: __styles.__strokeColor || colors.white,
@@ -182,7 +182,7 @@ function circle(x, y, radius) {
 }
 
 let meshEllipse;
-function ellipse(x, y, w, h) {
+function ellipse(x, y, w, h, start, stop) {
     let gl = getContext();
     pushMatrix();
 
@@ -214,6 +214,8 @@ function ellipse(x, y, w, h) {
         strokeSize: __styles.__strokeSize,
         strokeColor: __styles.__strokeColor || colors.white,
         fillColor: __styles.fillColor || colors.transparent,
+        angleStart: 0,
+        angleStop: TAU,
     }
     meshEllipse.shader.sendUniforms(uniforms);
 
@@ -225,7 +227,47 @@ function ellipse(x, y, w, h) {
 // TODO
 var PIE = 'pie';
 
-function arc() {
+let meshArc;
+function arc(x, y, w, h, angleStart, angleStop) {
+    let gl = getContext();
+    pushMatrix();
+
+    if (__styles.ellipseMode === CORNER)
+        translate(x, y);
+    else
+        translate(x - w / 2, y - h / 2);
+
+    scale(w, h);
+
+    if (!meshEllipse) {
+        meshEllipse = new Mesh();
+        let array = [
+            0, 0, 0,
+            1, 0, 0,
+            1, 1, 0,
+            0, 0, 0,
+            1, 1, 0,
+            0, 1, 0
+        ];
+
+        meshEllipse.initializeAttributes(shaders.ellipse, array, array);
+    } else {
+        meshEllipse.useAttributes();
+    }
+
+    let uniforms = {
+        size: [w, h],
+        strokeSize: __styles.__strokeSize,
+        strokeColor: __styles.__strokeColor || colors.white,
+        fillColor: __styles.fillColor || colors.transparent,
+        angleStart: angleStart,
+        angleStop: angleStop,
+    }
+    meshEllipse.shader.sendUniforms(uniforms);
+
+    drawArrays(gl.TRIANGLES, 0, 6);
+
+    popMatrix();
 }
 
 let meshText;
@@ -251,32 +293,49 @@ function textSize(txt) {
     };
 }
 
+let cacheTexture = {};
+
 function text(txt, x, y) {
     let gl = getContext();
     pushMatrix();
 
-    let metrics = textSize(txt);
+    let metrics, w, h, img;
+    if (cacheTexture[txt] === undefined) {
+        metrics = textSize(txt);
 
-    let w = metrics.w;
-    let h = metrics.h;
+        w = metrics.w;
+        h = metrics.h;
 
-    const context = meshText.context;
+        const context = meshText.context;
 
-    context.canvas.width = w;
-    context.canvas.height = h;
+        context.canvas.width = w;
+        context.canvas.height = h;
 
-    context.clearRect(0, 0, w, h);
+        context.clearRect(0, 0, w, h);
 
-    const fontRef = fontSize() + 'px monospace';
-    const fontColor = 'white';
+        const fontRef = fontSize() + 'px monospace';
+        const fontColor = 'white';
 
-    context.fillStyle = fontColor;
-    context.strokeStyle = fontColor;
-    context.font = fontRef;
-    context.fillText(txt, 0, h - 1);
+        context.fillStyle = fontColor;
+        context.strokeStyle = fontColor;
+        context.font = fontRef;
+        context.fillText(txt, 0, h - 1);
 
-    let img = new Texture(null, null, context.canvas);
+        img = new Texture(w, h, context.canvas);
+        cacheTexture[txt] = {
+            metrics: metrics,
+            img: img,
+        }
+    } else {
+        metrics = cacheTexture[txt].metrics;
 
+        w = metrics.w;
+        h = metrics.h;
+
+        img = cacheTexture[txt].img;
+    }
+
+    gl.bindTexture(gl.TEXTURE_2D, img.targetTexture);
     gl.activeTexture(gl.TEXTURE0);
 
     if (__styles.textMode === CORNER) {
@@ -285,7 +344,7 @@ function text(txt, x, y) {
         translate(x - w / 2, y - h / 2);
     }
 
-    if (getOrigin() === TOP_LEFT) {
+    if (engine.graphics.origin === TOP_LEFT) {
         translate(0, -metrics.fontBoundingBoxDescent);
         scale(w, h);
     } else {
@@ -293,22 +352,22 @@ function text(txt, x, y) {
         scale(w, -h);
     }
 
-    let array = [
-        0, 0, 0,
-        1, 0, 0,
-        1, 1, 0,
-        0, 0, 0,
-        1, 1, 0,
-        0, 1, 0,
-    ];
-
     shaders.texture.texture = img.targetTexture;
 
     if (!meshText.mesh) {
+        let array = [
+            0, 0, 0,
+            1, 0, 0,
+            1, 1, 0,
+            0, 0, 0,
+            1, 1, 0,
+            0, 1, 0,
+        ];
+
         meshText.mesh = new Mesh();
         meshText.mesh.initializeAttributes(shaders.texture, array, array);
     } else {
-        meshText.mesh.updateAttributes(array, array);
+        meshText.mesh.useAttributes();
     }
 
     let uniforms = {
@@ -316,7 +375,7 @@ function text(txt, x, y) {
     }
     meshText.mesh.shader.sendUniforms(uniforms);
 
-    drawArrays(gl.TRIANGLES, 0, array.length / 3);
+    drawArrays(gl.TRIANGLES, 0, 6);
 
     popMatrix();
 }

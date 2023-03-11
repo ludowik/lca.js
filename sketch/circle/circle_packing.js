@@ -5,9 +5,9 @@ class CirclePacking extends Sketch {
 
         this.nStep = 100;
 
-        this.params = {
+        this.params.addParams({
             N: '0'
-        };
+        });
     }
 
     newCircles(n = 1) {

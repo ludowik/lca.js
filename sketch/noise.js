@@ -1,10 +1,10 @@
 class Noise extends Sketch {
     setup() {
-        this.params = {
+        this.params.addParams({
             ratio: 2,
             size: 20,
             speed: 3,
-        };
+        });
     }
 
     draw() {

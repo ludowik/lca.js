@@ -11,7 +11,7 @@ var point_fragmentShaderText = `
         
         float distance = length(fragmentPosition);
 
-        float alpha = smoothstep(1., 1.-4./strokeSize, distance);
+        float alpha = smoothstep(1., 1. - 4. / strokeSize, distance);
         gl_FragColor = vec4(strokeColor.xyz, alpha);
     }
 `;

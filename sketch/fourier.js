@@ -5,13 +5,13 @@ class Fourier extends Sketch {
 
         this.size = minSize / 4;
 
-        this.params = {
+        this.params.addParams({
             n: 1,
             nMin: 1,
             nOnChange: () => this.reset(),
 
             reset: () => this.reset()
-        };
+        });
 
         this.reset();
     }

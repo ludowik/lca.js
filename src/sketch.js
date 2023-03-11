@@ -2,7 +2,9 @@ class Sketch extends Entity {
     constructor() {
         super();
 
-        this.params = {};
+        this.params = new Params({
+            topLeft: true
+        });
 
         this.fb = new FrameBuffer();
 

@@ -5,18 +5,21 @@ class Spirale extends Sketch {
         // TODO
         //normalMaterial();
 
+        // TODO : implement a camera
         //this.cam = createEasyCam();
 
         //let state = getItem('cam_state');
         //this.cam.setState(state);
 
-        this.params = {
+        this.params.addParams({
             'update': true,
 
-            'deltaAngle': Math.PI / 32,
-            'deltaAngleMin': 0,
-            'deltaAngleMax': Math.PI / 32,
-            'deltaAngleStep': Math.PI / 1024,
+            'deltaAngle': {
+                'value': Math.PI / 32,
+                'min': 0,
+                'max': Math.PI / 32,
+                'step': Math.PI / 1024
+            },
 
             'width': 100,
             'widthMax': 500,
@@ -25,7 +28,7 @@ class Spirale extends Sketch {
             'heightMax': 500,
 
             'noise': 100
-        };
+        });
 
         this.elapsedTime = 0;
     }
@@ -35,20 +38,14 @@ class Spirale extends Sketch {
             this.elapsedTime += dt;
         }
 
-        // TODO
+        // TODO : implement a camera
         //storeItem('cam_state', this.cam.getState());
     }
 
     draw() {
         background(0);
 
-        perspective();
-        camera(50, 0, -5);
-
-        ortho();
-
-        //translate(CX, CY)
-        //scale(2/W, 2/H)
+        perspective()
 
         fill(colors.white);
         translate(0, 0, 100);
@@ -56,7 +53,6 @@ class Spirale extends Sketch {
 
         translate(0, 0, -200);
         rect(-100, -100, 200, 200);
-
 
         let angle = 0;
 

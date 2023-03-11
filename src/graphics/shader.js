@@ -80,9 +80,9 @@ class Shader {
     sendUniform(gl) {
         let ul = this.uniformsLocation;
 
-        gl.uniformMatrix4fv(ul.uProjectionMatrix, false, projectionMatrix());
-        gl.uniformMatrix4fv(ul.uViewMatrix, false, viewMatrix());
-        gl.uniformMatrix4fv(ul.uModelMatrix, false, modelMatrix());
+        gl.uniformMatrix4fv(ul.uProjectionMatrix, gl.FALSE, projectionMatrix());
+        gl.uniformMatrix4fv(ul.uViewMatrix, gl.FALSE, viewMatrix());
+        gl.uniformMatrix4fv(ul.uModelMatrix, gl.FALSE, modelMatrix());
 
         if (ul.uTexture) {
             gl.uniform1i(ul.uTexture, 0);

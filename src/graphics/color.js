@@ -89,10 +89,11 @@ function hex2rgb(h, clr) {
 }
 
 function hsb2rgb(hue, sat, val, alpha) {
-    if (hue > 1)
+    if (hue > 1) {
         hue /= 255;
+    }
 
-    sat = sat || 0.5;
+    sat = sat || 1;
     val = val || 1;
     alpha = alpha || 1;
 
@@ -103,6 +104,7 @@ function hsb2rgb(hue, sat, val, alpha) {
     hue *= 6;  // We will split hue into 6 sectors    
 
     let sector = floor(hue);
+
     let tint1 = val * (1 - sat);
     let tint2 = val * (1 - sat * (hue - sector));
     let tint3 = val * (1 - sat * (1 + sector - hue));
@@ -145,10 +147,10 @@ function hsb2rgb(hue, sat, val, alpha) {
 
 function hsl2rgb(hue, sat, lgt, alpha) {
     if (hue > 1) {
-        hue = hue / 255;
+        hue /= 360;
     }
 
-    sat = sat || 0.5;
+    sat = sat || 1;
     lgt = lgt || 0.5;
     alpha = alpha || 1;
 
@@ -156,7 +158,7 @@ function hsl2rgb(hue, sat, lgt, alpha) {
         return new Color(lgt, lgt, lgt, alpha);
     }
 
-    hue = hue * 6; // We will split hue into 6 sectors    
+    hue *= 6; // We will split hue into 6 sectors    
 
     let c = (1 - Math.abs(2 * lgt - 1)) * sat;
     let x = (1 - Math.abs(hue % 2 - 1)) * c;
@@ -166,47 +168,43 @@ function hsl2rgb(hue, sat, lgt, alpha) {
     let g = 0;
     let b = 0;
 
-    if (hue < 1) r, g, b = c, x, 0;
-    else if (hue < 2) r, g, b = x, c, 0;
-    else if (hue < 3) r, g, b = 0, c, x;
-    else if (hue < 4) r, g, b = 0, x, c;
-    else if (hue < 5) r, g, b = x, 0, c;
-    else r, g, b = c, 0, x;
+    if (hue < 1) [r, g, b] = [c, x, 0];
+    else if (hue < 2) [r, g, b] = [x, c, 0];
+    else if (hue < 3) [r, g, b] = [0, c, x];
+    else if (hue < 4) [r, g, b] = [0, x, c];
+    else if (hue < 5) [r, g, b] = [x, 0, c];
+    else [r, g, b] = [c, 0, x];
 
     return new Color(r + m, g + m, b + m, alpha);
 }
 
-// TODO
-/*function Color.rgb2hsl(...)
-    let clr = Color(...)
-    let r, g, b, a = clr.r, clr.g, clr.b, clr.a
+function rgb2hsl(clr) {
+    let [r, g, b, a] = [clr.r, clr.g, clr.b, clr.a];
 
-    let max, min = math.max(r, g, b), math.min(r, g, b)
-    let h = (max + min) * .5
-    let s, l = h, h
+    let [max, min] = [Math.max(r, g, b), Math.min(r, g, b)];
+    let [h] = [(max + min) * .5];
+    let [s, l] = [h, h];
 
-    if max == min then
-    h, s = 0, 0
-    else
-    let d = max - min
-    s = (l > 0.5) and d / (2 - max - min) or d / (max + min)
+    if (max == min) {
+        [h, s] = [0, 0];
+    } else {
+        let d = max - min;
+        s = (l > 0.5) ? d / (2 - max - min) : d / (max + min);
 
-    if max == r then
-    h = (g - b) / d + (g < b and 6 or 0)
-        elseif max == g then
-    h = (b - r) / d + 2
-        elseif max == b then
-    h = (r - g) / d + 4
-    end
+        if (max == r)
+            h = (g - b) / d + (g < b ? 6 : 0);
+        else if (max == g)
+            h = (b - r) / d + 2;
+        else if (max == b)
+            h = (r - g) / d + 4;
 
-    h = h / 6
-    end
+        h = h / 6;
+    }
 
-    return h, s, l, a
-    end
-*/
+    return new Color(h, s, l, a);
+}
 
-//var HSL = 'hsl';
+var HSL = 'hsl';
 var HSB = 'hsb';
 var RGB = 'rgb';
 
@@ -219,6 +217,8 @@ function colorMode(mode) {
 function color(r, g, b, a) {
     if (__colorMode == HSB) {
         return hsb2rgb(r, g, b, a);
+    } else if (__colorMode == HSL) {
+        return hsl2rgb(r, g, b, a);
     }
     return new Color(r, g, b, a);
 }
